@@ -2,6 +2,7 @@ package de.fisp.anwesenheit.core.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -14,6 +15,7 @@ public class BenutzerRolle implements Serializable {
 	private static final long serialVersionUID = -8209714587794783803L;
 	
 	@Id
+	@Column(name="benutzer_id")
 	private String benutzerId;
 	@Id
 	private String rolle;

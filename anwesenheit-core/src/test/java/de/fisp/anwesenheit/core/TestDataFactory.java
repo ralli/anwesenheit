@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
+import de.fisp.anwesenheit.core.entities.BenutzerRolle;
 
 @Service
 public class TestDataFactory {
@@ -36,5 +37,12 @@ public class TestDataFactory {
 		antrag.setAntragArt(antragArt);
 		antrag.setAntragStatus("NEU");
 		return antrag;
+	}
+	
+	public BenutzerRolle createBenutzerRolle(String benutzerId, String rolle) {
+		BenutzerRolle benutzerRolle = new BenutzerRolle();
+		benutzerRolle.setBenutzerId(benutzerId);
+		benutzerRolle.setRolle(rolle);
+		return benutzerRolle;
 	}
 }
