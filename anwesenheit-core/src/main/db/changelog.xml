@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	<changeSet id="createTableAntragStatus" author="raljuhn">
+		<createTable tableName="antrag_status">
+			<column name="antrag_status" type="varchar(10)">
+				<constraints primaryKey="true" primaryKeyName="pk_antrag_status"
+					nullable="false" />
+			</column>
+			<column name="position" type="integer">
+				<constraints nullable="false" />
+			</column>
+			<column name="bezeichnung" type="varchar(30)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="createTableAntragArt" author="raljuhn">
+		<createTable tableName="antrag_art">
+			<column name="antrag_art" type="varchar(10)">
+				<constraints primaryKey="true" primaryKeyName="pk_antrag_art"
+					nullable="false" />
+			</column>
+			<column name="position" type="integer">
+				<constraints nullable="false" />
+			</column>
+			<column name="bezeichnung" type="varchar(80)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="createTableBenutzer" author="raljuhn">
+		<createTable tableName="benutzer">
+			<column name="benutzer_id" type="varchar(30)">
+				<constraints primaryKey="true" primaryKeyName="pk_benutzer"
+					nullable="false" />
+			</column>
+			<column name="benutzertyp" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="vorname" type="varchar(50)" />
+			<column name="nachname" type="varchar(50)" />
+			<column name="email" type="varchar(80)" />
+			<column name="salt" type="varchar(50)" />
+			<column name="password_hash" type="varchar(50)" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="createTableAntrag" author="raljuhn">
+		<createTable tableName="antrag">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" primaryKeyName="pk_antrag"
+					nullable="false" />
+			</column>
+			<column name="benutzer_id" type="varchar(30)">
+				<constraints nullable="false" references="benutzer(benutzer_id)"
+					foreignKeyName="fk_antrag_benutzer" deleteCascade="true" />
+			</column>
+			<column name="antrag_art" type="varchar(10)">
+				<constraints nullable="false" references="antrag_art(antrag_art)"
+					foreignKeyName="fk_antrag_art" deleteCascade="false" />
+			</column>
+			<column name="antrag_status" type="varchar(10)">
+				<constraints nullable="false" references="antrag_status(antrag_status)"
+					foreignKeyName="fk_antrag_status" deleteCascade="false" />
+			</column>
+			<column name="von" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="bis" type="date">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="createTableAntragHistorie" author="raljuhn">
+		<createTable tableName="antrag_historie">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true" primaryKeyName="pk_antrag_historie"
+					nullable="false" />
+			</column>
+			<column name="antrag_id" type="BIGINT">
+				<constraints nullable="false" references="antrag(id)"
+					foreignKeyName="fk_historie_antrag" deleteCascade="true" />
+			</column>
+			<column name="benutzer_id" type="varchar(30)">
+				<constraints nullable="false" references="benutzer(benutzer_id)"
+					foreignKeyName="fk_historie_benutzer" deleteCascade="true" />
+			</column>
+			<column name="zeitpunkt" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="beschreibung" type="varchar(512)" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="createTableRolle" author="raljuhn">
+		<createTable tableName="rolle">
+			<column name="rolle" type="varchar(10)">
+				<constraints primaryKey="true" primaryKeyName="pk_rolle"
+					nullable="false" />
+			</column>
+			<column name="position" type="integer">
+				<constraints nullable="false" />
+			</column>
+			<column name="bezeichnung" type="varchar(80)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="createTableBenutzerRolle" author="raljuhn">
+		<createTable tableName="benutzer_rolle">
+			<column name="benutzer_id" type="varchar(30)">
+				<constraints nullable="false" />
+			</column>
+			<column name="rolle" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="addPKToBenutzerRolle" author="raljuhn">
+		<addPrimaryKey tableName="benutzer_rolle" columnNames="benutzer_id,rolle" />
+		<addForeignKeyConstraint constraintName="fk_benutzer_rolle_1"
+			referencedTableName="benutzer" baseColumnNames="benutzer_id"
+			baseTableName="benutzer_rolle" referencedColumnNames="benutzer_id"
+			deleteCascade="true" />
+		<addForeignKeyConstraint constraintName="fk_benutzer_rolle_2"
+			referencedTableName="rolle" baseColumnNames="rolle" baseTableName="benutzer_rolle"
+			referencedColumnNames="rolle" deleteCascade="true" />
+	</changeSet>
+	<changeSet id="insertAntragArt" author="raljuhn">
+		<insert tableName="antrag_art">
+			<column name="antrag_art" value="URLAUB" />
+			<column name="position" valueNumeric="1" />
+			<column name="bezeichnung" value="Urlaub" />
+		</insert>
+		<insert tableName="antrag_art">
+			<column name="antrag_art" value="GLEITZEIT" />
+			<column name="position" valueNumeric="2" />
+			<column name="bezeichnung" value="Gleitzeit" />
+		</insert>
+		<insert tableName="antrag_art">
+			<column name="antrag_art" value="SONDER" />
+			<column name="position" valueNumeric="3" />
+			<column name="bezeichnung" value="Sonderurlaub" />
+		</insert>
+	</changeSet>
+	<changeSet id="insertAntragStatus" author="raljuhn">
+		<insert tableName="antrag_status">
+			<column name="antrag_status" value="NEU" />
+			<column name="position" valueNumeric="1" />
+			<column name="bezeichnung" value="Neu" />
+		</insert>
+		<insert tableName="antrag_status">
+			<column name="antrag_status" value="IN_ARBEIT" />
+			<column name="position" valueNumeric="2" />
+			<column name="bezeichnung" value="In Arbeit" />
+		</insert>
+		<insert tableName="antrag_status">
+			<column name="antrag_status" value="ERFASST" />
+			<column name="position" valueNumeric="3" />
+			<column name="bezeichnung" value="Erfasst" />
+		</insert>
+	</changeSet>
+	<changeSet id="insertRolle" author="raljuhn">
+		<insert tableName="rolle">
+			<column name="rolle" value="ADMIN" />
+			<column name="position" valueNumeric="1" />
+			<column name="bezeichnung" value="Administrator" />
+		</insert>
+		<insert tableName="rolle">
+			<column name="rolle" value="ERFASSER" />
+			<column name="position" valueNumeric="2" />
+			<column name="bezeichnung" value="Erfasser" />
+		</insert>
+	</changeSet>
+</databaseChangeLog>

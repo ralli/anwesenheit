@@ -1,7 +1,7 @@
 package de.fisp.anwesenheit.core.entities;
 
 public class Benutzer {
-	private String userId;
+	private String benutzerId;
 	private String vorname;
 	private String nachname;
 	private String benutzertyp; // native / ldap
@@ -9,12 +9,12 @@ public class Benutzer {
 	private String salt;
 	private String passwordHash;
 
-	public String getUserId() {
-		return userId;
+	public String getBenutzerId() {
+		return benutzerId;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setBenutzerId(String benutzerId) {
+		this.benutzerId = benutzerId;
 	}
 
 	public String getVorname() {
