@@ -1,25 +1,23 @@
 package de.fisp.anwesenheit.core.entities;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "antrag_art")
-public class AntragArt {
+@Table(name = "rolle")
+public class Rolle {
 	@Id
-	@Column(name="antrag_art")
-	private String antragArt;
+	private String rolle;
 	private int position;
 	private String bezeichnung;
 
-	public String getAntragArt() {
-		return antragArt;
+	public String getRolle() {
+		return rolle;
 	}
 
-	public void setAntragArt(String antragArt) {
-		this.antragArt = antragArt;
+	public void setRolle(String rolle) {
+		this.rolle = rolle;
 	}
 
 	public int getPosition() {

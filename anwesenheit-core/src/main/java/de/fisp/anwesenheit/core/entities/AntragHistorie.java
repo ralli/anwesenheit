@@ -2,10 +2,25 @@ package de.fisp.anwesenheit.core.entities;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "antrag_historie")
 public class AntragHistorie {
+	@Id
+	@GeneratedValue
 	private long id;
+	@Column(name = "antrag_id")
 	private long antragId;
+	@Column(name = "benutzer_id")
 	private String benutzerId;
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date zeitpunkt;
 	private String beschreibung;
 
