@@ -16,6 +16,8 @@ import de.fisp.anwesenheit.core.entities.AntragHistorie;
 import de.fisp.anwesenheit.core.entities.AntragStatus;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.BenutzerRolle;
+import de.fisp.anwesenheit.core.entities.Bewilligung;
+import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 import de.fisp.anwesenheit.core.entities.Rolle;
 
 @Configuration
@@ -30,7 +32,8 @@ public class HibernateConfig {
 		localSessionFactoryBean.setHibernateProperties(hibernateProperties);
 		Class<?>[] classes = { Antrag.class, AntragArt.class,
 				AntragHistorie.class, AntragStatus.class, Benutzer.class,
-				BenutzerRolle.class, Rolle.class };
+				BenutzerRolle.class, Rolle.class, BewilligungsStatus.class,
+				Bewilligung.class };
 		localSessionFactoryBean.setAnnotatedClasses(classes);
 		return localSessionFactoryBean;
 	}

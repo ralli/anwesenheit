@@ -37,7 +37,7 @@ public class BenutzerRolleDaoTest {
 
 	@Test
 	public void testInsertUpdateDelete() {
-		final String benutzerId = "demo";
+		final String benutzerId = "demotest";
 		final String rolle = "ADMIN";
 		insertBenutzer(benutzerId);
 		BenutzerRolle benutzerRolle = testDataFactory.createBenutzerRolle(

@@ -149,6 +149,57 @@
 			referencedTableName="rolle" baseColumnNames="rolle" baseTableName="benutzer_rolle"
 			referencedColumnNames="rolle" deleteCascade="true" />
 	</changeSet>
+	<changeSet id="createTableBewilligungStatus" author="raljuhn">
+		<createTable tableName="bewilligungs_status">
+			<column name="bewilligungs_status" type="varchar(10)">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="position" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="bezeichnung" type="varchar(80)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="createTableBewilligung" author="raljuhn">
+		<createTable tableName="bewilligung">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="antrag_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="position" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="bewilligungs_status" type="varchar(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="benutzer_id" type="varchar(30)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="addFKToBewilligung" author="raljuhn">
+		<addForeignKeyConstraint constraintName="fk_bewilligung_1"
+			referencedTableName="benutzer" baseColumnNames="benutzer_id"
+			baseTableName="benutzer_rolle" referencedColumnNames="benutzer_id"
+			deleteCascade="true" />
+		<addForeignKeyConstraint constraintName="fk_bewilligung_3"
+			referencedTableName="antrag" baseColumnNames="antrag_id"
+			baseTableName="bewilligung" referencedColumnNames="id" deleteCascade="true" />
+		<addForeignKeyConstraint constraintName="fk_bewilligung_2"
+			referencedTableName="bewilligungs_status" baseColumnNames="bewilligungs_status"
+			baseTableName="bewilligung" referencedColumnNames="bewilligungs_status"
+			deleteCascade="false" />
+	</changeSet>
 	<changeSet id="insertAntragArt" author="raljuhn">
 		<insert tableName="antrag_art">
 			<column name="antrag_art" value="URLAUB" />
@@ -193,6 +244,18 @@
 			<column name="rolle" value="ERFASSER" />
 			<column name="position" valueNumeric="2" />
 			<column name="bezeichnung" value="Erfasser" />
+		</insert>
+	</changeSet>
+	<changeSet id="insertBewilligungsStatus" author="raljuhn">
+		<insert tableName="bewilligungs_status">
+			<column name="bewilligungs_status" value="OFFEN" />
+			<column name="position" valueNumeric="1" />
+			<column name="bezeichnung" value="Offen" />
+		</insert>
+		<insert tableName="bewilligungs_status">
+			<column name="bewilligungs_status" value="BEWILLIGT" />
+			<column name="position" valueNumeric="2" />
+			<column name="bezeichnung" value="Bewilligt" />
 		</insert>
 	</changeSet>
 </databaseChangeLog>

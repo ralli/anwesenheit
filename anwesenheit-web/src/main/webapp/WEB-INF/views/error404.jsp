@@ -38,9 +38,9 @@
   </div>
   <div class="container">
   <div class="hero-unit">
-   <h1>Page not found</h1>
-   <p>The requested page does not exist</p>
-   <a href="<c:url value="/" />" class="btn btn-primary btn-large">Homepage</a>
+   <h1>Seite nicht gefunden</h1>
+   <p>Die angeforderte Seite existiert nicht.</p>
+   <a href="<c:url value="/" />" class="btn btn-primary btn-large">Startseite</a>
   </div>
   </div>
 </body>

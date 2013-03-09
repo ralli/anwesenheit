@@ -35,7 +35,7 @@ public class AntragDaoTest {
 
 	@Test
 	public void testInsertUpdateDelete() {
-		final String benutzerId = "demo";
+		final String benutzerId = "demotest";
 		final String antragArt = "URLAUB";
 		insertBenutzer(benutzerId);
 		Antrag antrag = testDataFactory.createAntrag(antragArt, benutzerId);

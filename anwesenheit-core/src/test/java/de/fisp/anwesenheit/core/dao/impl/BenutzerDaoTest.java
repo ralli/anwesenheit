@@ -29,7 +29,7 @@ public class BenutzerDaoTest {
 
 	@Test
 	public void testInsertUpdateDelete() {
-		final String benutzerId = "demo";
+		final String benutzerId = "demotest";
 		final String vorname = "Bongo";
 		Benutzer benutzer = testDataFactory.createBenutzer(benutzerId);
 		benutzerDao.insert(benutzer);
