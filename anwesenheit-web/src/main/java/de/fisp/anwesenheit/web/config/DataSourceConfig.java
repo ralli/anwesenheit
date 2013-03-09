@@ -14,7 +14,7 @@ public class DataSourceConfig {
 		datasource.setUrl("jdbc:mysql://localhost/anwesenheit");
 		datasource.setDriverClassName("com.mysql.jdbc.Driver");
 		datasource.setUsername("anwesenheit");
-		datasource.setPassword("anwesenheit-");
+		datasource.setPassword("anwesenheit");
 		datasource.setInitialSize(5);
 		datasource.setMaxActive(10);
 		datasource.setMaxIdle(5);

@@ -57,6 +57,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<!-- JSR 303 with Hibernate Validator -->
 		<dependency>

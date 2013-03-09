@@ -5,13 +5,17 @@
 <title>Home</title>
 </head>
 <body>
-  <div class="hero-unit">
-    <h1>Anwesenheitsverwaltung</h1>
-    <p>Spring Web MVC Demonstration</p>
-    <p>
-      <a class="btn btn-large" href="<c:url value="/vet"/>">Vets</a>
-      <a class="btn btn-large" href="<c:url value="/owner"/>">Owners</a>
-    </p>
-  </div>  
+	<div class="hero-unit">
+		<h1>Anwesenheitsverwaltung</h1>
+		<p>Spring Web MVC Demonstration</p>
+		<p>
+		<ul>
+			<li>Meine Anträge</li>
+			<li>Meine Bewilligungen</li>
+			<li>Meine Eintragungen</li>
+		</ul>
+		</p>
+	</div>
 </body>
+	<footer>Hase</footer>
 </html>
