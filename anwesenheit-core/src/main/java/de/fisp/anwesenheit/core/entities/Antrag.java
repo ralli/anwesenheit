@@ -6,9 +6,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 @Entity
 @Table(name = "antrag")
@@ -27,6 +31,9 @@ public class Antrag {
 	private Date bis;
 	@Column(name = "antrag_status")
 	private String antragStatus;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
+	private Benutzer benutzer;
 
 	public long getId() {
 		return id;
@@ -74,5 +81,22 @@ public class Antrag {
 
 	public void setAntragStatus(String antragStatus) {
 		this.antragStatus = antragStatus;
+	}
+
+	public Benutzer getBenutzer() {
+		return benutzer;
+	}
+
+	public void setBenutzer(Benutzer benutzer) {
+		this.benutzer = benutzer;
+	}
+
+	@Override
+	public String toString() {
+		ToStringBuilder toStringBuilder = new ToStringBuilder(this);
+		toStringBuilder.append("id", id).append("benutzerId", benutzerId)
+				.append("antragArt", antragArt).append("von", von)
+				.append("bis", bis).append("antragStatus", antragStatus);
+		return toStringBuilder.toString();
 	}
 }

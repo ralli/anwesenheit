@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -21,6 +23,9 @@ public class Bewilligung {
 	private String benutzerId;
 	@Column(name = "bewilligungs_status")
 	private String bewilligungsStatus;
+	@ManyToOne
+	@JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
+	private Benutzer benutzer;
 
 	public long getId() {
 		return id;
@@ -60,6 +65,14 @@ public class Bewilligung {
 
 	public void setBewilligungsStatus(String bewilligungsStatus) {
 		this.bewilligungsStatus = bewilligungsStatus;
+	}
+
+	public Benutzer getBenutzer() {
+		return benutzer;
+	}
+
+	public void setBenutzer(Benutzer benutzer) {
+		this.benutzer = benutzer;
 	}
 
 	@Override

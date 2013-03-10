@@ -38,6 +38,7 @@ public class TestDataFactory {
 		antrag.setBis(createDate(20, 3, 2013));
 		antrag.setAntragArt(antragArt);
 		antrag.setAntragStatus("NEU");
+		antrag.setBenutzer(createBenutzer(benutzerId));
 		return antrag;
 	}
 
@@ -54,6 +55,7 @@ public class TestDataFactory {
 		bewilligung.setPosition(1);
 		bewilligung.setBenutzerId(benutzerId);
 		bewilligung.setBewilligungsStatus("OFFEN");
+		bewilligung.setBenutzer(createBenutzer(benutzerId));
 		return bewilligung;
 	}
 }
