@@ -22,10 +22,13 @@ public class Bewilligung {
 	@Column(name = "benutzer_id")
 	private String benutzerId;
 	@Column(name = "bewilligungs_status")
-	private String bewilligungsStatus;
+	private String bewilligungsStatusId;
 	@ManyToOne
 	@JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
 	private Benutzer benutzer;
+	@ManyToOne
+	@JoinColumn(name = "bewilligungs_status", insertable = false, updatable = false)
+	private BewilligungsStatus bewilligungsStatus;
 
 	public long getId() {
 		return id;
@@ -59,11 +62,19 @@ public class Bewilligung {
 		this.benutzerId = benutzerId;
 	}
 
-	public String getBewilligungsStatus() {
+	public String getBewilligungsStatusId() {
+		return bewilligungsStatusId;
+	}
+
+	public void setBewilligungsStatusId(String bewilligungsStatusId) {
+		this.bewilligungsStatusId = bewilligungsStatusId;
+	}
+
+	public BewilligungsStatus getBewilligungsStatus() {
 		return bewilligungsStatus;
 	}
 
-	public void setBewilligungsStatus(String bewilligungsStatus) {
+	public void setBewilligungsStatus(BewilligungsStatus bewilligungsStatus) {
 		this.bewilligungsStatus = bewilligungsStatus;
 	}
 

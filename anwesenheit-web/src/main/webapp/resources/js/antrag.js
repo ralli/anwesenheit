@@ -1,37 +1,103 @@
-var module = angular.module("antrag", []);
-module.config(function($routeProvider) {
+var app = angular.module("antrag", ["ngResource"]);
+app.config(function($routeProvider) {
 	$routeProvider.when('/', {
-		templateUrl : 'views/details.html',
-		controller : 'DetailsCtrl'
+		templateUrl : 'index.html',
+		controller : 'ListCtrl'
+	})
+	.when("/new", {
+		templateUrl: 'new.html',
+		controller: 'NewCtrl',		
+	})
+	.when("/:id", {
+		templateUrl: 'details.html',
+		controller: 'DetailsCtrl',		
 	})
 });
 
-module.controller("MainCtrl", function($scope) {
-	$scope.greeting = "Wunder";
+app.controller("AppCtrl", function($rootScope) {
+	$rootScope.$on("$routeChangeError", function() {
+		console.log("Error changing routes");
+	})
 });
 
-module.controller("DetailsCtrl", function($scope) {
+app.controller("ListCtrl", function($scope) {
+	
+});
+
+app.controller("DetailsCtrl", function($scope, $http, $routeParams) {
+	$http.get("/anwesenheit-web/api/antraege/" + $routeParams.id)
+		.success(function(data, status, headers, config) {
+			$scope.antrag = angular.fromJson(data);
+		})
+		.error(function(data, status, headers, config) {
+			alert("Antrag nicht gefunden");
+		});		
+});
+
+app.controller("NewCtrl", function($scope) {
+	$scope.antragArtListe = [
+	                  	   { antragArt: "URLAUB", position: 1, bezeichnung: "Urlaub" },
+	                  	   { antragArt: "GLEITTAG", position: 2, bezeichnung: "Gleittag" },
+	                  	   { antragArt: "SONDER", position: 3, bezeichnung: "Sonderurlaub"}
+	                  	];
 	$scope.antrag = {
-		"id" : 10,
-		"antragArt" : "URLAUB",
-		"von" : "2013-04-01T00:00+0200",
-		"bis" : "2013-04-20T00:00+0200",
-		"benutzer" : {
-			"benutzerId" : "demo123",
-			"vorname" : "King",
-			"nachname" : "Kong",
-			"email" : "demo@demo.de"
-		},
-		"bewilligungen" : [ {
-			"id" : 1234,
-			"antragId" : 10,
-			"bewilligungsStatus" : "OFFEN",
-			"benutzer" : {
-				"benutzerId" : "chef123",
-				"vorname" : "King",
-				"nachname" : "Kong",
-				"email" : "demo@demo.de"
-			}
-		} ]
+		antragArt: $scope.antragArtListe[0],
+		von: "01.01.2013",
+		bis: "23.02.2013",
+		bewilliger: []
+	};
+	
+	$scope.createAntrag = function() {
+		if($scope.createForm.$valid)
+			console.log($scope.antrag);
+		else
+			console.log("Fehler");
+	};
+	
+	$scope.controlClassFor = function(flag) {
+		var result;
+		if(flag) {
+			result = "control-group";
+		}
+		else {
+			result = "control-group error";
+		}
+		return result;
+	};
+	$scope.addBewilliger = function() {
+		$scope.antrag.bewilliger.push($scope.bewilligerKey);
 	};
 });
+
+app.directive('autocomplete', ['$http', function($http) {
+    return function (scope, element, attrs) {
+        element.autocomplete({
+            minLength:3,
+            source:function (request, response) {
+                var url = "/anwesenheit-web/api/benutzer/search?q=" + request.term;
+                $http.get(url).success( function(data) {
+                    response(data.results);
+                });
+            },
+            focus:function (event, ui) {
+                element.val(ui.item.label);
+                return false;
+            },
+            select:function (event, ui) {
+                scope.myModelId.selected = ui.item.value;
+                scope.$apply;
+                return false;
+            },
+            change:function (event, ui) {
+                if (ui.item === null) {
+                    scope.myModelId.selected = null;
+                }
+            }
+        }).data("autocomplete")._renderItem = function (ul, item) {
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<a>" + item.label + "</a>")
+                .appendTo(ul);
+        };
+    }
+}]);

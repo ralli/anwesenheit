@@ -4,7 +4,7 @@
 
 	<!-- Appenders -->
 	<appender name="console" class="org.apache.log4j.ConsoleAppender">
-		<param name="Target" value="System.out" />
+		<param name="Target" value="System.out" />		
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{ISO8601} [%p] %c %m%n" />
 		</layout>
@@ -35,6 +35,7 @@
 	<!-- Root Logger -->
 	<root>
 		<appender-ref ref="console" />
+		<level value="info" />
 	</root>
 	
 </log4j:configuration>

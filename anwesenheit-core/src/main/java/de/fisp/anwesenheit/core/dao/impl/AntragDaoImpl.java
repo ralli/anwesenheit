@@ -33,8 +33,9 @@ public class AntragDaoImpl implements AntragDao {
 
 	@Override
 	public List<Antrag> findByBenutzerId(String benutzerId) {
-		Query query = getCurrentSession().createQuery(
-				"from Antrag a join fetch a.benutzer where a.benutzerId=:benutzerId order by a.von");
+		Query query = getCurrentSession()
+				.createQuery(
+						"from Antrag a join fetch a.benutzer join fetch a.antragArt join fetch a.antragStatus where a.benutzerId=:benutzerId order by a.von");
 		query.setString("benutzerId", benutzerId);
 		@SuppressWarnings("unchecked")
 		List<Antrag> list = query.list();
@@ -45,7 +46,7 @@ public class AntragDaoImpl implements AntragDao {
 	@Override
 	public Antrag findById(long id) {
 		Query query = getCurrentSession().createQuery(
-				"from Antrag a join fetch a.benutzer where a.id=:id");
+				"from Antrag a join fetch a.benutzer join fetch a.antragArt join fetch a.antragStatus where a.id=:id");
 		query.setLong("id", id);
 		@SuppressWarnings("unchecked")
 		List<Antrag> list = query.list();

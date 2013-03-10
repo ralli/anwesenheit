@@ -1,4 +1,9 @@
 body {
 	padding-top: 60px;
-	/* 60px to make the container go all the way to the bottom of the topbar */
+}
+
+ng-invalid {
+	border-color: red;
+	border-width: 1px;
+	border-style: solid;
 }

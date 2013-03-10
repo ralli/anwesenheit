@@ -24,16 +24,22 @@ public class Antrag {
 	@Column(name = "benutzer_id")
 	private String benutzerId;
 	@Column(name = "antrag_art")
-	private String antragArt;
+	private String antragArtId;
 	@Temporal(TemporalType.DATE)
 	private Date von;
 	@Temporal(TemporalType.DATE)
 	private Date bis;
 	@Column(name = "antrag_status")
-	private String antragStatus;
+	private String antragStatusId;
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
 	private Benutzer benutzer;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "antrag_status", insertable = false, updatable = false)
+	private AntragStatus antragStatus;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "antrag_art", insertable = false, updatable = false)
+	private AntragArt antragArt;
 
 	public long getId() {
 		return id;
@@ -51,12 +57,12 @@ public class Antrag {
 		this.benutzerId = benutzerId;
 	}
 
-	public String getAntragArt() {
-		return antragArt;
+	public String getAntragArtId() {
+		return antragArtId;
 	}
 
-	public void setAntragArt(String antragArt) {
-		this.antragArt = antragArt;
+	public void setAntragArtId(String antragArt) {
+		this.antragArtId = antragArt;
 	}
 
 	public Date getVon() {
@@ -75,12 +81,12 @@ public class Antrag {
 		this.bis = bis;
 	}
 
-	public String getAntragStatus() {
-		return antragStatus;
+	public String getAntragStatusId() {
+		return antragStatusId;
 	}
 
-	public void setAntragStatus(String antragStatus) {
-		this.antragStatus = antragStatus;
+	public void setAntragStatusId(String antragStatusId) {
+		this.antragStatusId = antragStatusId;
 	}
 
 	public Benutzer getBenutzer() {
@@ -91,12 +97,28 @@ public class Antrag {
 		this.benutzer = benutzer;
 	}
 
+	public AntragArt getAntragArt() {
+		return antragArt;
+	}
+
+	public void setAntragArt(AntragArt antragArt) {
+		this.antragArt = antragArt;
+	}
+
+	public void setAntragStatus(AntragStatus antragStatus) {
+		this.antragStatus = antragStatus;
+	}
+
+	public AntragStatus getAntragStatus() {
+		return antragStatus;
+	}
+
 	@Override
 	public String toString() {
 		ToStringBuilder toStringBuilder = new ToStringBuilder(this);
 		toStringBuilder.append("id", id).append("benutzerId", benutzerId)
-				.append("antragArt", antragArt).append("von", von)
-				.append("bis", bis).append("antragStatus", antragStatus);
+				.append("antragArt", antragArtId).append("von", von)
+				.append("bis", bis).append("antragStatusId", antragStatusId);
 		return toStringBuilder.toString();
 	}
 }

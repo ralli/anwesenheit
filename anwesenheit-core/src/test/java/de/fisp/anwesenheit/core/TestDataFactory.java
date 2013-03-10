@@ -6,6 +6,8 @@ import java.util.Date;
 import org.springframework.stereotype.Service;
 
 import de.fisp.anwesenheit.core.entities.Antrag;
+import de.fisp.anwesenheit.core.entities.AntragArt;
+import de.fisp.anwesenheit.core.entities.AntragStatus;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.BenutzerRolle;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
@@ -24,6 +26,22 @@ public class TestDataFactory {
 		return benutzer;
 	}
 
+	public AntragArt createAntragArt(String antragArt) {
+		AntragArt art = new AntragArt();
+		art.setAntragArt(antragArt);
+		art.setPosition(1);
+		art.setBezeichnung("Test");
+		return art;
+	}
+
+	public AntragStatus createAntragStatus(String antragStatus) {
+		AntragStatus status = new AntragStatus();
+		status.setAntragStatus(antragStatus);
+		status.setPosition(1);
+		status.setBezeichnung("Teststatus");
+		return status;
+	}
+
 	public Date createDate(int day, int month, int year) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month, day, 0, 0, 0);
@@ -32,12 +50,16 @@ public class TestDataFactory {
 	}
 
 	public Antrag createAntrag(String antragArt, String benutzerId) {
+		final String antragStatus = "NEU";
+
 		Antrag antrag = new Antrag();
 		antrag.setBenutzerId(benutzerId);
 		antrag.setVon(createDate(1, 3, 2013));
 		antrag.setBis(createDate(20, 3, 2013));
-		antrag.setAntragArt(antragArt);
-		antrag.setAntragStatus("NEU");
+		antrag.setAntragArtId(antragArt);
+		antrag.setAntragStatusId(antragStatus);
+		antrag.setAntragArt(createAntragArt(antragArt));
+		antrag.setAntragStatus(createAntragStatus(antragStatus));
 		antrag.setBenutzer(createBenutzer(benutzerId));
 		return antrag;
 	}

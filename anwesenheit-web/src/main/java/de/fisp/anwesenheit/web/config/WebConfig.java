@@ -16,7 +16,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "de.fisp.anwesenheit.core", "de.fisp.anwesenheit.web"  })
+@ComponentScan(basePackages = { "de.fisp" })
 public class WebConfig extends WebMvcConfigurerAdapter {
     private static final Logger log = LoggerFactory.getLogger(WebConfig.class);
 
