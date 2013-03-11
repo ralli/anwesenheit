@@ -47,7 +47,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
 	public Bewilligung findById(long id) {
 		Query query = getCurrentSession()
 				.createQuery(
-						"from Bewilligung b join fetch b.benutzer fetch b.bewilligungsStatus where b.id=:id");
+						"from Bewilligung b join fetch b.benutzer join fetch b.bewilligungsStatus where b.id=:id");
 		query.setLong("id", id);
 		@SuppressWarnings("unchecked")
 		List<Bewilligung> list = query.list();

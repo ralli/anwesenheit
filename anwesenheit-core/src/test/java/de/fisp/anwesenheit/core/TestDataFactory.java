@@ -11,6 +11,7 @@ import de.fisp.anwesenheit.core.entities.AntragStatus;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.BenutzerRolle;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
+import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 
 @Service
 public class TestDataFactory {
@@ -71,12 +72,25 @@ public class TestDataFactory {
 		return benutzerRolle;
 	}
 
+	public BewilligungsStatus createBewilligungsStatus(
+			String bewilligungsStatusId) {
+		BewilligungsStatus bewilligungsStatus = new BewilligungsStatus();
+		bewilligungsStatus.setBewilligungsStatus(bewilligungsStatusId);
+		bewilligungsStatus.setBezeichnung(bewilligungsStatusId);
+		bewilligungsStatus.setPosition(1);
+		return bewilligungsStatus;
+	}
+
 	public Bewilligung createBewilligung(long antragId, String benutzerId) {
+		final String bewilligungsStatusId = "OFFEN";
+
 		Bewilligung bewilligung = new Bewilligung();
 		bewilligung.setAntragId(antragId);
 		bewilligung.setPosition(1);
 		bewilligung.setBenutzerId(benutzerId);
-		bewilligung.setBewilligungsStatus("OFFEN");
+		bewilligung.setBewilligungsStatusId(bewilligungsStatusId);
+		bewilligung
+				.setBewilligungsStatus(createBewilligungsStatus(bewilligungsStatusId));
 		bewilligung.setBenutzer(createBenutzer(benutzerId));
 		return bewilligung;
 	}

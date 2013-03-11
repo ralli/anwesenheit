@@ -50,7 +50,7 @@ public class BewilligungDaoTest {
 		final String benutzerId = "testmitarbeiter";
 		final String chefId = "testchef";
 		final String antragsArt = "URLAUB";
-
+		final String bewilligungsStatus = "BEWILLIGT";
 		insertBenutzer(benutzerId);
 		insertBenutzer(chefId);
 		Antrag antrag = insertAntrag(antragsArt, benutzerId);
@@ -63,13 +63,13 @@ public class BewilligungDaoTest {
 		Assert.assertNotNull(bewilligung);
 		List<Bewilligung> list = bewilligungDao.findByAntrag(antrag.getId());
 		Assert.assertEquals(1, list.size());
-		bewilligung.setBewilligungsStatus("BEWILLIGT");
+		bewilligung.setBewilligungsStatusId(bewilligungsStatus);
 		bewilligungDao.update(bewilligung);
 		bewilligung = bewilligungDao.findById(id);
 		Assert.assertNotNull(bewilligung);
-		Assert.assertEquals("BEWILLIGT", bewilligung.getBewilligungsStatus());
+		Assert.assertEquals("BEWILLIGT", bewilligung.getBewilligungsStatusId());
 		bewilligungDao.delete(bewilligung);
 		bewilligung = bewilligungDao.findById(id);
-		Assert.assertNull(bewilligung);		
+		Assert.assertNull(bewilligung);
 	}
 }
