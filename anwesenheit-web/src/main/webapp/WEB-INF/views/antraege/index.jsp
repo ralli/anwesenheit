@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
-<title>Home</title>
+<title>Anträge</title>
 </head>
 <body>
 	<div ng-app="antrag">
@@ -73,7 +73,7 @@
                <div class="control-group">
                   <label class="control-label" for="bewilliger_key">Bewilliger</label>
                   <div class="controls">
-                     <input type="text" id="bewilliger_key" name="bewilliger" ng-model="bewilligerKey"  />
+                     <input type="text" id="bewilliger_key" name="bewilliger" ng-model="bewilligerKey" required />
                      <input type="submit" class="btn btn-primary" value="Hinzufügen" />
                   </div>
                </div>                

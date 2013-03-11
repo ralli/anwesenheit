@@ -8,10 +8,12 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.entities.AntragHistorie;
 
+@Service
 public class AntragHistorieDaoImpl implements AntragHistorieDao {
 	private Logger log = LoggerFactory.getLogger(AntragHistorieDaoImpl.class);
 	@Autowired

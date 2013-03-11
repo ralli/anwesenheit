@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import de.fisp.anwesenheit.core.TestDataFactory;
 import de.fisp.anwesenheit.core.dao.AntragDao;
+import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.domain.AntragListe;
@@ -30,6 +31,7 @@ public class AntragServiceTest {
 	private AntragDao antragDao;
 	private BewilligungDao bewilligungDao;
 	private BenutzerDao benutzerDao;
+	private AntragHistorieDao antragHistorieDao;
 
 	private AntragServiceImpl antragService;
 	private TestDataFactory testDataFactory;
@@ -40,8 +42,9 @@ public class AntragServiceTest {
 		antragDao = mock(AntragDao.class);
 		bewilligungDao = mock(BewilligungDao.class);
 		benutzerDao = mock(BenutzerDao.class);
+		antragHistorieDao = mock(AntragHistorieDao.class);
 		antragService = new AntragServiceImpl(antragDao, bewilligungDao,
-				benutzerDao);
+				benutzerDao, antragHistorieDao);
 	}
 
 	@Test
@@ -65,7 +68,7 @@ public class AntragServiceTest {
 		Assert.assertEquals(antragId, antragsDaten.getId());
 		Assert.assertEquals(benutzerId, antragsDaten.getBenutzer()
 				.getBenutzerId());
-		Assert.assertEquals(antragArt, antragsDaten.getAntragArt());
+		Assert.assertEquals(antragArt, antragsDaten.getAntragArt().getAntragArt());
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter writer = new StringWriter();
 		mapper.writeValue(writer, antragsDaten);
@@ -93,7 +96,7 @@ public class AntragServiceTest {
 
 		when(benutzerDao.findById(benutzerId)).thenReturn(benutzer);
 		when(antragDao.findByBenutzerId(benutzerId)).thenReturn(antragList);
-		
+
 		AntragListe bla = antragService.findByBenutzer(benutzerId);
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter writer = new StringWriter();

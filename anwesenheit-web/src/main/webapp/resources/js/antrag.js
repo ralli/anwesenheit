@@ -34,7 +34,12 @@ app.controller("DetailsCtrl", function($scope, $http, $routeParams) {
 		});		
 });
 
-app.controller("NewCtrl", function($scope) {
+function parseDate(s) {
+	var m = /([0-9]{2}).([0-9]{2}).([0-9]{4})/.exec(s);
+	return m[3] + "-" + m[2] + "-" + m[1];
+}
+
+app.controller("NewCtrl", function($scope, $http) {
 	$scope.antragArtListe = [
 	                  	   { antragArt: "URLAUB", position: 1, bezeichnung: "Urlaub" },
 	                  	   { antragArt: "GLEITTAG", position: 2, bezeichnung: "Gleittag" },
@@ -48,8 +53,20 @@ app.controller("NewCtrl", function($scope) {
 	};
 	
 	$scope.createAntrag = function() {
-		if($scope.createForm.$valid)
-			console.log($scope.antrag);
+		if($scope.createForm.$valid) {
+			var antragsDaten = {
+				antragArt: $scope.antrag.antragArt.antragArt,
+				von: parseDate($scope.antrag.von), 
+				bis: parseDate($scope.antrag.bis),
+				bewilliger: $scope.antrag.bewilliger
+			};
+			$http.post("/anwesenheit-web/api/antraege", angular.toJson(antragsDaten)).success(function(data) {
+				console.log(data);	
+			}).error(function(data) {
+				console.log(data);
+			});
+			
+		}
 		else
 			console.log("Fehler");
 	};
@@ -65,39 +82,9 @@ app.controller("NewCtrl", function($scope) {
 		return result;
 	};
 	$scope.addBewilliger = function() {
-		$scope.antrag.bewilliger.push($scope.bewilligerKey);
+		if($scope.bewilligungForm.$valid) {
+			$scope.antrag.bewilliger.push($scope.bewilligerKey);
+			$scope.bewilligerKey = "";
+		}
 	};
 });
-
-app.directive('autocomplete', ['$http', function($http) {
-    return function (scope, element, attrs) {
-        element.autocomplete({
-            minLength:3,
-            source:function (request, response) {
-                var url = "/anwesenheit-web/api/benutzer/search?q=" + request.term;
-                $http.get(url).success( function(data) {
-                    response(data.results);
-                });
-            },
-            focus:function (event, ui) {
-                element.val(ui.item.label);
-                return false;
-            },
-            select:function (event, ui) {
-                scope.myModelId.selected = ui.item.value;
-                scope.$apply;
-                return false;
-            },
-            change:function (event, ui) {
-                if (ui.item === null) {
-                    scope.myModelId.selected = null;
-                }
-            }
-        }).data("autocomplete")._renderItem = function (ul, item) {
-            return $("<li></li>")
-                .data("item.autocomplete", item)
-                .append("<a>" + item.label + "</a>")
-                .appendTo(ul);
-        };
-    }
-}]);

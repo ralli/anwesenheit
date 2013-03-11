@@ -1,6 +1,7 @@
 package de.fisp.anwesenheit.core.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.fisp.anwesenheit.core.dao.AntragDao;
+import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.domain.AntragListe;
@@ -17,7 +19,9 @@ import de.fisp.anwesenheit.core.domain.AntragListeEintrag;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
+import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
 import de.fisp.anwesenheit.core.entities.Antrag;
+import de.fisp.anwesenheit.core.entities.AntragHistorie;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.service.AntragService;
@@ -32,12 +36,16 @@ public class AntragServiceImpl implements AntragService {
 
 	private BenutzerDao benutzerDao;
 
+	private AntragHistorieDao antragHistorieDao;
+	
 	@Autowired
 	public AntragServiceImpl(AntragDao antragDao,
-			BewilligungDao bewilligungDao, BenutzerDao benutzerDao) {
+			BewilligungDao bewilligungDao, BenutzerDao benutzerDao,
+			AntragHistorieDao antragHistorieDao) {
 		this.antragDao = antragDao;
 		this.bewilligungDao = bewilligungDao;
 		this.benutzerDao = benutzerDao;
+		this.antragHistorieDao = antragHistorieDao;
 	}
 
 	@Override
@@ -113,5 +121,48 @@ public class AntragServiceImpl implements AntragService {
 				antrag.getAntragArt(), antrag.getAntragStatus(),
 				antrag.getVon(), antrag.getBis());
 		return eintrag;
+	}
+
+	@Override
+	@Transactional
+	public long createAntrag(CreateAntragCommand command) {
+		log.debug("createAntrag({})", command);
+
+		Antrag antrag = new Antrag();
+
+		antrag.setBenutzerId(command.getBenutzerId());
+		antrag.setAntragArtId(command.getAntragArt());
+		antrag.setAntragStatusId("NEU");
+		antrag.setVon(command.getVon());
+		antrag.setBis(command.getBis());
+
+		antragDao.insert(antrag);
+		int position = 1;
+		for (String bewilligerId : command.getBewilliger()) {
+			Bewilligung bewilligung = new Bewilligung();
+
+			bewilligung.setAntragId(antrag.getId());
+			bewilligung.setBenutzerId(bewilligerId);
+			bewilligung.setBewilligungsStatusId("OFFEN");
+			bewilligung.setPosition(position);
+			bewilligungDao.insert(bewilligung);
+
+			++position;
+		}
+
+		insertAntragHistorie(antrag);
+		
+		log.debug("createAntrag: id = {}", antrag.getId());
+		
+		return antrag.getId();
+	}
+
+	private void insertAntragHistorie(Antrag antrag) {
+		AntragHistorie antragHistorie = new AntragHistorie();
+		antragHistorie.setAntragId(antrag.getId());
+		antragHistorie.setBenutzerId(antrag.getBenutzerId());
+		antragHistorie.setZeitpunkt(new Date());
+		antragHistorie.setBeschreibung("Antrag angelegt");
+		antragHistorieDao.insert(antragHistorie);
 	}
 }
