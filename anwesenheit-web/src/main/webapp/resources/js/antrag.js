@@ -58,7 +58,7 @@ app.controller("NewCtrl", function($scope, $http) {
 				antragArt: $scope.antrag.antragArt.antragArt,
 				von: parseDate($scope.antrag.von), 
 				bis: parseDate($scope.antrag.bis),
-				bewilliger: $scope.antrag.bewilliger
+				bewilliger: $.map($scope.antrag.bewilliger, function(b) { return b.benutzerId })
 			};
 			$http.post("/anwesenheit-web/api/antraege", angular.toJson(antragsDaten)).success(function(data) {
 				console.log(data);	
@@ -81,10 +81,17 @@ app.controller("NewCtrl", function($scope, $http) {
 		}
 		return result;
 	};
+	
 	$scope.addBewilliger = function() {
 		if($scope.bewilligungForm.$valid) {
-			$scope.antrag.bewilliger.push($scope.bewilligerKey);
-			$scope.bewilligerKey = "";
+			var benutzerId = $scope.bewilligerKey;
+			$http.get("/anwesenheit-web/api/benutzer/" + benutzerId).success(function(data) {
+				var benutzerDaten = angular.fromJson(data);
+				$scope.antrag.bewilliger.push(benutzerDaten);
+				$scope.bewilligerKey = "";
+			}).error(function(data) {
+				console.log(data);
+			});
 		}
 	};
 });

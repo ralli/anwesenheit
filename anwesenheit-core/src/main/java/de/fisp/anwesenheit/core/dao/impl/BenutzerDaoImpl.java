@@ -2,9 +2,12 @@ package de.fisp.anwesenheit.core.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +68,20 @@ public class BenutzerDaoImpl implements BenutzerDao {
 		log.debug("delete({})", benutzer);
 		Session session = sessionFactory.getCurrentSession();
 		session.delete(benutzer);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Benutzer> search(String searchTerm) {
+		log.debug("search({})", searchTerm);
+		Session session = sessionFactory.getCurrentSession();
+		Criteria c = session.createCriteria(Benutzer.class);
+		String term = "%" + searchTerm + "%";
+		c.add(Restrictions.disjunction()
+				.add(Restrictions.ilike("benutzerId", term))
+				.add(Restrictions.ilike("vorname", term))
+				.add(Restrictions.ilike("nachname", term)));
+		c.addOrder(Order.asc("nachname"));
+		return c.list();
 	}
 }

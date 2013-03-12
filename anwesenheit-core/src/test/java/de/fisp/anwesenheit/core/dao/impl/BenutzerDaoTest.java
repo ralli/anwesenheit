@@ -1,5 +1,7 @@
 package de.fisp.anwesenheit.core.dao.impl;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,9 +41,13 @@ public class BenutzerDaoTest {
 		benutzerDao.update(benutzer);
 		benutzer = benutzerDao.findById(benutzerId);
 		Assert.assertNotNull(benutzer);
+		List<Benutzer> list = benutzerDao.search("demotest");
+		Assert.assertEquals(1, list.size());
 		Assert.assertEquals(vorname, benutzer.getVorname());
 		benutzerDao.delete(benutzer);
 		benutzer = benutzerDao.findById(benutzerId);
 		Assert.assertNull(benutzer);
+		
 	}
+	
 }

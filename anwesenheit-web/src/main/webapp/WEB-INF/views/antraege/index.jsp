@@ -79,7 +79,7 @@
                </div>                
             </form>
             <ul>
-              <li ng-repeat="b in antrag.bewilliger">{{b}}</b>
+              <li ng-repeat="b in antrag.bewilliger">{{b.vorname}} {{b.nachname}}</b>
             </ul>
             <p>{{createForm.$valid|json}}</p>
 		</script>

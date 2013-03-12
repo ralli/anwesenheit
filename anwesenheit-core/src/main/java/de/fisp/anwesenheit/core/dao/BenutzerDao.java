@@ -49,4 +49,6 @@ public interface BenutzerDao {
 	 *            Der zu löschende Benutzer.
 	 */
 	void delete(Benutzer benutzer);
+
+	List<Benutzer> search(String searchTerm);
 }
