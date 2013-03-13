@@ -37,7 +37,7 @@ public class AntragServiceImpl implements AntragService {
 	private BenutzerDao benutzerDao;
 
 	private AntragHistorieDao antragHistorieDao;
-	
+
 	@Autowired
 	public AntragServiceImpl(AntragDao antragDao,
 			BewilligungDao bewilligungDao, BenutzerDao benutzerDao,
@@ -151,9 +151,9 @@ public class AntragServiceImpl implements AntragService {
 		}
 
 		insertAntragHistorie(antrag);
-		
+
 		log.debug("createAntrag: id = {}", antrag.getId());
-		
+
 		return antrag.getId();
 	}
 
@@ -164,5 +164,15 @@ public class AntragServiceImpl implements AntragService {
 		antragHistorie.setZeitpunkt(new Date());
 		antragHistorie.setBeschreibung("Antrag angelegt");
 		antragHistorieDao.insert(antragHistorie);
+	}
+
+	@Override
+	@Transactional
+	public boolean deleteAntrag(long antragId) {
+		Antrag antrag = antragDao.findById(antragId);
+		if (antrag == null)
+			return false;
+		antragDao.delete(antrag);
+		return true;
 	}
 }

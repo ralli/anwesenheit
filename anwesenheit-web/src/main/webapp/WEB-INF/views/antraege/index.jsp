@@ -51,13 +51,13 @@
                <div ng-class="controlClassFor(createForm.von.$valid)">
                   <label for="antrag_von" class="control-label">Von</label>
                   <div class="controls">
-                     <input type="text" id="antrag_von" name="von" ng-model="antrag.von" ng-pattern="/[0-9]{2}\.[0-9]{2}\.[0-9]{4}/" required />
+                     <input type="text" id="antrag_von" name="von" ng-model="antrag.von" ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
                   </div>
                </div>
                <div ng-class="controlClassFor(createForm.bis.$valid)">
                   <label for="antrag_bis" class="control-label">Bis</label>
                   <div class="controls">
-                     <input type="text" id="antrag_bis" name="bis" ng-model="antrag.bis"  ng-pattern="/[0-9]{2}\.[0-9]{2}\.[0-9]{4}/" required />
+                     <input type="text" id="antrag_bis" name="bis" ng-model="antrag.bis"  ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
                   </div>
                </div>
   			   <div class="control-group">
@@ -140,6 +140,7 @@
 			</table>
 		</script>
 	</div>
+	<script src="<c:url value="/resources/js/underscore-min.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular-resource.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/antrag.js?reload=1"/>"></script>

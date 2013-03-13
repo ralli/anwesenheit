@@ -41,7 +41,7 @@ public class BenutzerApiController {
 		}
 	}
 
-	private String errorJson(String message) {
+	private String jsonMessage(String message) {
 		Map<String, Object> map = new LinkedHashMap<>();
 		map.put("message", message);
 		return toJson(map);
@@ -64,7 +64,7 @@ public class BenutzerApiController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		if(daten==null) {
-			return new ResponseEntity<String>(errorJson("Benutzer nicht gefunden"), headers, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(jsonMessage("Benutzer nicht gefunden"), headers, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
 	}

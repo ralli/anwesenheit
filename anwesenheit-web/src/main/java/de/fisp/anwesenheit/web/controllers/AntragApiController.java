@@ -37,7 +37,7 @@ public class AntragApiController {
 		return "juhnke_r";
 	}
 
-	private String toJSon(Object object) {
+	private String toJson(Object object) {
 		try {
 			StringWriter stringWriter = new StringWriter();
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -57,10 +57,10 @@ public class AntragApiController {
 		AntragListe liste = antragService.findByBenutzer(benutzerId);
 		if (liste == null) {
 			return new ResponseEntity<String>(
-					"{message: \"Benutzer existiert nicht\"}", headers,
+					jsonMessage("Benutzer existiert nicht"), headers,
 					HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<String>(toJSon(liste), headers, HttpStatus.OK);
+		return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -71,10 +71,32 @@ public class AntragApiController {
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		if (daten == null) {
 			return new ResponseEntity<String>(
-					"{message: \"Antrag existiert nicht\"}", headers,
+					jsonMessage("Antrag existiert nicht"), headers,
 					HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<String>(toJSon(daten), headers, HttpStatus.OK);
+		return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
+	}
+
+	private String jsonMessage(String message) {
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("message", message);
+		return toJson(map);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public @ResponseBody
+	ResponseEntity<String> delete(@PathVariable long id) {
+		boolean result = antragService.deleteAntrag(id);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+		if (result == false) {
+			return new ResponseEntity<String>(
+					jsonMessage("Antrag existiert nicht"), headers,
+					HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<String>(jsonMessage("Ok"), headers,
+				HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -83,24 +105,19 @@ public class AntragApiController {
 			@RequestBody @Valid CreateAntragCommand createAntragCommand) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-//		if (bindingResult.hasErrors()) {
-//			return new ResponseEntity<String>(
-//					"{message: \"Fehlerhafter Antrag\"}", headers,
-//					HttpStatus.BAD_REQUEST);
-//		}
 		try {
 			createAntragCommand.setBenutzerId(getCurrentUser());
 			long antragId = antragService.createAntrag(createAntragCommand);
 			Map<String, Object> result = new LinkedHashMap<String, Object>();
 			result.put("antragId", antragId);
-			return new ResponseEntity<String>(toJSon(result), headers,
+			return new ResponseEntity<String>(toJson(result), headers,
 					HttpStatus.OK);
 		} catch (Exception ex) {
 			logger.error("Fehler beim Speichern", ex);
 			Map<String, Object> result = new LinkedHashMap<String, Object>();
 			result.put("message", ex.getMessage());
-			return new ResponseEntity<String>(toJSon(result), headers,
-					HttpStatus.OK);
+			return new ResponseEntity<String>(toJson(result), headers,
+					HttpStatus.BAD_REQUEST);
 		}
 	}
 }

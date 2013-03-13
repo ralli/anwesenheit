@@ -48,4 +48,10 @@ public interface AntragService {
 	 * @return Die id des angelegten Antrags
 	 */
 	long createAntrag(CreateAntragCommand command);
+	
+	/**
+	 * Löscht einen Antrag
+	 * @param antragId
+	 */
+	boolean deleteAntrag(long antragId);
 }

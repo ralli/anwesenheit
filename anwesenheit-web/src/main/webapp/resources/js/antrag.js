@@ -35,7 +35,7 @@ app.controller("DetailsCtrl", function($scope, $http, $routeParams) {
 });
 
 function parseDate(s) {
-	var m = /([0-9]{2}).([0-9]{2}).([0-9]{4})/.exec(s);
+	var m = /([0-9][0-9]?).([0-9][0-9]?).([0-9]{4})/.exec(s);
 	return m[3] + "-" + m[2] + "-" + m[1];
 }
 
@@ -85,6 +85,8 @@ app.controller("NewCtrl", function($scope, $http) {
 	$scope.addBewilliger = function() {
 		if($scope.bewilligungForm.$valid) {
 			var benutzerId = $scope.bewilligerKey;
+			if(_.find($scope.antrag.bewilliger, function(b) { return _.isEqual(b.benutzerId, benutzerId) }))
+				return;
 			$http.get("/anwesenheit-web/api/benutzer/" + benutzerId).success(function(data) {
 				var benutzerDaten = angular.fromJson(data);
 				$scope.antrag.bewilliger.push(benutzerDaten);
