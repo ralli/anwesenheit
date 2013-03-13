@@ -3,6 +3,7 @@ package de.fisp.anwesenheit.core.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
+import de.fisp.anwesenheit.core.domain.LabelValue;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.service.BenutzerService;
 
@@ -36,13 +38,30 @@ public class BenutzerServiceImpl implements BenutzerService {
 
 	@Override
 	@Transactional
-	public List<BenutzerDaten> search(String searchTerm) {
+	public List<LabelValue> search(String searchTerm) {
 		List<Benutzer> list = benutzerDao.search(searchTerm);
-		List<BenutzerDaten> result = new ArrayList<BenutzerDaten>();
+		List<LabelValue> result = new ArrayList<LabelValue>();
 		for (Benutzer b : list) {
-			result.add(createBenutzerDaten(b));
+			result.add(createLabelValueFromBenutzer(b));
 		}
 		return result;
+	}
+
+	private LabelValue createLabelValueFromBenutzer(Benutzer benutzer) {
+		List<String> nameParts = new ArrayList<String>();
+
+		if (StringUtils.isNotBlank(benutzer.getVorname()))
+			nameParts.add(benutzer.getVorname());
+
+		if (StringUtils.isNotBlank(benutzer.getNachname()))
+			nameParts.add(benutzer.getNachname());
+
+		if (nameParts.isEmpty())
+			nameParts.add(benutzer.getBenutzerId());
+
+		String fullName = StringUtils.join(nameParts, ' ');
+
+		return new LabelValue(fullName, benutzer.getBenutzerId());
 	}
 
 	private BenutzerDaten createBenutzerDaten(Benutzer benutzer) {

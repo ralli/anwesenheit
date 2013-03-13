@@ -20,7 +20,10 @@
 	rel="stylesheet" />
 <link href="<c:url value="/bootstrap/css/bootstrap-responsive.css" />"
 	rel="stylesheet" />
-<link href="<c:url value="/resources/test.css?reload=1" />" rel="stylesheet" />
+<link href="<c:url value="/resources/jquery-ui.css" />"
+	rel="stylesheet" />
+<link href="<c:url value="/resources/test.css?reload=1" />"
+	rel="stylesheet" />
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
@@ -49,7 +52,7 @@
 						<li><a href="<c:url value="/" />">Home</a></li>
 						<li><a href="<c:url value="/antraege" />">Anträge</a></li>
 						<li><a href="<c:url value="/bewilligungen" />">Bewilligungen</a></li>
-						<li><a href="<c:url value="/eintragungen" />">Eintragungen</a></li>						
+						<li><a href="<c:url value="/eintragungen" />">Eintragungen</a></li>
 					</ul>
 					<b:currentUserName id="current-user-name">Test</b:currentUserName>
 				</div>

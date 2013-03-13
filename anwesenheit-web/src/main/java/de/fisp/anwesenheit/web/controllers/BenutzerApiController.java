@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
+import de.fisp.anwesenheit.core.domain.LabelValue;
 import de.fisp.anwesenheit.core.service.BenutzerService;
 
 @Controller
@@ -50,10 +51,10 @@ public class BenutzerApiController {
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public @ResponseBody
 	ResponseEntity<String> search(
-			@RequestParam(value = "q", required = true) String q) {
+			@RequestParam(value = "term", required = true) String term) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-		List<BenutzerDaten> list = benutzerService.search(q);
+		List<LabelValue> list = benutzerService.search(term);
 		return new ResponseEntity<String>(toJson(list), headers, HttpStatus.OK);
 	}
 
@@ -63,8 +64,10 @@ public class BenutzerApiController {
 		BenutzerDaten daten = benutzerService.findByBenutzerId(benutzerId);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-		if(daten==null) {
-			return new ResponseEntity<String>(jsonMessage("Benutzer nicht gefunden"), headers, HttpStatus.NOT_FOUND);
+		if (daten == null) {
+			return new ResponseEntity<String>(
+					jsonMessage("Benutzer nicht gefunden"), headers,
+					HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
 	}

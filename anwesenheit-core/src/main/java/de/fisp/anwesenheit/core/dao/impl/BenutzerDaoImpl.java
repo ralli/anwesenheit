@@ -82,6 +82,7 @@ public class BenutzerDaoImpl implements BenutzerDao {
 				.add(Restrictions.ilike("vorname", term))
 				.add(Restrictions.ilike("nachname", term)));
 		c.addOrder(Order.asc("nachname"));
+		c.setMaxResults(10);
 		return c.list();
 	}
 }

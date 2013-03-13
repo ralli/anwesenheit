@@ -73,15 +73,18 @@
                <div class="control-group">
                   <label class="control-label" for="bewilliger_key">Bewilliger</label>
                   <div class="controls">
-                     <input type="text" id="bewilliger_key" name="bewilliger" ng-model="bewilligerKey" required />
+                     <input type="text" id="bewilliger_key" name="bewilliger" ng-model="bewilligerKey" benutzer-autocomplete="true" select="benutzerSelected()" required />
                      <input type="submit" class="btn btn-primary" value="Hinzufügen" />
                   </div>
                </div>                
             </form>
             <ul>
-              <li ng-repeat="b in antrag.bewilliger">{{b.vorname}} {{b.nachname}}</b>
+              <li ng-repeat="b in antrag.bewilliger">
+                 {{b.vorname}} {{b.nachname}}
+                 <a ng-href="" ng-click="removeBewilliger(b)">Löschen</a>
+              </li>
             </ul>
-            <p>{{createForm.$valid|json}}</p>
+            <p>{{bewilligerKey}}</p>
 		</script>
 		<script type="text/ng-template" id="details.html">
 			<h1>Antrag</h1>
@@ -140,6 +143,7 @@
 			</table>
 		</script>
 	</div>
+	<script src="<c:url value="/resources/js/jquery-ui.js"/>"></script>
 	<script src="<c:url value="/resources/js/underscore-min.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular-resource.min.js"/>"></script>
