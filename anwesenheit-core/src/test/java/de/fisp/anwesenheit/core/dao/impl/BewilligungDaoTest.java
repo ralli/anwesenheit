@@ -68,6 +68,8 @@ public class BewilligungDaoTest {
 		bewilligung = bewilligungDao.findById(id);
 		Assert.assertNotNull(bewilligung);
 		Assert.assertEquals("BEWILLIGT", bewilligung.getBewilligungsStatusId());
+		int maxPosition = bewilligungDao.getMaxPosition(antrag.getId());
+		Assert.assertEquals(1, maxPosition);
 		bewilligungDao.delete(bewilligung);
 		bewilligung = bewilligungDao.findById(id);
 		Assert.assertNull(bewilligung);

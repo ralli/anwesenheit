@@ -9,7 +9,7 @@
 		<div ng-init="antragListe=<c:out value="${antragListe}"/>">
 			<div ng-view></div>
 		</div>
-		
+
 		<script type="text/ng-template" id="index.html">
 			<h1>Offene Anträge</h1>
 			<p><strong>Benutzer:</strong> {{antragListe.benutzer.vorname}}
@@ -145,9 +145,9 @@
 				</tbody>
 			</table>
 		</script>
-		
 
-        <script type="text/ng-template" id="edit.html">
+
+		<script type="text/ng-template" id="edit.html">
             <h1>Antrag bearbeiten</h1>            
             <form name="editForm" class="form form-horizontal">
               <legend>Antrag</legend>
@@ -188,6 +188,25 @@
                   </div>
                </div>
             </form>
+            <h2>Bewilligungen</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td>Bewilliger</td>
+                        <td>Status</td>
+                        <td>Aktionen</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="b in antrag.bewilligungen">
+                        <td>{{b.benutzer.vorname}} {{b.benutzer.nachname}}</td>
+    					<td>{{b.bewilligungsStatus.bezeichnung}}</td>
+                        <td>
+                            <a ng-href="" href="" ng-click="deleteBewilligung(b)">Löschen</a>
+                        </td>
+  					</tr>
+				</tbody>
+			</table>
             <p>{{antrag|json}}</p>
         </script>
 	</div>

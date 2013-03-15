@@ -10,6 +10,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 @Entity
 @Table(name = "antrag_historie")
 public class AntragHistorie {
@@ -62,5 +64,10 @@ public class AntragHistorie {
 
 	public void setBeschreibung(String beschreibung) {
 		this.beschreibung = beschreibung;
+	}
+	
+	@Override
+	public String toString() {
+	  return ToStringBuilder.reflectionToString(this);
 	}
 }

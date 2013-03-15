@@ -15,48 +15,51 @@ import de.fisp.anwesenheit.core.entities.AntragHistorie;
 
 @Service
 public class AntragHistorieDaoImpl implements AntragHistorieDao {
-	private Logger log = LoggerFactory.getLogger(AntragHistorieDaoImpl.class);
-	@Autowired
-	private SessionFactory sessionFactory;
+  private Logger logger = LoggerFactory.getLogger(AntragHistorieDaoImpl.class);
+  @Autowired
+  private SessionFactory sessionFactory;
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
 
-	private Session getCurrentSession() {
-		Session session = sessionFactory.getCurrentSession();
-		if (session == null) {
-			throw new RuntimeException("no current session");
-		}
-		return session;
-	}
+  private Session getCurrentSession() {
+    Session session = sessionFactory.getCurrentSession();
+    if (session == null) {
+      throw new RuntimeException("no current session");
+    }
+    return session;
+  }
 
-	@Override
-	public List<AntragHistorie> findByAntrag(long antragId) {
-		Query query = getCurrentSession()
-				.createQuery(
-						"from AntragHistorie a where a.antragId=:antragId order by a.zeitpunkt desc");
-		@SuppressWarnings("unchecked")
-		List<AntragHistorie> list = query.list();
-		log.debug("findByAntrag({}): count = {}", antragId, list.size());
-		return list;
-	}
+  @Override
+  public List<AntragHistorie> findByAntrag(long antragId) {
+    Query query = getCurrentSession().createQuery("from AntragHistorie a where a.antragId=:antragId order by a.zeitpunkt desc");
+    @SuppressWarnings("unchecked")
+    List<AntragHistorie> list = query.list();
+    logger.debug("findByAntrag({}): count = {}", antragId, list.size());
+    return list;
+  }
 
-	@Override
-	public AntragHistorie findById(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  @Override
+  public AntragHistorie findById(long id) {
+    Query query = getCurrentSession().createQuery("from AntragHistorie ah where ah.id = :id");
+    query.setLong("id", id);
+    @SuppressWarnings("unchecked")
+    List<AntragHistorie> list = query.list();
+    AntragHistorie result = list.isEmpty() ? null : list.get(0);
+    logger.debug("findById({}) = {}", result);
+    return result;
+  }
 
-	@Override
-	public void insert(AntragHistorie antragHistorie) {
-		// TODO Auto-generated method stub
+  @Override
+  public void insert(AntragHistorie antragHistorie) {
+    logger.debug("insert({})", antragHistorie);
+    getCurrentSession().save(antragHistorie);
+  }
 
-	}
-
-	@Override
-	public void delete(AntragHistorie antragHistorie) {
-		// TODO Auto-generated method stub
-
-	}
+  @Override
+  public void delete(AntragHistorie antragHistorie) {
+    logger.debug("delete({})", antragHistorie);
+    getCurrentSession().delete(antragHistorie);
+  }
 }

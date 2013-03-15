@@ -50,4 +50,6 @@ public interface BewilligungDao {
 	 *            Die zu löschende Bewilligung.
 	 */
 	void delete(Bewilligung bewilligung);
+	
+	int getMaxPosition(long antragId);
 }

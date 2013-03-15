@@ -78,7 +78,7 @@ public class AntragApiController {
 	}
 
 	private String jsonMessage(String message) {
-		Map<String, Object> map = new LinkedHashMap<>();
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("message", message);
 		return toJson(map);
 	}

@@ -73,4 +73,15 @@ public class BewilligungDaoImpl implements BewilligungDao {
 		log.debug("delete({})", bewilligung);
 		getCurrentSession().delete(bewilligung);
 	}
+	
+	@Override
+	public int getMaxPosition(long antragId) {
+	    Query query = getCurrentSession().createQuery("select max(b.position) from Bewilligung b where b.antragId=:antragId");
+	    query.setLong("antragId", antragId);
+	    @SuppressWarnings("unchecked")
+        List<Integer> list = query.list();
+	    int maxPosition = ( (Integer)list.get(0) ).intValue(); 
+	    log.debug("getMaxPosition(antragId={}) = {}", antragId, maxPosition);
+	    return maxPosition;
+	}
 }

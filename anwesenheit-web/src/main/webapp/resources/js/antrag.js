@@ -48,10 +48,14 @@ app.factory("benutzerService", function($resource) {
     return $resource("/anwesenheit-web/api/benutzer/:id");
 });
 
+app.factory("bewilligungService", function($resource) {
+    return $resource("/anwesenheit-web/api/bewilligung/:id");
+});
+
 app.controller("AppCtrl", function($rootScope) {
     $rootScope.$on("$routeChangeError", function() {
         console.log("Error changing routes");
-    })
+    });
 });
 
 app.controller("ListCtrl", function($scope, antragService) {
@@ -59,7 +63,7 @@ app.controller("ListCtrl", function($scope, antragService) {
         antragService.delete({ "id": antrag.id }, function(data) {
             $scope.antragListe = antragService.get();        
         });
-    }
+    };
 });
 
 app.controller("DetailsCtrl", function($scope, $routeParams, antragService) {
@@ -91,7 +95,7 @@ app.controller("NewCtrl", function($scope, antragService, antragArtService,
                 von : parseDate($scope.antrag.von),
                 bis : parseDate($scope.antrag.bis),
                 bewilliger : $.map($scope.antrag.bewilliger, function(b) {
-                    return b.benutzerId
+                    return b.benutzerId;
                 })
             };
 
@@ -100,7 +104,7 @@ app.controller("NewCtrl", function($scope, antragService, antragArtService,
             }, function(data) {
                 console.log(data);
             });
-        }
+        };
     };
 
     $scope.controlClassFor = function(flag) {
@@ -150,7 +154,7 @@ app.controller("NewCtrl", function($scope, antragService, antragArtService,
 });
 
 app.controller("EditCtrl", function($scope, $routeParams, $filter, antragArtService,
-        antragService, benutzerService) {
+        antragService, benutzerService, bewilligungService) {
     $scope.antragArtListe = antragArtService.get({});
     $scope.antrag = antragService.get({
         "id" : $routeParams.id
@@ -176,8 +180,10 @@ app.controller("EditCtrl", function($scope, $routeParams, $filter, antragArtServ
         
     };
     
-    $scope.deleteBewilliger = function(b) {
-        
+    $scope.deleteBewilligung = function(b) {
+        bewilligungService.delete({"id" : b.id }, function(data) {
+           console.log(data); 
+        });
     };
 });
 
