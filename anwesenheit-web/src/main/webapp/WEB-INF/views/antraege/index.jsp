@@ -9,7 +9,6 @@
 		<div ng-init="antragListe=<c:out value="${antragListe}"/>">
 			<div ng-view></div>
 		</div>
-		<p>
 		
 		<script type="text/ng-template" id="index.html">
 			<h1>Offene Anträge</h1>
@@ -33,7 +32,11 @@
 						<td>{{antrag.antragStatus.bezeichnung}}</td>
 						<td>{{antrag.von|date:'dd.MM.yyyy'}}</td>
 						<td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
-						<td><a ng-href="#/{{antrag.id}}" href>Details</a>
+						<td>
+                            <a ng-href="#/{{antrag.id}}" href>Details</a>
+                            <a ng-href="#/{{antrag.id}}/edit" href>Bearbeiten</a>
+                            <a href="" ng-click="deleteAntrag(antrag)">Löschen</a>
+                        </td>
 					</tr>
 				</tbody>
 			</table>
@@ -45,7 +48,7 @@
                <div class="control-group">
                   <label class="control-label" for="antrag_art">Art</label>
                   <div class="controls">
-                     <select id="antrag_art" name="antragArt" ng-model="antrag.antragArt" ng-options="a.bezeichnung for a in antragArtListe" />
+                     <select id="antrag_art" name="antragArt" ng-model="antrag.antragArt.antragArt" ng-options="a.antragArt as a.bezeichnung for a in antragArtListe" />
                   </div>
                </div>
                <div ng-class="controlClassFor(createForm.von.$valid)">
@@ -142,6 +145,51 @@
 				</tbody>
 			</table>
 		</script>
+		
+
+        <script type="text/ng-template" id="edit.html">
+            <h1>Antrag bearbeiten</h1>            
+            <form name="editForm" class="form form-horizontal">
+              <legend>Antrag</legend>
+              <div class="control-group">
+                  <label class="control-label">Antragsteller</label>
+                  <div class="controls">
+                     <span class="uneditable-input">{{antrag.benutzer.vorname}} {{antrag.benutzer.nachname}}</span>
+                  </div>
+              </div>
+              <div class="control-group">
+                  <label class="control-label">Antragststatus</label>
+                  <div class="controls">
+                     <span class="uneditable-input">{{antrag.antragStatus.bezeichnung}}</span>
+                  </div>
+              </div>
+              <div class="control-group">
+                  <label class="control-label" for="antrag_art">Art</label>
+                  <div class="controls">
+                     <select id="antrag_art" name="antragArt" ng-model="antrag.antragArt.antragArt" ng-options="a.antragArt as a.bezeichnung for a in antragArtListe" />
+                  </div>
+               </div>
+               <div ng-class="controlClassFor(editForm.von.$valid)">
+                  <label for="antrag_von" class="control-label">Von</label>
+                  <div class="controls">
+                     <input type="text" id="antrag_von" name="von" ng-model="antrag.von" ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+                  </div>
+               </div>
+               <div ng-class="controlClassFor(editForm.bis.$valid)">
+                  <label for="antrag_bis" class="control-label">Bis</label>
+                  <div class="controls">
+                     <input type="text" id="antrag_bis" name="bis" ng-model="antrag.bis"  ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+                  </div>
+               </div>
+               <div class="control-group">
+                  <div class="controls">
+                     <input type="submit" class="btn btn-primary" value="Speichern"/>
+                     <a ng-href="#" class="btn">Zurück</a>
+                  </div>
+               </div>
+            </form>
+            <p>{{antrag|json}}</p>
+        </script>
 	</div>
 	<script src="<c:url value="/resources/js/jquery-ui.js"/>"></script>
 	<script src="<c:url value="/resources/js/underscore-min.js"/>"></script>

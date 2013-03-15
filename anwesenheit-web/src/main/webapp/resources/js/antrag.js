@@ -6,10 +6,46 @@ app.config(function($routeProvider) {
     }).when("/new", {
         templateUrl : 'new.html',
         controller : 'NewCtrl',
-    }).when("/:id", {
+    })
+    .when("/:id/edit", {
+        templateUrl : 'edit.html',
+        controller : 'EditCtrl',        
+    })
+    .when("/:id", {
         templateUrl : 'details.html',
         controller : 'DetailsCtrl',
     })
+});
+
+app.factory("antragService", function($resource) {
+    return $resource("/anwesenheit-web/api/antraege/:id");
+});
+
+app.factory("antragArtService", function() {
+    var result = {};
+    result.get = function(id, success, error) {
+        var x = [ {
+            antragArt : "URLAUB",
+            position : 1,
+            bezeichnung : "Urlaub"
+        }, {
+            antragArt : "GLEITZEIT",
+            position : 2,
+            bezeichnung : "Gleitzeit"
+        }, {
+            antragArt : "SONDER",
+            position : 3,
+            bezeichnung : "Sonderurlaub"
+        } ];
+        if(success) 
+            success.call({}, x);
+        return x;
+    };
+    return result;
+});
+
+app.factory("benutzerService", function($resource) {
+    return $resource("/anwesenheit-web/api/benutzer/:id");
 });
 
 app.controller("AppCtrl", function($rootScope) {
@@ -18,16 +54,17 @@ app.controller("AppCtrl", function($rootScope) {
     })
 });
 
-app.controller("ListCtrl", function($scope) {
-
+app.controller("ListCtrl", function($scope, antragService) {
+    $scope.deleteAntrag = function(antrag) {
+        antragService.delete({ "id": antrag.id }, function(data) {
+            $scope.antragListe = antragService.get();        
+        });
+    }
 });
 
-app.controller("DetailsCtrl", function($scope, $http, $routeParams) {
-    $http.get("/anwesenheit-web/api/antraege/" + $routeParams.id).success(
-            function(data, status, headers, config) {
-                $scope.antrag = angular.fromJson(data);
-            }).error(function(data, status, headers, config) {
-        alert("Antrag nicht gefunden");
+app.controller("DetailsCtrl", function($scope, $routeParams, antragService) {
+    $scope.antrag = antragService.get({
+        "id" : $routeParams.id
     });
 });
 
@@ -36,26 +73,16 @@ function parseDate(s) {
     return m[3] + "-" + m[2] + "-" + m[1];
 }
 
-app.controller("NewCtrl", function($scope, $http) {
-    $scope.antragArtListe = [ {
-        antragArt : "URLAUB",
-        position : 1,
-        bezeichnung : "Urlaub"
-    }, {
-        antragArt : "GLEITTAG",
-        position : 2,
-        bezeichnung : "Gleittag"
-    }, {
-        antragArt : "SONDER",
-        position : 3,
-        bezeichnung : "Sonderurlaub"
-    } ];
-    $scope.antrag = {
-        antragArt : $scope.antragArtListe[0],
-        von : "01.01.2013",
-        bis : "23.02.2013",
-        bewilliger : []
-    };
+app.controller("NewCtrl", function($scope, antragService, antragArtService,
+        benutzerService) {
+    $scope.antragArtListe = antragArtService.get({}, function(liste) {
+        $scope.antrag = {
+            antragArt : _.clone(liste[0]),
+            von : "01.01.2013",
+            bis : "23.02.2013",
+            bewilliger : []
+        };
+    });
 
     $scope.createAntrag = function() {
         if ($scope.createForm.$valid) {
@@ -67,15 +94,13 @@ app.controller("NewCtrl", function($scope, $http) {
                     return b.benutzerId
                 })
             };
-            $http.post("/anwesenheit-web/api/antraege",
-                    angular.toJson(antragsDaten)).success(function(data) {
+
+            antragService.save(angular.toJson(antragsDaten), function(data) {
                 console.log(data);
-            }).error(function(data) {
+            }, function(data) {
                 console.log(data);
             });
-
-        } else
-            console.log("Fehler");
+        }
     };
 
     $scope.controlClassFor = function(flag) {
@@ -89,19 +114,19 @@ app.controller("NewCtrl", function($scope, $http) {
     };
 
     $scope._addBewilliger = function(benutzerId) {
-        if (_.find($scope.antrag.bewilliger, function(b) { return _.isEqual(b.benutzerId, benutzerId); })) {
+        if (_.find($scope.antrag.bewilliger, function(b) {
+            return _.isEqual(b.benutzerId, benutzerId);
+        })) {
             return;
-        }            
-        $http.get("/anwesenheit-web/api/benutzer/" + benutzerId).success(
-                function(data) {
-                    var benutzerDaten = angular.fromJson(data);
-                    $scope.antrag.bewilliger.push(benutzerDaten);
-                    $scope.bewilligerKey = "";
-                }).error(function(data) {
-            console.log(data);
+        }
+        benutzerService.get({
+            "id" : benutzerId
+        }, function(benutzerDaten) {
+            $scope.antrag.bewilliger.push(benutzerDaten);
+            $scope.bewilligerKey = "";
         });
     };
-    
+
     $scope.addBewilliger = function() {
         if ($scope.bewilligungForm.$valid) {
             var benutzerId = $scope.bewilligerKey;
@@ -109,11 +134,10 @@ app.controller("NewCtrl", function($scope, $http) {
         }
     };
 
-    
     $scope.benutzerSelected = function(ui) {
         $scope._addBewilliger(ui.value);
     }
-    
+
     $scope.removeBewilliger = function(b) {
         var array = $scope.antrag.bewilliger;
         for ( var i = array.length; i >= 0; i--) {
@@ -125,6 +149,37 @@ app.controller("NewCtrl", function($scope, $http) {
     };
 });
 
+app.controller("EditCtrl", function($scope, $routeParams, $filter, antragArtService,
+        antragService, benutzerService) {
+    $scope.antragArtListe = antragArtService.get({});
+    $scope.antrag = antragService.get({
+        "id" : $routeParams.id
+    }, function(data) {
+        data.von = $filter("date")(data.von, "dd.MM.yyyy");
+        data.bis = $filter("date")(data.bis, "dd.MM.yyyy");
+        console.log(data);
+    }, function(data) {
+        console.log(data);
+    });
+    
+    $scope.controlClassFor = function(flag) {
+        var result;
+        if (flag) {
+            result = "control-group";
+        } else {
+            result = "control-group error";
+        }
+        return result;
+    };
+    
+    $scope.saveAntrag = function() {
+        
+    };
+    
+    $scope.deleteBewilliger = function(b) {
+        
+    };
+});
 
 app.directive("benutzerAutocomplete", function($timeout) {
     return {
@@ -133,13 +188,10 @@ app.directive("benutzerAutocomplete", function($timeout) {
             iElement.autocomplete({
                 source : "/anwesenheit-web/api/benutzer/search",
                 select : function(event, ui) {
-//                    $timeout(function() {
-//                       iElement.trigger('input');
-//                    }, 0);
                     scope.bewilligerKey = ui.item.value;
                     scope.$digest();
                     scope._addBewilliger(ui.item.value);
-                 },
+                },
                 minLength : 2
             });
         }

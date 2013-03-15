@@ -94,7 +94,6 @@ public class AntragApiController {
 					jsonMessage("Antrag existiert nicht"), headers,
 					HttpStatus.NOT_FOUND);
 		}
-
 		return new ResponseEntity<String>(jsonMessage("Ok"), headers,
 				HttpStatus.OK);
 	}
@@ -120,4 +119,6 @@ public class AntragApiController {
 					HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	
 }
