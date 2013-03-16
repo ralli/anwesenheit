@@ -15,7 +15,7 @@ import de.fisp.anwesenheit.core.entities.Bewilligung;
 
 @Service
 public class BewilligungDaoImpl implements BewilligungDao {
-	private Logger log = LoggerFactory.getLogger(BenutzerRolleDaoImpl.class);
+	private Logger log = LoggerFactory.getLogger(BewilligungDaoImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
 
@@ -80,8 +80,9 @@ public class BewilligungDaoImpl implements BewilligungDao {
 	    query.setLong("antragId", antragId);
 	    @SuppressWarnings("unchecked")
         List<Integer> list = query.list();
-	    int maxPosition = ( (Integer)list.get(0) ).intValue(); 
-	    log.debug("getMaxPosition(antragId={}) = {}", antragId, maxPosition);
-	    return maxPosition;
+	    Integer maxPosition = list.get(0);
+	    int result = maxPosition == null ? 0 : maxPosition.intValue();
+	    log.debug("getMaxPosition(antragId={}) = {}", antragId, result);
+	    return result;
 	}
 }

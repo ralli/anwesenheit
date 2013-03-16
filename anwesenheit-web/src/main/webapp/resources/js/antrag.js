@@ -180,9 +180,31 @@ app.controller("EditCtrl", function($scope, $routeParams, $filter, antragArtServ
         
     };
     
+    $scope._addBewilliger = function(bewilligerKey) {
+      var command = {
+          "antragId": $scope.antrag.id,
+          "benutzerId": bewilligerKey
+      };
+      bewilligungService.save(angular.toJson(command), function(data) {
+        console.log(data);
+        $scope.antrag.bewilligungen.push(data);
+        $scope.bewilligerKey = "";
+      });
+    }
+    
+    $scope.addBewilliger = function() {
+       $scope._addBewilliger($scope.bewilligerKey);
+    }
+    
     $scope.deleteBewilligung = function(b) {
         bewilligungService.delete({"id" : b.id }, function(data) {
-           console.log(data); 
+          var array = $scope.antrag.bewilligungen;
+          for ( var i = array.length; i >= 0; i--) {
+              if (_.isEqual(array[i], b)) {
+                  array.splice(i, 1);
+                  break;
+              }
+          } 
         });
     };
 });

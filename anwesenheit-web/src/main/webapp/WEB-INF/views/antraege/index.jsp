@@ -41,6 +41,7 @@
 				</tbody>
 			</table>
 		</script>
+
 		<script type="text/ng-template" id="new.html">
 			<h1>Neuer Antrag</h1>
 			<form name="createForm" class="form-horizontal" ng-submit="createAntrag()">
@@ -89,6 +90,7 @@
             </ul>
             <p>{{bewilligerKey}}</p>
 		</script>
+
 		<script type="text/ng-template" id="details.html">
 			<h1>Antrag</h1>
 			<form class="form-horizontal">
@@ -146,7 +148,6 @@
 			</table>
 		</script>
 
-
 		<script type="text/ng-template" id="edit.html">
             <h1>Antrag bearbeiten</h1>            
             <form name="editForm" class="form form-horizontal">
@@ -189,6 +190,9 @@
                </div>
             </form>
             <h2>Bewilligungen</h2>
+            <form name="addBewilligerForm" class="form-inline" ng-submit="addBewilliger()">
+                <input type="text" placeholder="Bewilliger" ng-model="bewilligerKey" benutzer-autocomplete="true" /> <input type="submit" class="btn btn-primary" value="Hinzufügen" />
+            </form>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -206,8 +210,7 @@
                         </td>
   					</tr>
 				</tbody>
-			</table>
-            <p>{{antrag|json}}</p>
+			</table>            
         </script>
 	</div>
 	<script src="<c:url value="/resources/js/jquery-ui.js"/>"></script>

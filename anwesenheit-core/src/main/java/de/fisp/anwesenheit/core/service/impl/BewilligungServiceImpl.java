@@ -19,6 +19,7 @@ import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.AntragHistorie;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
+import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 import de.fisp.anwesenheit.core.service.BewilligungService;
 
 @Service
@@ -61,7 +62,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
     bewilligungDao.delete(bewilligung);
 
-    return false;
+    return true;
   }
 
   private BenutzerDaten createBenutzerDaten(Benutzer benutzer) {
@@ -77,14 +78,16 @@ public class BewilligungServiceImpl implements BewilligungService {
   }
 
   @Override
+  @Transactional
   public BewilligungsDaten addBewilligung(String benutzerId, AddBewilligungCommand command) {
+    logger.debug("addBewilligung({}, {})", benutzerId, command);
     Benutzer bewilliger = benutzerDao.findById(command.getBenutzerId());
     if (bewilliger == null) {
       logger.error("Bewilliger nicht gefunden");
       return null;
     }
 
-    Antrag antrag = antragDao.findById(command.getAntragId());
+    Antrag antrag = antragDao.findById(command.getAntragId());    
     if (antrag == null) {
       logger.error("Antrag nicht gefunden");
       return null;
@@ -92,13 +95,22 @@ public class BewilligungServiceImpl implements BewilligungService {
 
     Bewilligung bewilligung = new Bewilligung();
     bewilligung.setAntragId(command.getAntragId());
-    bewilligung.setBenutzerId(bewilligung.getBenutzerId());
+    bewilligung.setBenutzerId(command.getBenutzerId());
     bewilligung.setBewilligungsStatusId("OFFEN");
     bewilligung.setPosition(bewilligungDao.getMaxPosition(command.getAntragId()) + 1);
+    
     bewilligungDao.insert(bewilligung);
-
     bewilligung.setBenutzer(bewilliger);
+    BewilligungsStatus bewilligungsStatus = new BewilligungsStatus();
+    bewilligungsStatus.setBewilligungsStatus("OFFEN");
+    bewilligungsStatus.setBezeichnung("Offen");
+    bewilligungsStatus.setPosition(1);
+    bewilligung.setBewilligungsStatus(bewilligungsStatus);
     BewilligungsDaten daten = createBewilligungsDaten(bewilligung);
+    
+    String message = String.format("Bewilligung Bewilliger: %s, Status: %s hinzugefügt", bewilligung.getBenutzerId(),
+        bewilligung.getBewilligungsStatusId());
+    addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
     
     logger.debug("addBewilligung({}) = {}", command, daten);
     
