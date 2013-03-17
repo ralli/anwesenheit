@@ -50,6 +50,22 @@ public class AntragServiceImpl implements AntragService {
     this.antragHistorieDao = antragHistorieDao;
   }
 
+  /**
+   * Prüft, ob ein Antrag für einen Benutzer sichtbar ist.<p>
+   * 
+   * Ein Antrag ist für einen Benutzer sichtbar wenn
+   * <ul>
+   * <li>Der Benutzer Eigentümer des Antrags ist
+   * <li>Der Benutzer Sonderberechtigungen hat
+   * <li>Wenn ein Bewilligungsantrag für den Benutzer zum Antrag existiert
+   * </ul>
+   * 
+   * @param antrag
+   *          Der zu prüfende Antrag
+   * @param benutzer
+   *          Der zu prüfende Benutzer
+   * @return true, wenn der Antrag für den Benutzer sichtbar ist
+   */
   private boolean darfAntragAnsehen(Antrag antrag, Benutzer benutzer) {
     if (benutzer.getBenutzerId().equals(antrag.getBenutzerId()))
       return true;

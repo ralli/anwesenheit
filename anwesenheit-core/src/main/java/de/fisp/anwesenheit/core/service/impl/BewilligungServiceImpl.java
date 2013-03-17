@@ -1,7 +1,6 @@
 package de.fisp.anwesenheit.core.service.impl;
 
 import java.util.Date;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +18,9 @@ import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.AntragHistorie;
 import de.fisp.anwesenheit.core.entities.Benutzer;
-import de.fisp.anwesenheit.core.entities.BenutzerRolle;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
+import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.service.BewilligungService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
@@ -34,14 +33,16 @@ public class BewilligungServiceImpl implements BewilligungService {
   private AntragDao antragDao;
   private AntragHistorieDao antragHistorieDao;
   private BenutzerDao benutzerDao;
+  private BerechtigungsService berechtigungsService;
 
   @Autowired
   public BewilligungServiceImpl(BewilligungDao bewilligungDao, AntragDao antragDao, AntragHistorieDao antragHistorieDao,
-      BenutzerDao benutzerDao) {
+      BenutzerDao benutzerDao, BerechtigungsService berechtigungsService) {
     this.bewilligungDao = bewilligungDao;
     this.antragDao = antragDao;
     this.antragHistorieDao = antragHistorieDao;
     this.benutzerDao = benutzerDao;
+    this.berechtigungsService = berechtigungsService;
   }
 
   private void addAntragHistorie(long antragId, String benutzerId, String message) {
@@ -57,8 +58,9 @@ public class BewilligungServiceImpl implements BewilligungService {
   @Transactional
   public void deleteBewilligung(String benutzerId, long bewilligungId) {
     logger.debug("deleteBewilligung({})", bewilligungId);
+    
+    
     Bewilligung bewilligung = bewilligungDao.findById(bewilligungId);
-
     if (bewilligung == null) {
       throw new NotFoundException("Bewilligung nicht gefunden");
     }
@@ -67,7 +69,7 @@ public class BewilligungServiceImpl implements BewilligungService {
       throw new NotAuthorizedException("Nur offene Bewilligungen dürfen gelöscht werden");
     }
 
-    if (!isAntragEigentuemerOderErfasser(bewilligung.getAntrag(), benutzerId)) {
+    if (!berechtigungsService.isAntragEigentuemerOderErfasser(bewilligung.getAntrag(), benutzerId)) {
       throw new NotAuthorizedException("Keine ausreichende Berechtigung zum Löschen der Bewilligung");
     }
 
@@ -89,28 +91,6 @@ public class BewilligungServiceImpl implements BewilligungService {
     return result;
   }
 
-  private boolean isAntragEigentuemerOderErfasser(Antrag antrag, Benutzer benutzer) {
-    if (benutzer.getBenutzerId().equals(antrag.getBenutzerId()))
-      return true;
-
-    Set<BenutzerRolle> benutzerRollen = benutzer.getBenutzerRollen();
-    for (BenutzerRolle br : benutzerRollen) {
-      if ("ERFASSER".equals(br.getRolle()))
-        return true;
-    }
-
-    return false;
-  }
-
-  private boolean isAntragEigentuemerOderErfasser(Antrag antrag, String benutzerId) {
-    Benutzer benutzer = benutzerDao.findById(benutzerId);
-    if (benutzer == null) {
-      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
-    }
-    return isAntragEigentuemerOderErfasser(antrag, benutzer);
-  }
-    
-
   @Override
   @Transactional
   public BewilligungsDaten addBewilligung(String benutzerId, AddBewilligungCommand command) {
@@ -126,15 +106,6 @@ public class BewilligungServiceImpl implements BewilligungService {
       throw new NotFoundException("Antrag nicht gefunden");
     }
 
-    Benutzer benutzer = benutzerDao.findById(benutzerId);
-    if (benutzer == null) {
-      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
-    }
-
-    if (!isAntragEigentuemerOderErfasser(antrag, benutzer)) {
-      throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zum Hinzufügen einer Bewilligung");
-    }
-
     if (benutzerId.equals(command.getBenutzerId())) {
       throw new NotValidException("Anträge dürfen nicht durch sich selbst bewilligt werden");
     }
@@ -142,6 +113,10 @@ public class BewilligungServiceImpl implements BewilligungService {
     Bewilligung bewilligung = bewilligungDao.findByAntragIdAndBewilliger(command.getAntragId(), command.getBenutzerId());
     if (bewilligung != null) {
       throw new NotValidException("Die Bewilligung kann nicht mehrfach hinzugefügt werden");
+    }
+
+    if (!berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)) {
+      throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zum Hinzufügen einer Bewilligung");
     }
 
     bewilligung = new Bewilligung();

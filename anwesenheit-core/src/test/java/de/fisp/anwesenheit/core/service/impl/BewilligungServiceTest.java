@@ -18,6 +18,7 @@ import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
+import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
 import de.fisp.anwesenheit.core.util.NotValidException;
@@ -27,6 +28,7 @@ public class BewilligungServiceTest {
   private AntragDao antragDao;
   private AntragHistorieDao antragHistorieDao;
   private BenutzerDao benutzerDao;
+  private BerechtigungsService berechtigungsService;
   private BewilligungServiceImpl bewilligungService;
   private static final Logger logger = LoggerFactory.getLogger(BewilligungServiceTest.class);
   private static final TestDataFactory testDataFactory = new TestDataFactory();
@@ -37,7 +39,8 @@ public class BewilligungServiceTest {
     antragDao = mock(AntragDao.class);
     antragHistorieDao = mock(AntragHistorieDao.class);
     benutzerDao = mock(BenutzerDao.class);
-    bewilligungService = new BewilligungServiceImpl(bewilligungDao, antragDao, antragHistorieDao, benutzerDao);
+    berechtigungsService = mock(BerechtigungsService.class);
+    bewilligungService = new BewilligungServiceImpl(bewilligungDao, antragDao, antragHistorieDao, benutzerDao, berechtigungsService);
   }
 
   /**
@@ -89,15 +92,11 @@ public class BewilligungServiceTest {
     final String bewilligerId = "testbenutzer";
     final String abweichendeBenutzerId = "falscherbenutzer";
     final String eigentuemerId = "eigentuemer";
-    final Benutzer abweichenderBenutzer = testDataFactory.createBenutzer(abweichendeBenutzerId);
-    final Benutzer eigentuemer = testDataFactory.createBenutzer(eigentuemerId);
+    final Bewilligung bewilligung = testDataFactory.createBewilligung(antragId, eigentuemerId, bewilligerId);
 
-    Bewilligung bewilligung = testDataFactory.createBewilligung(antragId, eigentuemerId, bewilligerId);
-
-    when(bewilligungDao.findById(bewilligungId)).thenReturn(bewilligung);
-    when(benutzerDao.findById(abweichendeBenutzerId)).thenReturn(abweichenderBenutzer);
-    when(benutzerDao.findById(eigentuemerId)).thenReturn(eigentuemer);
-
+    when(bewilligungDao.findById(bewilligungId)).thenReturn(bewilligung);   
+    when(berechtigungsService.isAntragEigentuemerOderErfasser(bewilligung.getAntrag(), abweichendeBenutzerId)).thenReturn(false);
+    
     try {
       bewilligungService.deleteBewilligung(abweichendeBenutzerId, bewilligungId);
     } catch (NotAuthorizedException ex) {
@@ -119,15 +118,11 @@ public class BewilligungServiceTest {
     final String bewilligerId = "testbenutzer";
     final String abweichendeBenutzerId = "falscherbenutzer";
     final String eigentuemerId = "eigentuemer";
-    final Benutzer abweichenderBenutzer = testDataFactory.createBenutzer(abweichendeBenutzerId);
-    final Benutzer eigentuemer = testDataFactory.createBenutzer(eigentuemerId);
-
+    
     Bewilligung bewilligung = testDataFactory.createBewilligung(antragId, eigentuemerId, bewilligerId);
-
-    abweichenderBenutzer.getBenutzerRollen().add(testDataFactory.createBenutzerRolle(abweichendeBenutzerId, "ERFASSER"));
     when(bewilligungDao.findById(bewilligungId)).thenReturn(bewilligung);
-    when(benutzerDao.findById(abweichendeBenutzerId)).thenReturn(abweichenderBenutzer);
-    when(benutzerDao.findById(eigentuemerId)).thenReturn(eigentuemer);
+    when(berechtigungsService.isAntragEigentuemerOderErfasser(bewilligung.getAntrag(), abweichendeBenutzerId)).thenReturn(true);
+    
     bewilligungService.deleteBewilligung(abweichendeBenutzerId, bewilligungId);
   }
 
@@ -209,11 +204,10 @@ public class BewilligungServiceTest {
   }
 
   /**
-   * Test: Der der angemeldete Benutzer ist nicht Eigentümer des Antrags und hat
-   * keine Sonderberechtigungen => NotAuthorizedException
+   * Test: Alle Vorbedingungen sind erfüllt 
    */
   @Test
-  public void addBewilligungSucceedsIfSonderberechtigung() {
+  public void addBewilligungSucceeds() {
     final long antragId = 4321L;
     final String bewilligerId = "bewilliger";
     final String benutzerId = "benutzer";
@@ -227,33 +221,13 @@ public class BewilligungServiceTest {
     benutzer.getBenutzerRollen().add(testDataFactory.createBenutzerRolle(benutzerId, "ERFASSER"));
 
     when(benutzerDao.findById(bewilligerId)).thenReturn(bewilliger);
-    when(benutzerDao.findById(benutzerId)).thenReturn(benutzer);
     when(antragDao.findById(antragId)).thenReturn(antrag);
+    when(berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)).thenReturn(true);
+    
     bewilligungService.addBewilligung(benutzerId, addBewilligungCommand);
   }
 
-  /**
-   * Test: Der der angemeldete Benutzer ist Eigentümer des Antrags
-   */
-  @Test
-  public void addBewilligungSucceedsIfEigentuemer() {
-    final long antragId = 4321L;
-    final String bewilligerId = "bewilliger";
-    final String benutzerId = "benutzer";
-    final String eigentuemerId = benutzerId;
-    final Benutzer bewilliger = testDataFactory.createBenutzer(bewilligerId);
-    final Benutzer benutzer = testDataFactory.createBenutzer(benutzerId);
-    final AddBewilligungCommand addBewilligungCommand = createAddBewilligungCommand(antragId, bewilligerId);
-    final Antrag antrag = testDataFactory.createAntrag("URLAUB", eigentuemerId);
-    antrag.setId(antragId);
-
-    when(benutzerDao.findById(bewilligerId)).thenReturn(bewilliger);
-    when(benutzerDao.findById(benutzerId)).thenReturn(benutzer);
-    when(antragDao.findById(antragId)).thenReturn(antrag);
-    bewilligungService.addBewilligung(benutzerId, addBewilligungCommand);
-  }
-
-  /**
+   /**
    * Test: Die Bewilligung existiert bereits => NotValidException
    */
   @Test
@@ -280,11 +254,12 @@ public class BewilligungServiceTest {
       logger.debug("Alles prima: " + ex.getMessage());
       return;
     }
-    Assert.fail("NotValidException expected");    
+    Assert.fail("NotValidException expected");
   }
 
   /**
-   * Test: Der Antragsteller möchte den Antrag selbst bewilligen => NotValidException
+   * Test: Der Antragsteller möchte den Antrag selbst bewilligen =>
+   * NotValidException
    */
   @Test
   public void addBewilligungFailsIfBewilligerGleichAntragSteller() {
@@ -310,7 +285,7 @@ public class BewilligungServiceTest {
       logger.debug("Alles prima: " + ex.getMessage());
       return;
     }
-    Assert.fail("NotValidException expected");    
+    Assert.fail("NotValidException expected");
   }
 
 }

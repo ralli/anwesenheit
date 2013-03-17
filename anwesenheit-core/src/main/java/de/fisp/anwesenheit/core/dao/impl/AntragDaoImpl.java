@@ -56,6 +56,18 @@ public class AntragDaoImpl implements AntragDao {
   }
 
   @Override
+  public List<Antrag> findByBenutzerIdAndBewilliger(String benutzerId, String bewilligerBenutzerId) {
+    final String hql = "select b.antrag from Bewilligung b join fetch b.antrag.benutzer join fetch b.antrag.antragArt join fetch b.antrag.antragStatus where b.antrag.benutzerId=:benutzerId and b.benutzerId=:bewilligerBenutzerId order by b.antrag.von";
+    Query query = getCurrentSession().createQuery(hql);
+    query.setString("benutzerId", benutzerId);
+    query.setString("bewilligerBenutzerId", bewilligerBenutzerId);
+    @SuppressWarnings("unchecked")
+    List<Antrag> list = query.list();
+    log.debug("findByBenutzerIdAndBewilliger({},{}) = {}", new Object[] { benutzerId, bewilligerBenutzerId, list });
+    return list;
+  }
+
+  @Override
   public void insert(Antrag antrag) {
     log.debug("insert({})", antrag);
     getCurrentSession().save(antrag);
@@ -73,15 +85,4 @@ public class AntragDaoImpl implements AntragDao {
     getCurrentSession().delete(antrag);
   }
 
-  @Override
-  public List<Antrag> findByBenutzerIdAndBewilliger(String benutzerId, String bewilligerBenutzerId) {
-    final String hql = "select b.antrag from Bewilligung b join fetch b.antrag.benutzer join fetch b.antrag.antragArt join fetch b.antrag.antragStatus where b.antrag.benutzerId=:benutzerId and b.benutzerId=:bewilligerBenutzerId order by b.antrag.von";
-    Query query = getCurrentSession().createQuery(hql);
-    query.setString("benutzerId", benutzerId);
-    query.setString("bewilligerBenutzerId", bewilligerBenutzerId);
-    @SuppressWarnings("unchecked")
-    List<Antrag> list = query.list();
-    log.debug("findByBenutzerIdAndBewilliger({},{}) = {}", new Object[] { benutzerId, bewilligerBenutzerId, list });
-    return list;
-  }
 }
