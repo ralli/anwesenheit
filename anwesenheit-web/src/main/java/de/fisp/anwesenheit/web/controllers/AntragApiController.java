@@ -54,7 +54,7 @@ public class AntragApiController {
 		final String benutzerId = getCurrentUser();
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
-		AntragListe liste = antragService.findByBenutzer(benutzerId);
+		AntragListe liste = antragService.findByBenutzer(getCurrentUser(), benutzerId);
 		if (liste == null) {
 			return new ResponseEntity<String>(
 					jsonMessage("Benutzer existiert nicht"), headers,
@@ -66,7 +66,7 @@ public class AntragApiController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public @ResponseBody
 	ResponseEntity<String> details(@PathVariable long id) {
-		AntragsDaten daten = antragService.findAntragById(id);
+		AntragsDaten daten = antragService.findAntragById(getCurrentUser(), id);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		if (daten == null) {
@@ -86,7 +86,7 @@ public class AntragApiController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public @ResponseBody
 	ResponseEntity<String> delete(@PathVariable long id) {
-		boolean result = antragService.deleteAntrag(id);
+		boolean result = antragService.deleteAntrag(getCurrentUser(), id);
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		if (result == false) {
@@ -106,7 +106,7 @@ public class AntragApiController {
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		try {
 			createAntragCommand.setBenutzerId(getCurrentUser());
-			long antragId = antragService.createAntrag(createAntragCommand);
+			long antragId = antragService.createAntrag(getCurrentUser(), createAntragCommand);
 			Map<String, Object> result = new LinkedHashMap<String, Object>();
 			result.put("antragId", antragId);
 			return new ResponseEntity<String>(toJson(result), headers,

@@ -64,7 +64,7 @@ public class AntragServiceTest {
 
 		when(antragDao.findById(antragId)).thenReturn(antrag);
 		when(bewilligungDao.findByAntrag(antragId)).thenReturn(bewilligungen);
-		AntragsDaten antragsDaten = antragService.findAntragById(antragId);
+		AntragsDaten antragsDaten = antragService.findAntragById(benutzerId, antragId);
 		Assert.assertEquals(antragId, antragsDaten.getId());
 		Assert.assertEquals(benutzerId, antragsDaten.getBenutzer()
 				.getBenutzerId());
@@ -78,8 +78,10 @@ public class AntragServiceTest {
 	@Test
 	public void testFindAntragByIdNotFoundReturnsNull() throws Exception {
 		final long antragId = 10L;
+		final String benutzerId = "demo123";
+        
 		when(antragDao.findById(antragId)).thenReturn(null);
-		AntragsDaten antragsDaten = antragService.findAntragById(antragId);
+		AntragsDaten antragsDaten = antragService.findAntragById(benutzerId, antragId);
 		Assert.assertNull(antragsDaten);
 	}
 
@@ -97,7 +99,7 @@ public class AntragServiceTest {
 		when(benutzerDao.findById(benutzerId)).thenReturn(benutzer);
 		when(antragDao.findByBenutzerId(benutzerId)).thenReturn(antragList);
 
-		AntragListe bla = antragService.findByBenutzer(benutzerId);
+		AntragListe bla = antragService.findByBenutzer(benutzerId, benutzerId);
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter writer = new StringWriter();
 		mapper.writeValue(writer, bla);

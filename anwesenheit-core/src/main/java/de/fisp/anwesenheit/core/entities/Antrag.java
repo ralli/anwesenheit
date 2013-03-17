@@ -1,6 +1,7 @@
 package de.fisp.anwesenheit.core.entities;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,6 +33,7 @@ public class Antrag {
 	private Date bis;
 	@Column(name = "antrag_status")
 	private String antragStatusId;
+	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
 	private Benutzer benutzer;
@@ -41,6 +44,9 @@ public class Antrag {
 	@JoinColumn(name = "antrag_art", insertable = false, updatable = false)
 	private AntragArt antragArt;
 
+	@OneToMany(targetEntity=Bewilligung.class)
+	private Set<Bewilligung> bewilligungen;
+	
 	public long getId() {
 		return id;
 	}
@@ -113,6 +119,14 @@ public class Antrag {
 		return antragStatus;
 	}
 
+	public Set<Bewilligung> getBewilligungen() {
+      return bewilligungen;
+    }
+	
+	public void setBewilligungen(Set<Bewilligung> bewilligungen) {
+      this.bewilligungen = bewilligungen;
+    }
+	
 	@Override
 	public String toString() {
 		ToStringBuilder toStringBuilder = new ToStringBuilder(this);

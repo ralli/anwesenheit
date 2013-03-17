@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
 import de.fisp.anwesenheit.core.service.BewilligungService;
+import de.fisp.anwesenheit.core.util.NotAuthorizedException;
+import de.fisp.anwesenheit.core.util.NotFoundException;
+import de.fisp.anwesenheit.core.util.NotValidException;
 
 @Controller
 @RequestMapping("/api/bewilligung")
@@ -58,13 +61,13 @@ public class BewilligungApiController {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Content-Type", "application/json; charset=utf-8");
     try {
-      boolean found = bewilligungService.deleteBewilligung(getCurrentUser(), id);
-      if (found == false) {
-        return new ResponseEntity<String>(jsonMessage("Bewilligung nicht gefunden"), headers, HttpStatus.NOT_FOUND);
-      }
+      bewilligungService.deleteBewilligung(getCurrentUser(), id);
       return new ResponseEntity<String>(jsonMessage("Ok"), headers, HttpStatus.OK);
-    } catch (Exception ex) {
-      logger.warn("Fehler beim Löschen", ex);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }
   }
@@ -81,8 +84,11 @@ public class BewilligungApiController {
         return new ResponseEntity<String>(jsonMessage("Daten nicht gefunden"), headers, HttpStatus.NOT_FOUND);
       }
       return new ResponseEntity<String>(toJson(bewilligungsDaten), headers, HttpStatus.OK);
-    } catch (Exception ex) {
-      logger.warn("Fehler beim Hinzufügen", ex);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }
   }

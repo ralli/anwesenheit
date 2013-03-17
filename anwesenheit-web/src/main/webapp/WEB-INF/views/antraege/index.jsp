@@ -71,16 +71,11 @@
                   </div>
                </div>
             </form>
-            
-            <form name="bewilligungForm" class="form-horizontal" ng-submit="addBewilliger()">
-               <legend>Bewilligungen</legend>
-               <div class="control-group">
-                  <label class="control-label" for="bewilliger_key">Bewilliger</label>
-                  <div class="controls">
-                     <input type="text" id="bewilliger_key" name="bewilliger" ng-model="bewilligerKey" benutzer-autocomplete="true" select="benutzerSelected()" required />
-                     <input type="submit" class="btn btn-primary" value="Hinzufügen" />
-                  </div>
-               </div>                
+            <h2>Bewilligungen</h2>
+            <form name="bewilligungForm" class="form-inline" ng-submit="addBewilliger()">
+               <input type="text" placeholder="Bewilliger" id="bewilliger_key" name="bewilliger" ng-model="bewilligerKey" benutzer-autocomplete="true" select="benutzerSelected()" required />
+               <input type="submit" class="btn btn-primary" value="Hinzufügen" />
+               <span class="error">{{bewilligungError}}</span>
             </form>
             <ul>
               <li ng-repeat="b in antrag.bewilliger">
@@ -192,6 +187,7 @@
             <h2>Bewilligungen</h2>
             <form name="addBewilligerForm" class="form-inline" ng-submit="addBewilliger()">
                 <input type="text" placeholder="Bewilliger" ng-model="bewilligerKey" benutzer-autocomplete="true" /> <input type="submit" class="btn btn-primary" value="Hinzufügen" />
+                <span class="error">{{bewilligungError}}</span>
             </form>
             <table class="table table-bordered">
                 <thead>

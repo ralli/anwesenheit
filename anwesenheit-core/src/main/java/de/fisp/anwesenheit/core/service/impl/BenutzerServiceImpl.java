@@ -18,7 +18,7 @@ import de.fisp.anwesenheit.core.service.BenutzerService;
 
 @Service
 public class BenutzerServiceImpl implements BenutzerService {
-	private BenutzerDao benutzerDao;
+	private BenutzerDao benutzerDao;	
 	private static final Logger logger = LoggerFactory
 			.getLogger(BenutzerServiceImpl.class);
 

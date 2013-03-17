@@ -24,51 +24,58 @@ import de.fisp.anwesenheit.core.service.BenutzerService;
 @Controller
 @RequestMapping("/api/benutzer")
 public class BenutzerApiController {
-	private BenutzerService benutzerService;
+  private BenutzerService benutzerService;
 
-	@Autowired
-	public BenutzerApiController(BenutzerService benutzerService) {
-		this.benutzerService = benutzerService;
-	}
+  @Autowired
+  public BenutzerApiController(BenutzerService benutzerService) {
+    this.benutzerService = benutzerService;
+  }
 
-	private String toJson(Object object) {
-		try {
-			StringWriter stringWriter = new StringWriter();
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.writeValue(stringWriter, object);
-			return stringWriter.toString();
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+  private String getCurrentUser() {
+    return "juhnke_r";
+  }
 
-	private String jsonMessage(String message) {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("message", message);
-		return toJson(map);
-	}
+  private String toJson(Object object) {
+    try {
+      StringWriter stringWriter = new StringWriter();
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.writeValue(stringWriter, object);
+      return stringWriter.toString();
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
 
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public @ResponseBody
-	ResponseEntity<String> search(
-			@RequestParam(value = "term", required = true) String term) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-		List<LabelValue> list = benutzerService.search(term);
-		return new ResponseEntity<String>(toJson(list), headers, HttpStatus.OK);
-	}
+  private String jsonMessage(String message) {
+    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    map.put("message", message);
+    return toJson(map);
+  }
 
-	@RequestMapping(value = "/{benutzerId}", method = RequestMethod.GET)
-	public @ResponseBody
-	ResponseEntity<String> findByBenutzerId(@PathVariable String benutzerId) {
-		BenutzerDaten daten = benutzerService.findByBenutzerId(benutzerId);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-		if (daten == null) {
-			return new ResponseEntity<String>(
-					jsonMessage("Benutzer nicht gefunden"), headers,
-					HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
-	}
+  @RequestMapping(value = "/search", method = RequestMethod.GET)
+  public @ResponseBody
+  ResponseEntity<String> search(@RequestParam(value = "term", required = true) String term) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    List<LabelValue> list = benutzerService.search(term);
+    return new ResponseEntity<String>(toJson(list), headers, HttpStatus.OK);
+  }
+
+  @RequestMapping(value = "/current", method = RequestMethod.GET)
+  public @ResponseBody
+  ResponseEntity<String> findCurrentUser() {
+    return findByBenutzerId(getCurrentUser());
+  }
+
+  @RequestMapping(value = "/{benutzerId}", method = RequestMethod.GET)
+  public @ResponseBody
+  ResponseEntity<String> findByBenutzerId(@PathVariable String benutzerId) {
+    BenutzerDaten daten = benutzerService.findByBenutzerId(benutzerId);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    if (daten == null) {
+      return new ResponseEntity<String>(jsonMessage("Benutzer nicht gefunden"), headers, HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
+  }
 }

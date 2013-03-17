@@ -118,16 +118,18 @@ app.controller("NewCtrl", function($scope, antragService, antragArtService,
     };
 
     $scope._addBewilliger = function(benutzerId) {
+      $scope.bewilligungError = "";
         if (_.find($scope.antrag.bewilliger, function(b) {
-            return _.isEqual(b.benutzerId, benutzerId);
+          return _.isEqual(b.benutzerId, benutzerId);
         })) {
-            return;
+          $scope.bewilligungError = "Die Bewilligung kann nicht mehrfach hinzugefügt werden";
+          return;
         }
-        benutzerService.get({
-            "id" : benutzerId
-        }, function(benutzerDaten) {
+        benutzerService.get({"id" : benutzerId }, function(benutzerDaten) {
             $scope.antrag.bewilliger.push(benutzerDaten);
             $scope.bewilligerKey = "";
+        }, function(data) {
+          $scope.bewilligungError = data.data.message;
         });
     };
 
@@ -181,6 +183,7 @@ app.controller("EditCtrl", function($scope, $routeParams, $filter, antragArtServ
     };
     
     $scope._addBewilliger = function(bewilligerKey) {
+      $scope.bewilligungError="";
       var command = {
           "antragId": $scope.antrag.id,
           "benutzerId": bewilligerKey
@@ -189,6 +192,10 @@ app.controller("EditCtrl", function($scope, $routeParams, $filter, antragArtServ
         console.log(data);
         $scope.antrag.bewilligungen.push(data);
         $scope.bewilligerKey = "";
+      },
+      function(data) {
+        console.log(data)
+        $scope.bewilligungError=data.data.message;
       });
     }
     
