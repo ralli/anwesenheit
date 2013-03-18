@@ -23,102 +23,120 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
 import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
+import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 import de.fisp.anwesenheit.core.service.AntragService;
+import de.fisp.anwesenheit.core.util.NotAuthorizedException;
+import de.fisp.anwesenheit.core.util.NotFoundException;
+import de.fisp.anwesenheit.core.util.NotValidException;
 
 @Controller
 @RequestMapping("/api/antraege")
 public class AntragApiController {
-	@Autowired
-	private AntragService antragService;
-	private static final Logger logger = LoggerFactory
-			.getLogger(AntragApiController.class);
+  @Autowired
+  private AntragService antragService;
+  private static final Logger logger = LoggerFactory.getLogger(AntragApiController.class);
 
-	private String getCurrentUser() {
-		return "juhnke_r";
-	}
+  private String getCurrentUser() {
+    return "juhnke_r";
+  }
 
-	private String toJson(Object object) {
-		try {
-			StringWriter stringWriter = new StringWriter();
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.writeValue(stringWriter, object);
-			return stringWriter.toString();
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+  private String toJson(Object object) {
+    try {
+      StringWriter stringWriter = new StringWriter();
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.writeValue(stringWriter, object);
+      return stringWriter.toString();
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
 
-	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody
-	ResponseEntity<String> index() {
-		final String benutzerId = getCurrentUser();
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-		AntragListe liste = antragService.findByBenutzer(getCurrentUser(), benutzerId);
-		if (liste == null) {
-			return new ResponseEntity<String>(
-					jsonMessage("Benutzer existiert nicht"), headers,
-					HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
-	}
+  private String jsonMessage(String message) {
+    Map<String, Object> map = new LinkedHashMap<String, Object>();
+    map.put("message", message);
+    return toJson(map);
+  }
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public @ResponseBody
-	ResponseEntity<String> details(@PathVariable long id) {
-		AntragsDaten daten = antragService.findAntragById(getCurrentUser(), id);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-		if (daten == null) {
-			return new ResponseEntity<String>(
-					jsonMessage("Antrag existiert nicht"), headers,
-					HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
-	}
+  @RequestMapping(method = RequestMethod.GET)
+  public @ResponseBody
+  ResponseEntity<String> index() {
+    final String benutzerId = getCurrentUser();
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    try {
+      AntragListe liste = antragService.findByBenutzer(getCurrentUser(), benutzerId);
+      return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    }
+  }
 
-	private String jsonMessage(String message) {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("message", message);
-		return toJson(map);
-	}
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+  public @ResponseBody
+  ResponseEntity<String> details(@PathVariable long id) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    try {
+      AntragsDaten daten = antragService.findAntragById(getCurrentUser(), id);
+      return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody
-	ResponseEntity<String> delete(@PathVariable long id) {
-		boolean result = antragService.deleteAntrag(getCurrentUser(), id);
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-		if (result == false) {
-			return new ResponseEntity<String>(
-					jsonMessage("Antrag existiert nicht"), headers,
-					HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<String>(jsonMessage("Ok"), headers,
-				HttpStatus.OK);
-	}
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    }
+  }
 
-	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody
-	ResponseEntity<String> insert(
-			@RequestBody @Valid CreateAntragCommand createAntragCommand) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json; charset=utf-8");
-		try {
-			createAntragCommand.setBenutzerId(getCurrentUser());
-			long antragId = antragService.createAntrag(getCurrentUser(), createAntragCommand);
-			Map<String, Object> result = new LinkedHashMap<String, Object>();
-			result.put("antragId", antragId);
-			return new ResponseEntity<String>(toJson(result), headers,
-					HttpStatus.OK);
-		} catch (Exception ex) {
-			logger.error("Fehler beim Speichern", ex);
-			Map<String, Object> result = new LinkedHashMap<String, Object>();
-			result.put("message", ex.getMessage());
-			return new ResponseEntity<String>(toJson(result), headers,
-					HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	
+  @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+  public @ResponseBody
+  ResponseEntity<String> delete(@PathVariable long id) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    try {
+      antragService.deleteAntrag(getCurrentUser(), id);
+      return new ResponseEntity<String>(jsonMessage("Ok"), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    }
+  }
+
+  @RequestMapping(method = RequestMethod.POST)
+  public @ResponseBody
+  ResponseEntity<String> insert(@RequestBody @Valid CreateAntragCommand createAntragCommand) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    try {
+      createAntragCommand.setBenutzerId(getCurrentUser());
+      long antragId = antragService.createAntrag(getCurrentUser(), createAntragCommand);
+      Map<String, Object> result = new LinkedHashMap<String, Object>();
+      result.put("antragId", antragId);
+      return new ResponseEntity<String>(toJson(result), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    } catch (NotValidException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+  public @ResponseBody
+  ResponseEntity<String> update(@PathVariable long id, @RequestBody @Valid UpdateAntragCommand updateAntragCommand) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    try {
+      AntragsDaten daten = antragService.updateAntrag(getCurrentUser(), id, updateAntragCommand);
+      return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    } catch (NotValidException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }

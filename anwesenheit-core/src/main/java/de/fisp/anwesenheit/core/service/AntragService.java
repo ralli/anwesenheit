@@ -3,6 +3,7 @@ package de.fisp.anwesenheit.core.service;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
 import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
+import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 
 /**
  * Implementiert die Geschäftslogik für die Verwaltung von Anträgen.
@@ -68,6 +69,24 @@ public interface AntragService {
    *           wenn der aktuelle Benutzer den Antrag nicht anlegen darf
    */
   long createAntrag(String benutzerId, CreateAntragCommand command);
+
+  /**
+   * Ändert die Antragsdaten.
+   * 
+   * @param benutzerId
+   *          Der aktuell angemeldete Benutzer Benutzer
+   * @param antragId
+   *          Die Id des zu ändernden Antrags
+   * @param command
+   *          Die zu ändernden Antragsdaten
+   *          
+   * @return Die geänderten Antragsdaten
+   * 
+   * @throws NotFoundException
+   * @throws NotAuthorizedException
+   * @throws NotValidException
+   */
+  AntragsDaten updateAntrag(String benutzerId, long antragId, UpdateAntragCommand command);
 
   /**
    * Löscht einen Antrag.

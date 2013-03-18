@@ -1,9 +1,10 @@
 package de.fisp.anwesenheit.core.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +22,13 @@ import de.fisp.anwesenheit.core.domain.AntragsDaten;
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
 import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
+import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.AntragHistorie;
 import de.fisp.anwesenheit.core.entities.Benutzer;
-import de.fisp.anwesenheit.core.entities.BenutzerRolle;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.service.AntragService;
+import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
 
@@ -34,57 +36,19 @@ import de.fisp.anwesenheit.core.util.NotFoundException;
 public class AntragServiceImpl implements AntragService {
   private static final Logger log = LoggerFactory.getLogger(AntragService.class);
   private AntragDao antragDao;
-
   private BewilligungDao bewilligungDao;
-
   private BenutzerDao benutzerDao;
-
   private AntragHistorieDao antragHistorieDao;
+  private BerechtigungsService berechtigungsService;
 
   @Autowired
   public AntragServiceImpl(AntragDao antragDao, BewilligungDao bewilligungDao, BenutzerDao benutzerDao,
-      AntragHistorieDao antragHistorieDao) {
+      AntragHistorieDao antragHistorieDao, BerechtigungsService berechtigungsService) {
     this.antragDao = antragDao;
     this.bewilligungDao = bewilligungDao;
     this.benutzerDao = benutzerDao;
     this.antragHistorieDao = antragHistorieDao;
-  }
-
-  /**
-   * Prüft, ob ein Antrag für einen Benutzer sichtbar ist.<p>
-   * 
-   * Ein Antrag ist für einen Benutzer sichtbar wenn
-   * <ul>
-   * <li>Der Benutzer Eigentümer des Antrags ist
-   * <li>Der Benutzer Sonderberechtigungen hat
-   * <li>Wenn ein Bewilligungsantrag für den Benutzer zum Antrag existiert
-   * </ul>
-   * 
-   * @param antrag
-   *          Der zu prüfende Antrag
-   * @param benutzer
-   *          Der zu prüfende Benutzer
-   * @return true, wenn der Antrag für den Benutzer sichtbar ist
-   */
-  private boolean darfAntragAnsehen(Antrag antrag, Benutzer benutzer) {
-    if (benutzer.getBenutzerId().equals(antrag.getBenutzerId()))
-      return true;
-
-    Set<BenutzerRolle> benutzerRollen = benutzer.getBenutzerRollen();
-    for (BenutzerRolle br : benutzerRollen) {
-      if ("ERFASSER".equals(br.getRolle()))
-        return true;
-    }
-
-    return bewilligungDao.findByAntragIdAndBewilliger(antrag.getId(), benutzer.getBenutzerId()) != null;
-  }
-
-  private boolean darfAntragAnsehen(Antrag antrag, String benutzerId) {
-    Benutzer benutzer = benutzerDao.findById(benutzerId);
-    if (benutzer == null) {
-      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
-    }
-    return darfAntragAnsehen(antrag, benutzer);
+    this.berechtigungsService = berechtigungsService;
   }
 
   @Override
@@ -94,12 +58,19 @@ public class AntragServiceImpl implements AntragService {
     if (antrag == null) {
       throw new NotFoundException("Antrag mit nicht gefunden");
     }
-    if (!darfAntragAnsehen(antrag, benutzerId)) {
+
+    if (!berechtigungsService.darfAntragAnsehen(antrag, benutzerId)) {
       throw new NotAuthorizedException("Keine Berechtigung zur Anzeige des Antrags");
     }
+
+    return createAntragsDatenFromAntrag(id, antrag);
+  }
+
+  private AntragsDaten createAntragsDatenFromAntrag(long id, Antrag antrag) {
     BenutzerDaten benutzerDaten = createBenutzerDaten(antrag.getBenutzer());
     AntragsDaten result = new AntragsDaten(antrag.getId(), antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getVon(),
         antrag.getBis(), benutzerDaten, loadBewilligungsDaten(id));
+
     log.debug("findAntragById({}) = {}", id, result);
     return result;
   }
@@ -125,27 +96,10 @@ public class AntragServiceImpl implements AntragService {
     return result;
   }
 
-  private boolean darfAlleAntraegeSehen(String currentBenutzerId, String benutzerId) {
-    if (currentBenutzerId.equals(benutzerId))
-      return true;
-
-    Benutzer current = benutzerDao.findById(currentBenutzerId);
-    if (current == null) {
-      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", currentBenutzerId));
-    }
-
-    for (BenutzerRolle br : current.getBenutzerRollen()) {
-      if ("ERFASSER".equals(br.getRolle()))
-        return true;
-    }
-
-    return false;
-  }
-
   @Override
   @Transactional
   public AntragListe findByBenutzer(String currentBenutzerId, String benutzerId) {
-    boolean alleAnzeigen = darfAlleAntraegeSehen(currentBenutzerId, benutzerId);
+    boolean alleAnzeigen = berechtigungsService.darfAlleAntraegeSehen(currentBenutzerId, benutzerId);
 
     Benutzer benutzer = benutzerDao.findById(benutzerId);
     if (benutzer == null) {
@@ -193,6 +147,10 @@ public class AntragServiceImpl implements AntragService {
     antrag.setVon(command.getVon());
     antrag.setBis(command.getBis());
 
+    if (!berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)) {
+      throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zum Anlegen des Antrags.");
+    }
+
     antragDao.insert(antrag);
     int position = 1;
     for (String bewilligerId : command.getBewilliger()) {
@@ -207,17 +165,15 @@ public class AntragServiceImpl implements AntragService {
       ++position;
     }
 
-    insertAntragHistorie(antrag);
-
+    insertAntragHistorie(benutzerId, antrag, "Antrag angelegt");
     log.debug("createAntrag: id = {}", antrag.getId());
-
     return antrag.getId();
   }
 
-  private void insertAntragHistorie(Antrag antrag) {
+  private void insertAntragHistorie(String benutzerId, Antrag antrag, String message) {
     AntragHistorie antragHistorie = new AntragHistorie();
     antragHistorie.setAntragId(antrag.getId());
-    antragHistorie.setBenutzerId(antrag.getBenutzerId());
+    antragHistorie.setBenutzerId(benutzerId);
     antragHistorie.setZeitpunkt(new Date());
     antragHistorie.setBeschreibung("Antrag angelegt");
     antragHistorieDao.insert(antragHistorie);
@@ -227,9 +183,38 @@ public class AntragServiceImpl implements AntragService {
   @Transactional
   public boolean deleteAntrag(String benutzerId, long antragId) {
     Antrag antrag = antragDao.findById(antragId);
-    if (antrag == null)
-      return false;
+    if (antrag == null) {
+      throw new NotFoundException("Antrag nicht gefunden");
+    }
+    if (!berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)) {
+      throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zum Löschen des Antrags");
+    }
     antragDao.delete(antrag);
     return true;
+  }
+
+  private String dateToString(Date date) {
+    DateFormat f = new SimpleDateFormat("dd.mm.yyyy");
+    return f.format(date);
+  }
+
+  @Override
+  @Transactional
+  public AntragsDaten updateAntrag(String benutzerId, long antragId, UpdateAntragCommand command) {
+    Antrag antrag = antragDao.findById(antragId);
+    if (antrag == null) {
+      throw new NotFoundException("Antrag nicht gefunden");
+    }
+    if (!berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)) {
+      throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zum Ändern des Antrags");
+    }
+    antrag.setAntragArtId(command.getAntragArt());
+    antrag.setVon(command.getVon());
+    antrag.setBis(command.getBis());
+    antragDao.update(antrag);
+    String message = String.format("Antrag geändert: Art: %s, Von: %s, Bis: %s", command.getAntragArt(),
+        dateToString(command.getVon()), dateToString(command.getBis()));
+    insertAntragHistorie(benutzerId, antrag, message);
+    return createAntragsDatenFromAntrag(antragId, antragDao.findById(antragId));
   }
 }

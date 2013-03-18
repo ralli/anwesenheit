@@ -229,9 +229,14 @@
 			<column name="bezeichnung" value="In Arbeit" />
 		</insert>
 		<insert tableName="antrag_status">
-			<column name="antrag_status" value="ERFASST" />
+			<column name="antrag_status" value="BEWILLIGT" />
 			<column name="position" valueNumeric="3" />
-			<column name="bezeichnung" value="Erfasst" />
+			<column name="bezeichnung" value="Bewilligt" />
+		</insert>
+		<insert tableName="antrag_status">
+			<column name="antrag_status" value="ABGELEHNT" />
+			<column name="position" valueNumeric="4" />
+			<column name="bezeichnung" value="Abgelehnt" />
 		</insert>
 	</changeSet>
 	<changeSet id="insertRolle" author="raljuhn">

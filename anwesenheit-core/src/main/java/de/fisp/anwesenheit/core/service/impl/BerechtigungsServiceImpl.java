@@ -24,23 +24,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
     this.benutzerDao = benutzerDao;
   }
 
-  /**
-   * Prüft, ob ein Antrag für einen Benutzer sichtbar ist.
-   * <p>
-   * 
-   * Ein Antrag ist für einen Benutzer sichtbar wenn
-   * <ul>
-   * <li>Der Benutzer Eigentümer des Antrags ist
-   * <li>Der Benutzer Sonderberechtigungen hat
-   * <li>Wenn ein Bewilligungsantrag für den Benutzer zum Antrag existiert
-   * </ul>
-   * 
-   * @param antrag
-   *          Der zu prüfende Antrag
-   * @param benutzer
-   *          Der zu prüfende Benutzer
-   * @return true, wenn der Antrag für den Benutzer sichtbar ist
-   */
+  @Override
   public boolean darfAntragAnsehen(Antrag antrag, Benutzer benutzer) {
     if (benutzer.getBenutzerId().equals(antrag.getBenutzerId()))
       return true;
@@ -54,23 +38,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
     return bewilligungDao.findByAntragIdAndBewilliger(antrag.getId(), benutzer.getBenutzerId()) != null;
   }
 
-  /**
-   * Prüft, ob ein Antrag für einen Benutzer sichtbar ist.
-   * <p>
-   * 
-   * Ein Antrag ist für einen Benutzer sichtbar wenn
-   * <ul>
-   * <li>Der Benutzer Eigentümer des Antrags ist
-   * <li>Der Benutzer Sonderberechtigungen hat
-   * <li>Wenn ein Bewilligungsantrag für den Benutzer zum Antrag existiert
-   * </ul>
-   * 
-   * @param antrag
-   *          Der zu prüfende Antrag
-   * @param benutzerId
-   *          Die Id des zu prüfenden Benutzers
-   * @return true, wenn der Antrag für den Benutzer sichtbar ist
-   */
+  @Override
   public boolean darfAntragAnsehen(Antrag antrag, String benutzerId) {
     Benutzer benutzer = benutzerDao.findById(benutzerId);
     if (benutzer == null) {
@@ -79,17 +47,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
     return darfAntragAnsehen(antrag, benutzer);
   }
 
-  /**
-   * Prüft, ob ein Benutzer Eigentümer eines Antrags ist oder ob der Benutzer
-   * über Sonderberechtigungen verfügt.
-   * 
-   * @param antrag
-   *          Der zu prüfende Antrag
-   * @param benutzer
-   *          Der zu prüfende Benutzer
-   * @return true, wenn die Prüfung zu einem positiven Ergebnis kommt
-   */
-
+  @Override
   public boolean isAntragEigentuemerOderErfasser(Antrag antrag, Benutzer benutzer) {
     if (benutzer.getBenutzerId().equals(antrag.getBenutzerId()))
       return true;
@@ -103,21 +61,30 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
     return false;
   }
 
-  /**
-   * Prüft, ob ein Benutzer Eigentümer eines Antrags ist oder ob der Benutzer
-   * über Sonderberechtigungen verfügt.
-   * 
-   * @param antrag
-   *          Der zu prüfende Antrag
-   * @param benutzerId
-   *          Der zu prüfende Benutzer
-   * @return true, wenn die Prüfung zu einem positiven Ergebnis kommt
-   */
+  @Override
   public boolean isAntragEigentuemerOderErfasser(Antrag antrag, String benutzerId) {
     Benutzer benutzer = benutzerDao.findById(benutzerId);
     if (benutzer == null) {
       throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
     }
     return isAntragEigentuemerOderErfasser(antrag, benutzer);
+  }
+
+  @Override
+  public boolean darfAlleAntraegeSehen(String currentBenutzerId, String benutzerId) {
+    if (currentBenutzerId.equals(benutzerId))
+      return true;
+
+    Benutzer current = benutzerDao.findById(currentBenutzerId);
+    if (current == null) {
+      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", currentBenutzerId));
+    }
+
+    for (BenutzerRolle br : current.getBenutzerRollen()) {
+      if ("ERFASSER".equals(br.getRolle()))
+        return true;
+    }
+
+    return false;
   }
 }

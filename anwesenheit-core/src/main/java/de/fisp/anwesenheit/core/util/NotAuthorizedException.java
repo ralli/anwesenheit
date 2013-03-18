@@ -1,6 +1,7 @@
 package de.fisp.anwesenheit.core.util;
 
 public class NotAuthorizedException extends RuntimeException {
+  private static final long serialVersionUID = 1L;
 
   public NotAuthorizedException() {
     super();
