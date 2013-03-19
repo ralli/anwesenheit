@@ -5,9 +5,11 @@ import java.security.MessageDigest;
 import java.util.Random;
 
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.stereotype.Service;
 
 import de.fisp.anwesenheit.core.service.PasswordService;
 
+@Service
 public class PasswordServiceImpl implements PasswordService {
   @Override
   public String generateSalt() {

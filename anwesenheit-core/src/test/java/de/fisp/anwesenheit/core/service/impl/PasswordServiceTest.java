@@ -26,8 +26,8 @@ public class PasswordServiceTest {
 
   @Test
   public void testEncodeEqualsDecode() {
-    final String salt = "qgfB6sybMH662ZICb44/GM2dzb0=";
-    final String password = "testpassword";
+    final String salt = passwordService.generateSalt();
+    final String password = "test";
     final String differentPassword = "somethingdifferent";
     final String passwordHash = passwordService.encodePassword(salt, password);
     logger.info("salt={}, passwordHash={}", salt, passwordHash);

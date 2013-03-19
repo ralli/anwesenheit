@@ -15,30 +15,30 @@ import de.fisp.anwesenheit.core.entities.AntragArt;
 
 @Service
 public class AntragArtDaoImpl implements AntragArtDao {
-	private Logger log = LoggerFactory.getLogger(AntragDaoImpl.class);
-	@Autowired
-	private SessionFactory sessionFactory;
+  private Logger log = LoggerFactory.getLogger(AntragArtDaoImpl.class);
+  @Autowired
+  private SessionFactory sessionFactory;
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
 
-	private Session getCurrentSession() {
-		Session session = sessionFactory.getCurrentSession();
-		if (session == null) {
-			throw new RuntimeException("no current session");
-		}
-		return session;
-	}
+  private Session getCurrentSession() {
+    Session session = sessionFactory.getCurrentSession();
+    if (session == null) {
+      throw new RuntimeException("no current session");
+    }
+    return session;
+  }
 
-	@Override
-	public List<AntragArt> findAll() {
-		Session session = getCurrentSession();
-		Query query = session.createQuery("from AntragArt a order by a.position");
-		@SuppressWarnings("unchecked")
-		List<AntragArt> list = query.list();
-		log.debug("findAll: count = {}", list.size());
-		return list;
-	}
+  @Override
+  public List<AntragArt> findAll() {
+    Session session = getCurrentSession();
+    Query query = session.createQuery("from AntragArt a order by a.position");
+    @SuppressWarnings("unchecked")
+    List<AntragArt> list = query.list();
+    log.debug("findAll: count = {}", list.size());
+    return list;
+  }
 
 }

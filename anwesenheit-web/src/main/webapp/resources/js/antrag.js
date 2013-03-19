@@ -18,30 +18,11 @@ app.config(function($routeProvider) {
 });
 
 app.factory("antragService", function($resource) {
-    return $resource("/anwesenheit-web/api/antraege/:id");
+  return $resource("/anwesenheit-web/api/antraege/:id");
 });
 
-app.factory("antragArtService", function() {
-    var result = {};
-    result.get = function(id, success, error) {
-        var x = [ {
-            antragArt : "URLAUB",
-            position : 1,
-            bezeichnung : "Urlaub"
-        }, {
-            antragArt : "GLEITZEIT",
-            position : 2,
-            bezeichnung : "Gleitzeit"
-        }, {
-            antragArt : "SONDER",
-            position : 3,
-            bezeichnung : "Sonderurlaub"
-        } ];
-        if(success) 
-            success.call({}, x);
-        return x;
-    };
-    return result;
+app.factory("antragArtService", function($resource) {
+  return $resource("/anwesenheit-web/api/antragsarten/:id");
 });
 
 app.factory("benutzerService", function($resource) {
@@ -79,7 +60,7 @@ function parseDate(s) {
 
 app.controller("NewCtrl", function($scope, antragService, antragArtService,
         benutzerService) {
-    $scope.antragArtListe = antragArtService.get({}, function(liste) {
+    $scope.antragArtListe = antragArtService.query(function(liste) {
         $scope.antrag = {
             antragArt : _.clone(liste[0]),
             von : "01.01.2013",
