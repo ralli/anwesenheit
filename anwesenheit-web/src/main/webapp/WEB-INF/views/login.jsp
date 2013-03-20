@@ -48,11 +48,14 @@ body {
 			</div>
 		</div>
 	</div>
-	<form:form cssClass="form-signin" modelAttribute="loginData"
+	<form:form id="login-form" cssClass="form-signin" modelAttribute="loginData"
 		method="POST">
+		<form:errors />
 		<h2 class="form-signin-heading">Bitte melden Sie sich an</h2>
-		<form:input path="login" placeholder="Benutzername" />
-		<form:password path="password" placeholder="Passwort" />
+		<form:input path="login" placeholder="Benutzername" />  <form:errors path="login" cssClass="errorMessage" element="div" />
+     
+		
+		<form:password path="password" placeholder="Passwort" /> <form:errors path="password"/>
 		<button class="btn btn-large btn-primary" type="submit">Anmelden</button>
 	</form:form>
 </body>

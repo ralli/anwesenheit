@@ -6,7 +6,7 @@
 </head>
 <body>
 	<div ng-app="antrag">
-		<div ng-init="antragListe=<c:out value="${antragListe}"/>">
+		<div>
 			<div ng-view></div>
 		</div>
 

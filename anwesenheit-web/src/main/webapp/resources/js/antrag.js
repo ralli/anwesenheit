@@ -40,6 +40,7 @@ app.controller("AppCtrl", function($rootScope) {
 });
 
 app.controller("ListCtrl", function($scope, antragService) {
+  $scope.antragListe = antragService.get({});
     $scope.deleteAntrag = function(antrag) {
         antragService.delete({ "id": antrag.id }, function(data) {
             $scope.antragListe = antragService.get();        
@@ -138,7 +139,7 @@ app.controller("NewCtrl", function($scope, antragService, antragArtService,
 
 app.controller("EditCtrl", function($scope, $routeParams, $filter, antragArtService,
         antragService, benutzerService, bewilligungService) {
-    $scope.antragArtListe = antragArtService.get({});
+    $scope.antragArtListe = antragArtService.query();
     $scope.antrag = antragService.get({
         "id" : $routeParams.id
     }, function(data) {

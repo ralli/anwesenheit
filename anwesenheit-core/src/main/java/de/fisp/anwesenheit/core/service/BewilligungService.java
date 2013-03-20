@@ -1,6 +1,7 @@
 package de.fisp.anwesenheit.core.service;
 
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
+import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
 
 public interface BewilligungService {
@@ -16,7 +17,7 @@ public interface BewilligungService {
    * @throws NotAuthorized
    *           wenn der Benutzer die Bewilligung nicht löschen darf
    */
-  public void deleteBewilligung(String benutzerId, long bewilligungId);
+  void deleteBewilligung(String benutzerId, long bewilligungId);
 
   /**
    * Fügt eine neue Bewilligung zu einem Antrag hinzu
@@ -25,7 +26,18 @@ public interface BewilligungService {
    *          Der Benutzer, der die Bewilligung hinzufügen möchte
    * @param command
    *          Die Daten der Bewilligung, die hinzugefügt werden soll
-   * @return Die 
+   * @return Die
    */
-  public BewilligungsDaten addBewilligung(String benutzerId, AddBewilligungCommand command);
+  BewilligungsDaten addBewilligung(String benutzerId, AddBewilligungCommand command);
+
+  /**
+   * Liefert eine Liste aller Bewilligungen die einem Benutzer zugewiesen sind
+   * 
+   * @param currentUserId
+   *          Die BenutzerId des aktuell angemeldeten Benutzers
+   * @param benutzerId
+   *          Die BenutzerId des Benutzers
+   * @return Die Liste der gefundenen Bewilligungen
+   */
+  BewilligungListe findByBenutzer(String currentUserId, String benutzerId);
 }

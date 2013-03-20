@@ -95,4 +95,15 @@ public class BewilligungDaoImpl implements BewilligungDao {
     log.debug("findByAntragIdAndBewilliger({}, {}) = {}", new Object[] { antragId, benutzerId, result });
     return result;
   }
+
+  @Override
+  public List<Bewilligung> findByBewilliger(String benutzerId) {
+    final String hql = "from Bewilligung b join fetch b.antrag join fetch b.benutzer join fetch b.bewilligungsStatus join fetch b.antrag.benutzer join fetch b.antrag.antragStatus join fetch b.antrag.antragArt where b.benutzerId=:benutzerId order by b.antrag.von";
+    Query query = getCurrentSession().createQuery(hql);
+    query.setString("benutzerId", benutzerId);
+    @SuppressWarnings("unchecked")
+    List<Bewilligung> list = query.list();
+    log.debug("findByBewilliger({}): count = {}", new Object[] { benutzerId, list.size() });
+    return list;
+  }
 }

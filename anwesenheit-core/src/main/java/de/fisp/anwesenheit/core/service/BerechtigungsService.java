@@ -97,4 +97,39 @@ public interface BerechtigungsService {
    */
 
   boolean isAntragEigentuemerOderErfasser(Antrag antrag, String benutzerId);
+
+  /**
+   * Liefert true, wenn der aktuelle Benutzer die Bewilligungen eines anderen
+   * Benutzers ansehen darf
+   * 
+   * @param currentBenutzerId
+   *          Der Benutzer, dessen Berechtigungen geprüft werden sollen
+   * @param benutzerId
+   *          Der Benutzer, dessen Bewilligungen angesehen werden sollen
+   * @return true, wenn der aktuelle Benutzer die Bewilligungen ansehen darf
+   * @throws NotFoundException
+   *           wenn der aktuelle Benutzer nicht existiert
+   */
+  boolean darfBewilligungenAnsehen(String currentBenutzerId, String benutzerId);
+
+  /**
+   * Liefert true, wenn der Benutzer über Sonderberechtigungen verfügt
+   * 
+   * @param benutzer
+   *          Der zu prüfende Benutzer
+   * 
+   * @return true, wenn der Benutzer über Sonderberechtigungen verfügt
+   */
+  boolean hatSonderBerechtigungen(Benutzer benutzer);
+
+  /**
+   * Liefert true, wenn der Benutzer über Sonderberechtigungen verfügt
+   * 
+   * @param benutzerId
+   *          Die Benutzerkennung des Benutzers
+   * @return true, wenn der Benutzer über Sonderberechtigungen verfügt
+   * @throws NotFoundException
+   *           wenn der Benutzer nicht existiert
+   */
+  boolean hatSonderBerechtigungen(String benutzerId);
 }

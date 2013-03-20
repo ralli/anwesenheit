@@ -3,6 +3,9 @@ package de.fisp.anwesenheit.core.service.impl;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +18,7 @@ import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
+import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
@@ -94,9 +98,9 @@ public class BewilligungServiceTest {
     final String eigentuemerId = "eigentuemer";
     final Bewilligung bewilligung = testDataFactory.createBewilligung(antragId, eigentuemerId, bewilligerId);
 
-    when(bewilligungDao.findById(bewilligungId)).thenReturn(bewilligung);   
+    when(bewilligungDao.findById(bewilligungId)).thenReturn(bewilligung);
     when(berechtigungsService.isAntragEigentuemerOderErfasser(bewilligung.getAntrag(), abweichendeBenutzerId)).thenReturn(false);
-    
+
     try {
       bewilligungService.deleteBewilligung(abweichendeBenutzerId, bewilligungId);
     } catch (NotAuthorizedException ex) {
@@ -118,11 +122,11 @@ public class BewilligungServiceTest {
     final String bewilligerId = "testbenutzer";
     final String abweichendeBenutzerId = "falscherbenutzer";
     final String eigentuemerId = "eigentuemer";
-    
+
     Bewilligung bewilligung = testDataFactory.createBewilligung(antragId, eigentuemerId, bewilligerId);
     when(bewilligungDao.findById(bewilligungId)).thenReturn(bewilligung);
     when(berechtigungsService.isAntragEigentuemerOderErfasser(bewilligung.getAntrag(), abweichendeBenutzerId)).thenReturn(true);
-    
+
     bewilligungService.deleteBewilligung(abweichendeBenutzerId, bewilligungId);
   }
 
@@ -204,7 +208,7 @@ public class BewilligungServiceTest {
   }
 
   /**
-   * Test: Alle Vorbedingungen sind erfüllt 
+   * Test: Alle Vorbedingungen sind erfüllt
    */
   @Test
   public void addBewilligungSucceeds() {
@@ -223,11 +227,11 @@ public class BewilligungServiceTest {
     when(benutzerDao.findById(bewilligerId)).thenReturn(bewilliger);
     when(antragDao.findById(antragId)).thenReturn(antrag);
     when(berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)).thenReturn(true);
-    
+
     bewilligungService.addBewilligung(benutzerId, addBewilligungCommand);
   }
 
-   /**
+  /**
    * Test: Die Bewilligung existiert bereits => NotValidException
    */
   @Test
@@ -288,4 +292,60 @@ public class BewilligungServiceTest {
     Assert.fail("NotValidException expected");
   }
 
+  @Test
+  public void findByBenutzerIdShouldFailIfBenutzerNotFound() {
+    final String benutzerId = "chef";
+    final String currentUserId = "backoffice";
+    final Benutzer chef = null;
+    /*
+     * schlägt ebenfalls fehl, ist aber nicht Bestandteil des Tests (die
+     * NotFoundException wird vom BerechtigungsService geworfen)
+     */
+    final Benutzer backoffice = testDataFactory.createBenutzer(currentUserId);
+    when(benutzerDao.findById(benutzerId)).thenReturn(chef);
+    when(benutzerDao.findById(currentUserId)).thenReturn(backoffice);
+    try {
+      bewilligungService.findByBenutzer(currentUserId, benutzerId);
+    } catch (NotFoundException ex) {
+      // alles ok
+      return;
+    }
+    Assert.fail("NotFoundException erwartet");
+  }
+
+  @Test
+  public void findByBenutzerIdShouldFailIfInsufficientRights() {
+    final String benutzerId = "chef";
+    final String currentUserId = "backoffice";
+    final Benutzer chef = testDataFactory.createBenutzer(benutzerId);
+    final Benutzer backoffice = testDataFactory.createBenutzer(currentUserId);
+
+    when(benutzerDao.findById(benutzerId)).thenReturn(chef);
+    when(benutzerDao.findById(currentUserId)).thenReturn(backoffice);
+    when(berechtigungsService.darfBewilligungenAnsehen(currentUserId, benutzerId)).thenReturn(false);
+    try {
+      bewilligungService.findByBenutzer(currentUserId, benutzerId);
+    } catch (NotAuthorizedException ex) {
+      // alles ok
+      return;
+    }
+    Assert.fail("NotAuthorizedException erwartet");
+  }
+
+  @Test
+  public void findByBenutzerIdShouldSucceed() {
+    final String benutzerId = "chef";
+    final String currentUserId = "backoffice";
+    final Benutzer chef = testDataFactory.createBenutzer(benutzerId);
+    final Benutzer backoffice = testDataFactory.createBenutzer(currentUserId);
+    final List<Bewilligung> list = new ArrayList<Bewilligung>();
+    list.add(testDataFactory.createBewilligung(1, currentUserId, benutzerId));
+    when(benutzerDao.findById(benutzerId)).thenReturn(chef);
+    when(benutzerDao.findById(currentUserId)).thenReturn(backoffice);
+    when(berechtigungsService.darfBewilligungenAnsehen(currentUserId, benutzerId)).thenReturn(true);
+    when(bewilligungDao.findByBewilliger(benutzerId)).thenReturn(list);    
+    BewilligungListe result = bewilligungService.findByBenutzer(currentUserId, benutzerId);
+    logger.debug("{}", result);
+    Assert.assertEquals(1, result.getBewilligungen().size());
+  }
 }

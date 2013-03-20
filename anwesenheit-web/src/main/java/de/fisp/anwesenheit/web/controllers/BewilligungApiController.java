@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +21,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
+import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
 import de.fisp.anwesenheit.core.service.BewilligungService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
@@ -34,12 +33,14 @@ import de.fisp.anwesenheit.core.util.NotValidException;
 public class BewilligungApiController {
   @Autowired
   private BewilligungService bewilligungService;
-  private static final Logger logger = LoggerFactory.getLogger(BewilligungApiController.class);
 
   private String getCurrentUser() {
-    return (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId", RequestAttributes.SCOPE_SESSION);
+    String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId", RequestAttributes.SCOPE_SESSION);
+    if(result == null) {
+      throw new NotAuthorizedException("Nicht angemeldet");
+    }
+    return result;
   }
-
 
   private String toJson(Object object) {
     try {
@@ -56,6 +57,22 @@ public class BewilligungApiController {
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     map.put("message", message);
     return toJson(map);
+  }
+
+  @RequestMapping(method = RequestMethod.GET)
+  public @ResponseBody
+  ResponseEntity<String> findByCurrentUser() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    try {      
+      String benutzerId = getCurrentUser();
+      BewilligungListe liste = bewilligungService.findByBenutzer(benutzerId, benutzerId);
+      return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    }
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

@@ -61,7 +61,18 @@ public interface BewilligungDao {
    *          Die ID des zugehörigen Antrags
    * @param benutzerId
    *          Die ID des Bewilligers
-   * @return
+   * @return Die gefundenen Bewilligung oder null, wenn keine passende
+   *         Bewilligung gefunden wurde.
    */
   Bewilligung findByAntragIdAndBewilliger(long antragId, String benutzerId);
+
+  /**
+   * Liefert eine List aller einem Benutzer zugewiesenen Bewilligungen
+   * 
+   * @param benutzerId
+   *          Die ID des Bewilligers
+   * 
+   * @return Die Liste der Bewilligungen
+   */
+  List<Bewilligung> findByBewilliger(String benutzerId);
 }

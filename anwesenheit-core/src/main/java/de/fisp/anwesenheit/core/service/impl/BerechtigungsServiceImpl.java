@@ -75,16 +75,33 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
     if (currentBenutzerId.equals(benutzerId))
       return true;
 
-    Benutzer current = benutzerDao.findById(currentBenutzerId);
-    if (current == null) {
-      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", currentBenutzerId));
-    }
+    return hatSonderBerechtigungen(currentBenutzerId);
+  }
 
-    for (BenutzerRolle br : current.getBenutzerRollen()) {
+  @Override
+  public boolean hatSonderBerechtigungen(Benutzer benutzer) {
+    for (BenutzerRolle br : benutzer.getBenutzerRollen()) {
       if ("ERFASSER".equals(br.getRolle()))
         return true;
     }
 
     return false;
+  }
+
+  @Override
+  public boolean hatSonderBerechtigungen(String benutzerId) {
+    Benutzer benutzer = benutzerDao.findById(benutzerId);
+    if (benutzer == null) {
+      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
+    }
+    return hatSonderBerechtigungen(benutzer);
+  }
+
+  @Override
+  public boolean darfBewilligungenAnsehen(String currentBenutzerId, String benutzerId) {
+    if (currentBenutzerId.equals(benutzerId))
+      return true;
+
+    return hatSonderBerechtigungen(currentBenutzerId);
   }
 }

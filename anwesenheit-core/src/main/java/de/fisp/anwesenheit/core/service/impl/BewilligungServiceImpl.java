@@ -1,6 +1,8 @@
 package de.fisp.anwesenheit.core.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,9 @@ import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
+import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
+import de.fisp.anwesenheit.core.domain.BewilligungsListeEintrag;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.AntragHistorie;
 import de.fisp.anwesenheit.core.entities.Benutzer;
@@ -58,8 +62,7 @@ public class BewilligungServiceImpl implements BewilligungService {
   @Transactional
   public void deleteBewilligung(String benutzerId, long bewilligungId) {
     logger.debug("deleteBewilligung({})", bewilligungId);
-    
-    
+
     Bewilligung bewilligung = bewilligungDao.findById(bewilligungId);
     if (bewilligung == null) {
       throw new NotFoundException("Bewilligung nicht gefunden");
@@ -141,5 +144,34 @@ public class BewilligungServiceImpl implements BewilligungService {
     logger.debug("addBewilligung({}) = {}", command, daten);
 
     return daten;
+  }
+
+  private BewilligungsListeEintrag createBewilligungsListeEintrag(Bewilligung bewilligung) {
+    Antrag antrag = bewilligung.getAntrag();
+    BewilligungsListeEintrag eintrag = new BewilligungsListeEintrag(bewilligung.getId(), bewilligung.getBewilligungsStatus(),
+        bewilligung.getAntragId(), antrag.getAntragArt(), antrag.getAntragStatus(), createBenutzerDaten(antrag.getBenutzer()),
+        antrag.getVon(), antrag.getBis());
+    return eintrag;
+  }
+
+  @Override
+  @Transactional
+  public BewilligungListe findByBenutzer(String currentUserId, String benutzerId) {
+    logger.debug("findByBenutzer({}, {})", currentUserId, benutzerId);
+    Benutzer benutzer = benutzerDao.findById(benutzerId);
+    if (benutzer == null) {
+      throw new NotFoundException(String.format("Bewilliger %s nicht gefunden", benutzerId));
+    }
+    if (!berechtigungsService.darfBewilligungenAnsehen(currentUserId, benutzerId)) {
+      throw new NotAuthorizedException("Keine Ausreichenden Berechtigungen zum Anzeigen der Bewilligungen");
+    }
+    List<Bewilligung> list = bewilligungDao.findByBewilliger(benutzerId);
+    List<BewilligungsListeEintrag> eintraege = new ArrayList<BewilligungsListeEintrag>();
+    BenutzerDaten benutzerDaten = createBenutzerDaten(benutzer);
+    for (Bewilligung b : list) {
+      eintraege.add(createBewilligungsListeEintrag(b));
+    }
+    BewilligungListe result = new BewilligungListe(benutzerDaten, eintraege);
+    return result;
   }
 }

@@ -51,25 +51,36 @@ public class BewilligungDaoTest {
 		final String chefId = "testchef";
 		final String antragsArt = "URLAUB";
 		final String bewilligungsStatus = "BEWILLIGT";
+		
 		insertBenutzer(benutzerId);
 		insertBenutzer(chefId);
 		Antrag antrag = insertAntrag(antragsArt, benutzerId);
 		Bewilligung bewilligung = testDataFactory.createBewilligung(
 				antrag.getId(), chefId);
 		bewilligungDao.insert(bewilligung);
+		
 		long id = bewilligung.getId();
 		Assert.assertTrue("Muss ein generierter Wert sein", id != 0L);
+		
 		bewilligung = bewilligungDao.findById(id);
 		Assert.assertNotNull(bewilligung);
+		
 		List<Bewilligung> list = bewilligungDao.findByAntrag(antrag.getId());
 		Assert.assertEquals(1, list.size());
+		
 		bewilligung.setBewilligungsStatusId(bewilligungsStatus);
 		bewilligungDao.update(bewilligung);
+		
 		bewilligung = bewilligungDao.findById(id);
 		Assert.assertNotNull(bewilligung);
-		Assert.assertEquals("BEWILLIGT", bewilligung.getBewilligungsStatusId());
+		Assert.assertEquals(bewilligungsStatus, bewilligung.getBewilligungsStatusId());
+		
 		int maxPosition = bewilligungDao.getMaxPosition(antrag.getId());
 		Assert.assertEquals(1, maxPosition);
+		
+		list = bewilligungDao.findByBewilliger(chefId);
+		Assert.assertEquals(1, list.size());
+		
 		bewilligungDao.delete(bewilligung);
 		bewilligung = bewilligungDao.findById(id);
 		Assert.assertNull(bewilligung);
