@@ -1,0 +1,30 @@
+<h1>Offene Anträge</h1>
+<p>
+	<strong>Benutzer:</strong> {{antragListe.benutzer.vorname}}
+	{{antragListe.benutzer.nachname}}
+</p>
+<a ng-href="#/new" class="btn" href><i class="icon-plus"></i>Neuer
+	Antrag</a>
+</p>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Art</th>
+			<th>Status</th>
+			<th>Von</th>
+			<th>Bis</th>
+			<th>Aktion</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="antrag in antragListe.antraege">
+			<td>{{antrag.antragArt.bezeichnung}}</td>
+			<td>{{antrag.antragStatus.bezeichnung}}</td>
+			<td>{{antrag.von|date:'dd.MM.yyyy'}}</td>
+			<td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
+			<td><a ng-href="#/{{antrag.id}}" href>Details</a> <a
+				ng-href="#/{{antrag.id}}/edit" href>Bearbeiten</a> <a href=""
+				ng-click="deleteAntrag(antrag)">Löschen</a></td>
+		</tr>
+	</tbody>
+</table>

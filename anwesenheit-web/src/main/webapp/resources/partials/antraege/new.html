@@ -1,0 +1,49 @@
+
+<h1>Neuer Antrag</h1>
+<form name="createForm" class="form-horizontal"
+	ng-submit="createAntrag()">
+	<legend>Antrag</legend>
+	<div class="control-group">
+		<label class="control-label" for="antrag_art">Art</label>
+		<div class="controls">
+			<select id="antrag_art" name="antragArt"
+				ng-model="antrag.antragArt.antragArt"
+				ng-options="a.antragArt as a.bezeichnung for a in antragArtListe" />
+		</div>
+	</div>
+	<div ng-class="controlClassFor(createForm.von.$valid)">
+		<label for="antrag_von" class="control-label">Von</label>
+		<div class="controls">
+			<input type="text" id="antrag_von" name="von" ng-model="antrag.von"
+				ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+		</div>
+	</div>
+	<div ng-class="controlClassFor(createForm.bis.$valid)">
+		<label for="antrag_bis" class="control-label">Bis</label>
+		<div class="controls">
+			<input type="text" id="antrag_bis" name="bis" ng-model="antrag.bis"
+				ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<input type="submit" class="btn btn-primary" value="Speichern" /> <a
+				ng-href="#" class="btn">Zurück</a>
+		</div>
+	</div>
+</form>
+<h2>Bewilligungen</h2>
+<form name="bewilligungForm" class="form-inline"
+	ng-submit="addBewilliger()">
+	<input type="text" placeholder="Bewilliger" id="bewilliger_key"
+		name="bewilliger" ng-model="bewilligerKey"
+		benutzer-autocomplete="true" select="benutzerSelected()" required />
+	<input type="submit" class="btn btn-primary" value="Hinzufügen" /> <span
+		class="error">{{bewilligungError}}</span>
+</form>
+<ul>
+	<li ng-repeat="b in antrag.bewilliger">{{b.vorname}}
+		{{b.nachname}} <a ng-href="" ng-click="removeBewilliger(b)">Löschen</a>
+	</li>
+</ul>
+<p>{{bewilligerKey}}</p>

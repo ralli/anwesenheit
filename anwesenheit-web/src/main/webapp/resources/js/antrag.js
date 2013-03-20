@@ -1,18 +1,18 @@
 var app = angular.module("antrag", [ "ngResource" ]);
 app.config(function($routeProvider) {
     $routeProvider.when('/', {
-        templateUrl : 'index.html',
+        templateUrl : '/anwesenheit-web/resources/partials/antraege/index.html',
         controller : 'ListCtrl'
     }).when("/new", {
-        templateUrl : 'new.html',
+        templateUrl : '/anwesenheit-web/resources/partials/antraege/new.html',
         controller : 'NewCtrl',
     })
     .when("/:id/edit", {
-        templateUrl : 'edit.html',
+        templateUrl : '/anwesenheit-web/resources/partials/antraege/details.html',
         controller : 'EditCtrl',        
     })
     .when("/:id", {
-        templateUrl : 'details.html',
+        templateUrl : '/anwesenheit-web/resources/partials/antraege/details.html',
         controller : 'DetailsCtrl',
     })
 });
