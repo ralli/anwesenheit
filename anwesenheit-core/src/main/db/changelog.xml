@@ -263,4 +263,32 @@
 			<column name="bezeichnung" value="Bewilligt" />
 		</insert>
 	</changeSet>
+	<changeSet id="createTableBenutzerTyp" author="raljuhn">
+		<createTable tableName="benutzertyp">
+			<column name="benutzertyp" type="varchar(10)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="position" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="bezeichnung" type="varchar(30)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet id="insertBenutzerTyp" author="raljuhn">
+		<insert tableName="benutzertyp">
+			<column name="benutzertyp" value="native" />
+			<column name="position" valueNumeric="1" />
+			<column name="bezeichnung" value="Intern" />
+		</insert>
+		<insert tableName="benutzertyp">
+			<column name="benutzertyp" value="ldap" />
+			<column name="position" valueNumeric="2" />
+			<column name="bezeichnung" value="LDAP" />
+		</insert>
+	</changeSet>
+	<changeSet id="addFKToBenutzer" author="raljuhn">
+	<addForeignKeyConstraint constraintName="fk_benutzer_1" referencedTableName="benutzertyp" baseColumnNames="benutzertyp" baseTableName="benutzer" referencedColumnNames="benutzertyp" />
+	</changeSet>
 </databaseChangeLog>
