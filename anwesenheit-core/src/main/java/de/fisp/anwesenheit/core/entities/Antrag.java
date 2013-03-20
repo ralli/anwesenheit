@@ -45,6 +45,7 @@ public class Antrag {
 	private AntragArt antragArt;
 
 	@OneToMany(targetEntity=Bewilligung.class)
+	@JoinColumn(name="antrag_id")
 	private Set<Bewilligung> bewilligungen;
 	
 	public long getId() {
