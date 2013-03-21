@@ -56,7 +56,7 @@ app.controller("ListAntragCtrl", function($scope, antragService) {
   $scope.antragListe = antragService.get({});
     $scope.deleteAntrag = function(antrag) {
         antragService.delete({ "id": antrag.id }, function(data) {
-            $scope.antragListe = antragService.get();        
+            $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function(a) { return a.id === antrag.id; });        
         });
     };
 });
