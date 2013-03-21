@@ -14,7 +14,7 @@ app.config(function($routeProvider) {
         controller : 'NewAntragCtrl',
     })
     .when("/antraege/:id/edit", {
-        templateUrl : '/anwesenheit-web/resources/partials/antraege/details.html',
+        templateUrl : '/anwesenheit-web/resources/partials/antraege/edit.html',
         controller : 'EditAntragCtrl',        
     })
     .when("/antraege/:id", {
