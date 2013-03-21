@@ -3,7 +3,7 @@
 	<strong>Benutzer:</strong> {{antragListe.benutzer.vorname}}
 	{{antragListe.benutzer.nachname}}
 </p>
-<a ng-href="#/new" class="btn" href><i class="icon-plus"></i>Neuer
+<a ng-href="#/antraege/new" class="btn" href><i class="icon-plus"></i>Neuer
 	Antrag</a>
 </p>
 <table class="table table-bordered">
@@ -22,9 +22,11 @@
 			<td>{{antrag.antragStatus.bezeichnung}}</td>
 			<td>{{antrag.von|date:'dd.MM.yyyy'}}</td>
 			<td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
-			<td><a ng-href="#/{{antrag.id}}" href>Details</a> <a
-				ng-href="#/{{antrag.id}}/edit" href>Bearbeiten</a> <a href=""
-				ng-click="deleteAntrag(antrag)">Löschen</a></td>
+			<td>
+			   <a ng-href="#/antraege/{{antrag.id}}" href>Details</a> 
+			   <a ng-href="#/antraege/{{antrag.id}}/edit" href>Bearbeiten</a> 
+			   <a href="" ng-click="deleteAntrag(antrag)">Löschen</a>
+			</td>
 		</tr>
 	</tbody>
 </table>

@@ -81,8 +81,11 @@ public class AntragDaoImpl implements AntragDao {
 
   @Override
   public void delete(Antrag antrag) {
+    String hqlDelete = "delete Antrag a where a.id = :id";
     log.debug("delete({})", antrag);
-    getCurrentSession().delete(antrag);
+    Query query = getCurrentSession().createQuery(hqlDelete);
+    query.setLong("id", antrag.getId());
+    query.executeUpdate();
   }
 
 }

@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/bootstrap"
 	prefix="b"%>
-<html>
+<html ng-app="antrag">
 <head>
 <title><sitemesh:write property='title' /></title>
 <c:url value="/" var="baseUrl" />
@@ -49,10 +49,10 @@
 				<a class="brand" href="<c:url value="/" />">Anwesenheit</a>
 				<div class="nav-collapse">
 					<ul class="nav">
-						<li><a href="<c:url value="/" />">Home</a></li>
-						<li><a href="<c:url value="/antraege" />">Anträge</a></li>
-						<li><a href="<c:url value="/bewilligungen" />">Bewilligungen</a></li>
-						<li><a href="<c:url value="/eintragungen" />">Eintragungen</a></li>
+						<li><a href="<c:url value="#" />">Home</a></li>
+						<li><a href="<c:url value="#/antraege" />">Anträge</a></li>
+						<li><a href="<c:url value="#/bewilligungen" />">Bewilligungen</a></li>
+						<li><a href="<c:url value="#/eintragungen" />">Eintragungen</a></li>
 					</ul>
 					<b:currentUserName id="current-user-name">Test</b:currentUserName>
 				</div>
@@ -66,9 +66,6 @@
 		</c:if>
 		<sitemesh:write property='body' />
 	</div>
-
-	<sitemesh:write property='footer' />
-
 	<script src="<c:url value="/bootstrap/js/bootstrap.min.js" />"></script>
 </body>
 </html>

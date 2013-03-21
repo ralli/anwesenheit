@@ -19,121 +19,120 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Entity
 @Table(name = "antrag")
 public class Antrag {
-	@Id
-	@GeneratedValue
-	@Column(name = "id")
-	private long id;
-	@Column(name = "benutzer_id")
-	private String benutzerId;
-	@Column(name = "antrag_art")
-	private String antragArtId;
-	@Temporal(TemporalType.DATE)
-	private Date von;
-	@Temporal(TemporalType.DATE)
-	private Date bis;
-	@Column(name = "antrag_status")
-	private String antragStatusId;
-	
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
-	private Benutzer benutzer;
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "antrag_status", insertable = false, updatable = false)
-	private AntragStatus antragStatus;
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "antrag_art", insertable = false, updatable = false)
-	private AntragArt antragArt;
+  @Id
+  @GeneratedValue
+  @Column(name = "id")
+  private long id;
+  @Column(name = "benutzer_id")
+  private String benutzerId;
+  @Column(name = "antrag_art")
+  private String antragArtId;
+  @Temporal(TemporalType.DATE)
+  private Date von;
+  @Temporal(TemporalType.DATE)
+  private Date bis;
+  @Column(name = "antrag_status")
+  private String antragStatusId;
 
-	@OneToMany(targetEntity=Bewilligung.class)
-	@JoinColumn(name="antrag_id")
-	private Set<Bewilligung> bewilligungen;
-	
-	public long getId() {
-		return id;
-	}
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
+  private Benutzer benutzer;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "antrag_status", insertable = false, updatable = false)
+  private AntragStatus antragStatus;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "antrag_art", insertable = false, updatable = false)
+  private AntragArt antragArt;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+  @OneToMany(targetEntity = Bewilligung.class)
+  @JoinColumn(name = "antrag_id")
+  private Set<Bewilligung> bewilligungen;
 
-	public String getBenutzerId() {
-		return benutzerId;
-	}
+  public long getId() {
+    return id;
+  }
 
-	public void setBenutzerId(String benutzerId) {
-		this.benutzerId = benutzerId;
-	}
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	public String getAntragArtId() {
-		return antragArtId;
-	}
+  public String getBenutzerId() {
+    return benutzerId;
+  }
 
-	public void setAntragArtId(String antragArt) {
-		this.antragArtId = antragArt;
-	}
+  public void setBenutzerId(String benutzerId) {
+    this.benutzerId = benutzerId;
+  }
 
-	public Date getVon() {
-		return von;
-	}
+  public String getAntragArtId() {
+    return antragArtId;
+  }
 
-	public void setVon(Date von) {
-		this.von = von;
-	}
+  public void setAntragArtId(String antragArt) {
+    this.antragArtId = antragArt;
+  }
 
-	public Date getBis() {
-		return bis;
-	}
+  public Date getVon() {
+    return von;
+  }
 
-	public void setBis(Date bis) {
-		this.bis = bis;
-	}
+  public void setVon(Date von) {
+    this.von = von;
+  }
 
-	public String getAntragStatusId() {
-		return antragStatusId;
-	}
+  public Date getBis() {
+    return bis;
+  }
 
-	public void setAntragStatusId(String antragStatusId) {
-		this.antragStatusId = antragStatusId;
-	}
+  public void setBis(Date bis) {
+    this.bis = bis;
+  }
 
-	public Benutzer getBenutzer() {
-		return benutzer;
-	}
+  public String getAntragStatusId() {
+    return antragStatusId;
+  }
 
-	public void setBenutzer(Benutzer benutzer) {
-		this.benutzer = benutzer;
-	}
+  public void setAntragStatusId(String antragStatusId) {
+    this.antragStatusId = antragStatusId;
+  }
 
-	public AntragArt getAntragArt() {
-		return antragArt;
-	}
+  public Benutzer getBenutzer() {
+    return benutzer;
+  }
 
-	public void setAntragArt(AntragArt antragArt) {
-		this.antragArt = antragArt;
-	}
+  public void setBenutzer(Benutzer benutzer) {
+    this.benutzer = benutzer;
+  }
 
-	public void setAntragStatus(AntragStatus antragStatus) {
-		this.antragStatus = antragStatus;
-	}
+  public AntragArt getAntragArt() {
+    return antragArt;
+  }
 
-	public AntragStatus getAntragStatus() {
-		return antragStatus;
-	}
+  public void setAntragArt(AntragArt antragArt) {
+    this.antragArt = antragArt;
+  }
 
-	public Set<Bewilligung> getBewilligungen() {
-      return bewilligungen;
-    }
-	
-	public void setBewilligungen(Set<Bewilligung> bewilligungen) {
-      this.bewilligungen = bewilligungen;
-    }
-	
-	@Override
-	public String toString() {
-		ToStringBuilder toStringBuilder = new ToStringBuilder(this);
-		toStringBuilder.append("id", id).append("benutzerId", benutzerId)
-				.append("antragArt", antragArtId).append("von", von)
-				.append("bis", bis).append("antragStatusId", antragStatusId);
-		return toStringBuilder.toString();
-	}
+  public void setAntragStatus(AntragStatus antragStatus) {
+    this.antragStatus = antragStatus;
+  }
+
+  public AntragStatus getAntragStatus() {
+    return antragStatus;
+  }
+
+  public Set<Bewilligung> getBewilligungen() {
+    return bewilligungen;
+  }
+
+  public void setBewilligungen(Set<Bewilligung> bewilligungen) {
+    this.bewilligungen = bewilligungen;
+  }
+
+  @Override
+  public String toString() {
+    ToStringBuilder toStringBuilder = new ToStringBuilder(this);
+    toStringBuilder.append("id", id).append("benutzerId", benutzerId).append("antragArt", antragArtId).append("von", von)
+        .append("bis", bis).append("antragStatusId", antragStatusId);
+    return toStringBuilder.toString();
+  }
 }

@@ -1,20 +1,30 @@
 var app = angular.module("antrag", [ "ngResource" ]);
 app.config(function($routeProvider) {
-    $routeProvider.when('/', {
+    $routeProvider
+    .when('/', {
+      templateUrl : '/anwesenheit-web/resources/partials/home.html',
+      controller : 'HomeCtrl'
+    })
+    .when('/antraege', {
         templateUrl : '/anwesenheit-web/resources/partials/antraege/index.html',
-        controller : 'ListCtrl'
-    }).when("/new", {
+        controller : 'ListAntragCtrl'
+    })
+    .when("/antraege/new", {
         templateUrl : '/anwesenheit-web/resources/partials/antraege/new.html',
-        controller : 'NewCtrl',
+        controller : 'NewAntragCtrl',
     })
-    .when("/:id/edit", {
+    .when("/antraege/:id/edit", {
         templateUrl : '/anwesenheit-web/resources/partials/antraege/details.html',
-        controller : 'EditCtrl',        
+        controller : 'EditAntragCtrl',        
     })
-    .when("/:id", {
+    .when("/antraege/:id", {
         templateUrl : '/anwesenheit-web/resources/partials/antraege/details.html',
-        controller : 'DetailsCtrl',
+        controller : 'AntragDetailsCtrl',
     })
+    .when("/bewilligungen", {
+        templateUrl : '/anwesenheit-web/resources/partials/bewilligungen/index.html',
+        controller : 'ListBewilligungCtrl',
+    });
 });
 
 app.factory("antragService", function($resource) {
@@ -39,7 +49,10 @@ app.controller("AppCtrl", function($rootScope) {
     });
 });
 
-app.controller("ListCtrl", function($scope, antragService) {
+app.controller("HomeCtrl", function($scope) {  
+});
+
+app.controller("ListAntragCtrl", function($scope, antragService) {
   $scope.antragListe = antragService.get({});
     $scope.deleteAntrag = function(antrag) {
         antragService.delete({ "id": antrag.id }, function(data) {
@@ -48,7 +61,7 @@ app.controller("ListCtrl", function($scope, antragService) {
     };
 });
 
-app.controller("DetailsCtrl", function($scope, $routeParams, antragService) {
+app.controller("AntragDetailsCtrl", function($scope, $routeParams, antragService) {
     $scope.antrag = antragService.get({
         "id" : $routeParams.id
     });
@@ -59,7 +72,7 @@ function parseDate(s) {
     return m[3] + "-" + m[2] + "-" + m[1];
 }
 
-app.controller("NewCtrl", function($scope, antragService, antragArtService,
+app.controller("NewAntragCtrl", function($scope, antragService, antragArtService,
         benutzerService) {
     $scope.antragArtListe = antragArtService.query(function(liste) {
         $scope.antrag = {
@@ -137,7 +150,7 @@ app.controller("NewCtrl", function($scope, antragService, antragArtService,
     };
 });
 
-app.controller("EditCtrl", function($scope, $routeParams, $filter, antragArtService,
+app.controller("EditAntragCtrl", function($scope, $routeParams, $filter, antragArtService,
         antragService, benutzerService, bewilligungService) {
     $scope.antragArtListe = antragArtService.query();
     $scope.antrag = antragService.get({
@@ -213,4 +226,9 @@ app.directive("benutzerAutocomplete", function($timeout) {
             });
         }
     };
+});
+
+
+app.controller("ListBewilligungCtrl", function($scope, bewilligungService) {
+  $scope.bewilligungsListe = bewilligungService.get({});
 });
