@@ -112,12 +112,6 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
-
-		<!-- Sitemesh -->
-		<dependency>
-			<groupId>org.sitemesh</groupId>
-			<artifactId>sitemesh</artifactId>
-		</dependency>
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
