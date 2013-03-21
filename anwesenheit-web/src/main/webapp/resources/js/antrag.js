@@ -28,7 +28,9 @@ app.config(function($routeProvider) {
 });
 
 app.factory("antragService", function($resource) {
-  return $resource("/anwesenheit-web/api/antraege/:id");
+  return $resource("/anwesenheit-web/api/antraege/:id", {"id" : "@id" }, {
+    "update" : { "method" : "PUT" }
+  });
 });
 
 app.factory("antragArtService", function($resource) {
@@ -72,7 +74,7 @@ function parseDate(s) {
     return m[3] + "-" + m[2] + "-" + m[1];
 }
 
-app.controller("NewAntragCtrl", function($scope, antragService, antragArtService,
+app.controller("NewAntragCtrl", function($scope, $location, antragService, antragArtService,
         benutzerService) {
     $scope.antragArtListe = antragArtService.query(function(liste) {
         $scope.antrag = {
@@ -96,6 +98,7 @@ app.controller("NewAntragCtrl", function($scope, antragService, antragArtService
 
             antragService.save(angular.toJson(antragsDaten), function(data) {
                 console.log(data);
+                $location.url("/antraege");
             }, function(data) {
                 console.log(data);
             });
@@ -140,17 +143,13 @@ app.controller("NewAntragCtrl", function($scope, antragService, antragArtService
     }
 
     $scope.removeBewilliger = function(b) {
-        var array = $scope.antrag.bewilliger;
-        for ( var i = array.length; i >= 0; i--) {
-            if (_.isEqual(array[i], b)) {
-                array.splice(i, 1);
-                break;
-            }
-        }
+      $scope.antrag.bewilliger = _.reject($scope.antrag.bewilliger, function(x) {
+        return _.isEqual(x,b);
+      });
     };
 });
 
-app.controller("EditAntragCtrl", function($scope, $routeParams, $filter, antragArtService,
+app.controller("EditAntragCtrl", function($scope, $routeParams, $filter, $location, antragArtService,
         antragService, benutzerService, bewilligungService) {
     $scope.antragArtListe = antragArtService.query();
     $scope.antrag = antragService.get({
@@ -174,7 +173,15 @@ app.controller("EditAntragCtrl", function($scope, $routeParams, $filter, antragA
     };
     
     $scope.saveAntrag = function() {
-        
+      var antragsDaten = {
+          id : $scope.antrag.id,
+          antragArt : $scope.antrag.antragArt.antragArt,
+          von : parseDate($scope.antrag.von),
+          bis : parseDate($scope.antrag.bis),
+      };
+      antragService.update(antragsDaten, function(data) {
+        $location.url("/antraege");
+      });
     };
     
     $scope._addBewilliger = function(bewilligerKey) {
@@ -200,15 +207,11 @@ app.controller("EditAntragCtrl", function($scope, $routeParams, $filter, antragA
     
     $scope.deleteBewilligung = function(b) {
         bewilligungService.delete({"id" : b.id }, function(data) {
-          var array = $scope.antrag.bewilligungen;
-          for ( var i = array.length; i >= 0; i--) {
-              if (_.isEqual(array[i], b)) {
-                  array.splice(i, 1);
-                  break;
-              }
-          } 
+          $scope.antrag.bewilligungen = _.reject($scope.antrag.bewilligungen, function(x) {
+            return _.isEqual(x, b);
+          });
         });
-    };
+    }
 });
 
 app.directive("benutzerAutocomplete", function($timeout) {

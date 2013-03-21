@@ -5,9 +5,18 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class UpdateAntragCommand {
+  private long id;
   private String antragArt;
   private Date von;
   private Date bis;
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
 
   public String getAntragArt() {
     return antragArt;
