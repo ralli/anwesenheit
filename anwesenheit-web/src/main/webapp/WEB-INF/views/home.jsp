@@ -17,6 +17,8 @@
 <link href="<c:url value="/bootstrap/css/bootstrap-responsive.css" />"
 	rel="stylesheet" />
 <link href="<c:url value="/resources/jquery-ui.css" />" rel="stylesheet" />
+<link href="<c:url value="/resources/css/angular-ui.css" />"
+	rel="stylesheet" />
 <link href="<c:url value="/resources/test.css?reload=1" />"
 	rel="stylesheet" />
 
@@ -56,12 +58,9 @@
 		</div>
 	</div>
 	<div class="container">
-		<c:if test="${not empty message}">
-			<div class="alert alert-success">${message}</div>
-		</c:if>
 		<div ng-view></div>
 	</div>
-	<script src="<c:url value="/resources/js/jquery-1.7.2.js"/>"></script>
+	<script src="<c:url value="/resources/js/jquery-1.7.2.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/jquery-ui.js"/>"></script>
 	<script src="<c:url value="/resources/js/underscore-min.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular.min.js"/>"></script>
@@ -69,5 +68,9 @@
 	<script src="<c:url value="/resources/js/angular-ui.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/antrag.js?reload=1"/>"></script>
 	<script src="<c:url value="/bootstrap/js/bootstrap.min.js" />"></script>
+	<script
+        src="<c:url value="/resources/js/angular-ui.js" />"></script>
+	<script
+		src="<c:url value="/resources/js/ui-bootstrap-tpls-0.2.0.js" />"></script>
 </body>
 </html>

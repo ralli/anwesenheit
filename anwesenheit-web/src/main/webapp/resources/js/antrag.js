@@ -1,4 +1,4 @@
-var app = angular.module("antrag", [ "ngResource" ]);
+var app = angular.module("antrag", [ "ngResource", "ui", "ui.bootstrap" ]);
 app.config(function($routeProvider) {
     $routeProvider
     .when('/', {
