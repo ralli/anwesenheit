@@ -175,7 +175,7 @@ public class AntragServiceImpl implements AntragService {
     antragHistorie.setAntragId(antrag.getId());
     antragHistorie.setBenutzerId(benutzerId);
     antragHistorie.setZeitpunkt(new Date());
-    antragHistorie.setBeschreibung("Antrag angelegt");
+    antragHistorie.setBeschreibung(message);
     antragHistorieDao.insert(antragHistorie);
   }
 
@@ -194,7 +194,7 @@ public class AntragServiceImpl implements AntragService {
   }
 
   private String dateToString(Date date) {
-    DateFormat f = new SimpleDateFormat("dd.mm.yyyy");
+    DateFormat f = new SimpleDateFormat("dd.MM.yyyy");
     return f.format(date);
   }
 
