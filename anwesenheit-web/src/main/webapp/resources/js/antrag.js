@@ -1,3 +1,5 @@
+// Encoding: UTF-8
+
 var app = angular.module("antrag", [ "ngResource", "ui", "ui.bootstrap" ]);
 app.config(function($routeProvider) {
     $routeProvider
@@ -37,6 +39,10 @@ app.factory("antragArtService", function($resource) {
   return $resource("/anwesenheit-web/api/antragsarten/:id");
 });
 
+app.factory("sonderUrlaubArtService", function($resource) {
+  return $resource("/anwesenheit-web/api/sonderurlaubarten/:id");
+});
+
 app.factory("benutzerService", function($resource) {
     return $resource("/anwesenheit-web/api/benutzer/:id");
 });
@@ -67,6 +73,10 @@ app.controller("AntragDetailsCtrl", function($scope, $routeParams, antragService
     $scope.antrag = antragService.get({
         "id" : $routeParams.id
     });
+    
+    $scope.sonderUrlaubArtVisible = function() {
+      return $scope.antrag && $scope.antrag.antragArt.antragArt === "SONDER";
+    }
 });
 
 function parseDate(s) {
@@ -74,23 +84,35 @@ function parseDate(s) {
     return m[3] + "-" + m[2] + "-" + m[1];
 }
 
+function parseNumber(s) {
+  var x = s.replace(/,/g, '.');
+  return parseFloat(x);
+}
+
 app.controller("NewAntragCtrl", function($scope, $location, antragService, antragArtService,
-        benutzerService) {
+        benutzerService, sonderUrlaubArtService) {
     $scope.antragArtListe = antragArtService.query(function(liste) {
         $scope.antrag = {
             antragArt : _.clone(liste[0]),
+            sonderUrlaubArt : "UMZUG",
             von : "01.01.2013",
             bis : "23.02.2013",
+            anzahlTage: "0",
             bewilliger : []
         };
     });
+    
+    $scope.sonderUrlaubArtListe = sonderUrlaubArtService.query();
+    
 
     $scope.createAntrag = function() {
         if ($scope.createForm.$valid) {
             var antragsDaten = {
                 antragArt : $scope.antrag.antragArt.antragArt,
+                sonderUrlaubArt: $scope.antrag.sonderUrlaubArt,
                 von : parseDate($scope.antrag.von),
                 bis : parseDate($scope.antrag.bis),
+                anzahlTage: parseNumber($scope.antrag.anzahlTage),
                 bewilliger : $.map($scope.antrag.bewilliger, function(b) {
                     return b.benutzerId;
                 })
@@ -105,6 +127,23 @@ app.controller("NewAntragCtrl", function($scope, $location, antragService, antra
         };
     };
 
+    $scope.sonderUrlaubArtVisible = function() {
+      return $scope.antrag && $scope.antrag.antragArt.antragArt === "SONDER";
+    }
+
+    $scope.anzahlTageVisible = function() {
+      return !$scope.sonderUrlaubArtVisible();
+    }
+    
+    $scope.getAnzahlTage = function() {
+      if(!$scope.sonderUrlaubArtVisible())
+        return 0;
+      var x = _.find($scope.sonderUrlaubArtListe, function(a) {
+        return _.isEqual(a.sonderUrlaubArt, $scope.antrag.sonderUrlaubArt);
+      });
+      return x.anzahlTage;
+    }
+    
     $scope.controlClassFor = function(flag) {
         var result;
         if (flag) {
@@ -150,14 +189,17 @@ app.controller("NewAntragCtrl", function($scope, $location, antragService, antra
 });
 
 app.controller("EditAntragCtrl", function($scope, $routeParams, $filter, $location, antragArtService,
-        antragService, benutzerService, bewilligungService) {
+        antragService, benutzerService, bewilligungService, sonderUrlaubArtService) {
     $scope.antragArtListe = antragArtService.query();
+    $scope.sonderUrlaubArtListe = sonderUrlaubArtService.query();
     $scope.antrag = antragService.get({
         "id" : $routeParams.id
     }, function(data) {
+        var s = _.isNull(data.sonderUrlaubArt) ? "UMZUG" : data.sonderUrlaubArt.sonderUrlaubArt;
         data.von = $filter("date")(data.von, "dd.MM.yyyy");
         data.bis = $filter("date")(data.bis, "dd.MM.yyyy");
-        console.log(data);
+        data.sonderUrlaubArt = s;
+        data.anzahlTage = $filter("number")(data.anzahlTage);        
     }, function(data) {
         console.log(data);
     });
@@ -172,12 +214,32 @@ app.controller("EditAntragCtrl", function($scope, $routeParams, $filter, $locati
         return result;
     };
     
+    $scope.sonderUrlaubArtVisible = function() {
+      return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
+    }
+    
+    $scope.anzahlTageVisible = function() {
+      return !$scope.sonderUrlaubArtVisible();
+    }
+    
+    $scope.getAnzahlTage = function() {
+      if(!$scope.sonderUrlaubArtVisible())
+        return 0;
+      var x = _.find($scope.sonderUrlaubArtListe, function(a) {
+        return _.isEqual(a.sonderUrlaubArt, $scope.antrag.sonderUrlaubArt);
+      });
+      return _.isNull(x)  ? 0 : x.anzahlTage;
+    }
+    
     $scope.saveAntrag = function() {
+      
       var antragsDaten = {
           id : $scope.antrag.id,
           antragArt : $scope.antrag.antragArt.antragArt,
+          sonderUrlaubArt : $scope.antrag.sonderUrlaubArt,
           von : parseDate($scope.antrag.von),
           bis : parseDate($scope.antrag.bis),
+          anzahlTage: parseNumber($scope.antrag.anzahlTage)
       };
       antragService.update(antragsDaten, function(data) {
         $location.url("/antraege");
@@ -230,7 +292,6 @@ app.directive("benutzerAutocomplete", function($timeout) {
         }
     };
 });
-
 
 app.controller("ListBewilligungCtrl", function($scope, bewilligungService) {
   $scope.bewilligungsListe = bewilligungService.get({});

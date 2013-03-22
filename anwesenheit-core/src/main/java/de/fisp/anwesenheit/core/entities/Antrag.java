@@ -27,12 +27,16 @@ public class Antrag {
   private String benutzerId;
   @Column(name = "antrag_art")
   private String antragArtId;
+  @Column(name = "sonderurlaub_art")
+  private String sonderUrlaubArtId;
   @Temporal(TemporalType.DATE)
   private Date von;
   @Temporal(TemporalType.DATE)
   private Date bis;
   @Column(name = "antrag_status")
   private String antragStatusId;
+  @Column(name = "anzahl_tage")
+  private double anzahlTage;
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
@@ -43,6 +47,10 @@ public class Antrag {
   @ManyToOne(optional = false)
   @JoinColumn(name = "antrag_art", insertable = false, updatable = false)
   private AntragArt antragArt;
+
+  @ManyToOne(optional = true)
+  @JoinColumn(name = "sonderurlaub_art", insertable = false, updatable = false)
+  private SonderUrlaubArt sonderUrlaubArt;
 
   @OneToMany(targetEntity = Bewilligung.class)
   @JoinColumn(name = "antrag_id")
@@ -72,6 +80,14 @@ public class Antrag {
     this.antragArtId = antragArt;
   }
 
+  public String getSonderUrlaubArtId() {
+    return sonderUrlaubArtId;
+  }
+
+  public void setSonderUrlaubArtId(String sonderUrlaubArtId) {
+    this.sonderUrlaubArtId = sonderUrlaubArtId;
+  }
+
   public Date getVon() {
     return von;
   }
@@ -96,6 +112,14 @@ public class Antrag {
     this.antragStatusId = antragStatusId;
   }
 
+  public double getAnzahlTage() {
+    return anzahlTage;
+  }
+
+  public void setAnzahlTage(double anzahlTage) {
+    this.anzahlTage = anzahlTage;
+  }
+
   public Benutzer getBenutzer() {
     return benutzer;
   }
@@ -110,6 +134,14 @@ public class Antrag {
 
   public void setAntragArt(AntragArt antragArt) {
     this.antragArt = antragArt;
+  }
+
+  public SonderUrlaubArt getSonderUrlaubArt() {
+    return sonderUrlaubArt;
+  }
+
+  public void setSonderUrlaubArt(SonderUrlaubArt sonderUrlaubArt) {
+    this.sonderUrlaubArt = sonderUrlaubArt;
   }
 
   public void setAntragStatus(AntragStatus antragStatus) {
@@ -132,7 +164,7 @@ public class Antrag {
   public String toString() {
     ToStringBuilder toStringBuilder = new ToStringBuilder(this);
     toStringBuilder.append("id", id).append("benutzerId", benutzerId).append("antragArt", antragArtId).append("von", von)
-        .append("bis", bis).append("antragStatusId", antragStatusId);
+        .append("bis", bis).append("antragStatusId", antragStatusId).append("anzahlTage", anzahlTage);
     return toStringBuilder.toString();
   }
 }

@@ -7,8 +7,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class UpdateAntragCommand {
   private long id;
   private String antragArt;
+  private String sonderUrlaubArt;
   private Date von;
   private Date bis;
+  private double anzahlTage;
 
   public long getId() {
     return id;
@@ -26,6 +28,14 @@ public class UpdateAntragCommand {
     this.antragArt = antragArt;
   }
 
+  public String getSonderUrlaubArt() {
+    return sonderUrlaubArt;
+  }
+
+  public void setSonderUrlaubArt(String sonderUrlaubArt) {
+    this.sonderUrlaubArt = sonderUrlaubArt;
+  }
+
   public Date getVon() {
     return von;
   }
@@ -40,6 +50,14 @@ public class UpdateAntragCommand {
 
   public void setBis(Date bis) {
     this.bis = bis;
+  }
+
+  public double getAnzahlTage() {
+    return anzahlTage;
+  }
+
+  public void setAnzahlTage(double anzahlTage) {
+    this.anzahlTage = anzahlTage;
   }
 
   @Override

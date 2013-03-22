@@ -38,6 +38,25 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+	<changeSet id="createTableSonderUrlaubArt" author="raljuhn">
+		<createTable tableName="sonderurlaub_art">
+			<column name="sonderurlaub_art" type="varchar(10)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="position" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="anzahl_tage" type="decimal(5,1)">
+				<constraints nullable="false" />
+			</column>
+			<column name="bezeichnung" type="varchar(30)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
 	<changeSet id="createTableBenutzer" author="raljuhn">
 		<createTable tableName="benutzer">
 			<column name="benutzer_id" type="varchar(30)">
@@ -75,10 +94,17 @@
 				<constraints nullable="false" references="antrag_status(antrag_status)"
 					foreignKeyName="fk_antrag_status" deleteCascade="false" />
 			</column>
+			<column name="sonderurlaub_art" type="varchar(10)">
+			 <constraints nullable="true" references="sonderurlaub_art(sonderurlaub_art)"
+                    foreignKeyName="fk_antrag_sonderurlaub" deleteCascade="false" />            
+			</column>
 			<column name="von" type="date">
 				<constraints nullable="false" />
 			</column>
 			<column name="bis" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="anzahl_tage" type="decimal(5,1)">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -239,6 +265,32 @@
 			<column name="bezeichnung" value="Abgelehnt" />
 		</insert>
 	</changeSet>
+	<changeSet id="insertSonderUrlaubArt" author="raljuhn">
+		<insert tableName="sonderurlaub_art">
+			<column name="sonderurlaub_art" value="HEIRAT" />
+			<column name="position" valueNumeric="1" />
+			<column name="anzahl_tage" valueNumeric="2" />
+			<column name="bezeichnung" value="Heirat" />
+		</insert>
+		<insert tableName="sonderurlaub_art">
+			<column name="sonderurlaub_art" value="GEBURT" />
+			<column name="position" valueNumeric="2" />
+			<column name="anzahl_tage" valueNumeric="1" />
+			<column name="bezeichnung" value="Geburt" />
+		</insert>
+		<insert tableName="sonderurlaub_art">
+			<column name="sonderurlaub_art" value="TOD" />
+			<column name="position" valueNumeric="3" />
+			<column name="anzahl_tage" valueNumeric="1" />
+			<column name="bezeichnung" value="Todesfall" />
+		</insert>
+		<insert tableName="sonderurlaub_art">
+			<column name="sonderurlaub_art" value="UMZUG" />
+			<column name="position" valueNumeric="4" />
+			<column name="anzahl_tage" valueNumeric="1" />
+			<column name="bezeichnung" value="Umzug" />
+		</insert>
+	</changeSet>
 	<changeSet id="insertRolle" author="raljuhn">
 		<insert tableName="rolle">
 			<column name="rolle" value="ADMIN" />
@@ -262,11 +314,11 @@
 			<column name="position" valueNumeric="2" />
 			<column name="bezeichnung" value="Bewilligt" />
 		</insert>
-        <insert tableName="bewilligungs_status">
-            <column name="bewilligungs_status" value="ABGELEHNT" />
-            <column name="position" valueNumeric="3" />
-            <column name="bezeichnung" value="Abgelehnt" />
-        </insert>
+		<insert tableName="bewilligungs_status">
+			<column name="bewilligungs_status" value="ABGELEHNT" />
+			<column name="position" valueNumeric="3" />
+			<column name="bezeichnung" value="Abgelehnt" />
+		</insert>
 	</changeSet>
 	<changeSet id="createTableBenutzerTyp" author="raljuhn">
 		<createTable tableName="benutzertyp">
@@ -280,6 +332,9 @@
 				<constraints nullable="false" />
 			</column>
 		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
 	</changeSet>
 	<changeSet id="insertBenutzerTyp" author="raljuhn">
 		<insert tableName="benutzertyp">
@@ -294,6 +349,8 @@
 		</insert>
 	</changeSet>
 	<changeSet id="addFKToBenutzer" author="raljuhn">
-	<addForeignKeyConstraint constraintName="fk_benutzer_1" referencedTableName="benutzertyp" baseColumnNames="benutzertyp" baseTableName="benutzer" referencedColumnNames="benutzertyp" />
+		<addForeignKeyConstraint constraintName="fk_benutzer_1"
+			referencedTableName="benutzertyp" baseColumnNames="benutzertyp"
+			baseTableName="benutzer" referencedColumnNames="benutzertyp" />
 	</changeSet>
 </databaseChangeLog>

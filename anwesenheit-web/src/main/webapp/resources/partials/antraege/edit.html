@@ -1,47 +1,70 @@
 <h1>Antrag bearbeiten</h1>
 <form name="editForm" class="form form-horizontal" ng-submit="saveAntrag()">
-	<legend>Antrag</legend>
-	<div class="control-group">
-		<label class="control-label">Antragsteller</label>
-		<div class="controls">
-			<span class="uneditable-input">{{antrag.benutzer.vorname}}
-				{{antrag.benutzer.nachname}}</span>
+    <fieldset>
+		<legend>Antrag</legend>
+		<div class="control-group">
+			<label class="control-label">Antragsteller</label>
+			<div class="controls">
+				<span class="uneditable-input">{{antrag.benutzer.vorname}}
+					{{antrag.benutzer.nachname}}</span>
+			</div>
 		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label">Antragststatus</label>
-		<div class="controls">
-			<span class="uneditable-input">{{antrag.antragStatus.bezeichnung}}</span>
+		<div class="control-group">
+			<label class="control-label">Antragststatus</label>
+			<div class="controls">
+				<span class="uneditable-input">{{antrag.antragStatus.bezeichnung}}</span>
+			</div>
 		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label" for="antrag_art">Art</label>
-		<div class="controls">
-			<select id="antrag_art" name="antragArt"
-				ng-model="antrag.antragArt.antragArt"
-				ng-options="a.antragArt as a.bezeichnung for a in antragArtListe" />
+		<div class="control-group">
+			<label class="control-label" for="antrag_art">Art</label>
+			<div class="controls">
+				<select id="antrag_art" name="antragArt"
+					ng-model="antrag.antragArt.antragArt"
+					ng-options="a.antragArt as a.bezeichnung for a in antragArtListe" />
+			</div>
 		</div>
-	</div>
-	<div ng-class="controlClassFor(editForm.von.$valid)">
-		<label for="antrag_von" class="control-label">Von</label>
-		<div class="controls">
-			<input type="text" id="antrag_von" name="von" ng-model="antrag.von"
-				ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+		<div class="control-group" ng-show="sonderUrlaubArtVisible()">
+        <label class="control-label" for="sonderurlaub_art">Grund für Sonderurlaub</label>
+        <div class="controls">
+            <select id="sonderurlaub_art" name="sonderUrlaubArt"
+                ng-model="antrag.sonderUrlaubArt"
+                ng-options="a.sonderUrlaubArt as a.bezeichnung for a in sonderUrlaubArtListe" />
+        </div>
+    </div>
+		<div ng-class="controlClassFor(editForm.von.$valid)">
+			<label for="antrag_von" class="control-label">Von</label>
+			<div class="controls">
+				<input type="text" id="antrag_von" name="von" ng-model="antrag.von"
+					ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+			</div>
 		</div>
-	</div>
-	<div ng-class="controlClassFor(editForm.bis.$valid)">
-		<label for="antrag_bis" class="control-label">Bis</label>
-		<div class="controls">
-			<input type="text" id="antrag_bis" name="bis" ng-model="antrag.bis"
-				ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+		<div ng-class="controlClassFor(editForm.bis.$valid)">
+			<label for="antrag_bis" class="control-label">Bis</label>
+			<div class="controls">
+				<input type="text" id="antrag_bis" name="bis" ng-model="antrag.bis"
+					ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+			</div>
 		</div>
-	</div>
-	<div class="control-group">
-		<div class="controls">
-			<input type="submit" class="btn btn-primary" value="Speichern" /> <a
-				ng-href="#/antraege" class="btn">Zurück</a>
+		<div class="control-group" ng-show="sonderUrlaubArtVisible()">
+	        <label class="control-label">Anzahl Tage</label>
+	        <div class="controls">
+	            <span class="uneditable-input">{{getAnzahlTage()}}</span>
+	        </div>
+        </div>
+	    <div ng-class="controlClassFor(editForm.anzahlTage.$valid)" ng-show="anzahlTageVisible()">
+	        <label for="antrag_bis" class="control-label">Anzahl Tage</label>
+	        <div class="controls">
+	            <input type="text" id="antrag_anzahl_tage" name="anzahlTage" ng-model="antrag.anzahlTage"
+	                ng-pattern="/^[0-9]+(,[05])?$/" required />
+	        </div>
+	    </div>	
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-primary" value="Speichern" /> <a
+					ng-href="#/antraege" class="btn">Zurück</a>
+			</div>
 		</div>
-	</div>
+	</fieldset>
 </form>
 <h2>Bewilligungen</h2>
 <form name="addBewilligerForm" class="form-inline"

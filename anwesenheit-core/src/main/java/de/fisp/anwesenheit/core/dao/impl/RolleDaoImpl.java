@@ -15,21 +15,21 @@ import de.fisp.anwesenheit.core.entities.Rolle;
 
 @Service
 public class RolleDaoImpl implements RolleDao {
-	private Logger log = LoggerFactory.getLogger(RolleDaoImpl.class);
-	@Autowired
-	private SessionFactory sessionFactory;
+  private Logger log = LoggerFactory.getLogger(RolleDaoImpl.class);
+  @Autowired
+  private SessionFactory sessionFactory;
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
 
-	private Session getCurrentSession() {
-		Session session = sessionFactory.getCurrentSession();
-		if (session == null) {
-			throw new RuntimeException("no current session");
-		}
-		return session;
-	}
+  private Session getCurrentSession() {
+    Session session = sessionFactory.getCurrentSession();
+    if (session == null) {
+      throw new RuntimeException("no current session");
+    }
+    return session;
+  }
 
 	@Override
 	public List<Rolle> findAll() {

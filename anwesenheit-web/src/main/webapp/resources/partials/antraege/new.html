@@ -10,6 +10,15 @@
 				ng-options="a.antragArt as a.bezeichnung for a in antragArtListe" />
 		</div>
 	</div>
+	<div class="control-group" ng-show="sonderUrlaubArtVisible()">
+        <label class="control-label" for="sonderurlaub_art">Grund für Sonderurlaub</label>
+        <div class="controls">
+            <select id="sonderurlaub_art" name="sonderUrlaubArt"
+                ng-model="antrag.sonderUrlaubArt"
+                ng-options="a.sonderUrlaubArt as a.bezeichnung for a in sonderUrlaubArtListe" />
+        </div>
+    </div>
+    
 	<div ng-class="controlClassFor(createForm.von.$valid)">
 		<label for="antrag_von" class="control-label">Von</label>
 		<div class="controls">
@@ -24,6 +33,20 @@
 				ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
 		</div>
 	</div>
+	<div class="control-group" ng-show="sonderUrlaubArtVisible()">
+		<label class="control-label">Anzahl Tage</label>
+		<div class="controls">
+			<span class="uneditable-input">{{getAnzahlTage()}}</span>
+		</div>
+	</div>
+	<div ng-class="controlClassFor(createForm.anzahlTage.$valid)" ng-show="anzahlTageVisible()">
+        <label for="antrag_bis" class="control-label">Anzahl Tage</label>
+        <div class="controls">
+            <input type="text" id="antrag_anzahl_tage" name="anzahlTage" ng-model="antrag.anzahlTage"
+                ng-pattern="/^[0-9]+(,[05])?$/" required />
+        </div>
+    </div>
+	
 	<div class="control-group">
 		<div class="controls">
 			<input type="submit" class="btn btn-primary" value="Speichern" /> 
@@ -31,6 +54,7 @@
 		</div>
 	</div>
 </form>
+
 <h2>Bewilligungen</h2>
 <form name="bewilligungForm" class="form-inline"
 	ng-submit="addBewilliger()">

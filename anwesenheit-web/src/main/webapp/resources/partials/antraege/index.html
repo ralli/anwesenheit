@@ -13,6 +13,7 @@
 			<th>Status</th>
 			<th>Von</th>
 			<th>Bis</th>
+			<th>Anzahl Tage</th>
 			<th>Aktion</th>
 		</tr>
 	</thead>
@@ -22,6 +23,7 @@
 			<td>{{antrag.antragStatus.bezeichnung}}</td>
 			<td>{{antrag.von|date:'dd.MM.yyyy'}}</td>
 			<td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
+            <td>{{antrag.anzahlTage|number}}</td>
 			<td>
 			   <a ng-href="#/antraege/{{antrag.id}}" href>Details</a> 
 			   <a ng-href="#/antraege/{{antrag.id}}/edit" href>Bearbeiten</a> 

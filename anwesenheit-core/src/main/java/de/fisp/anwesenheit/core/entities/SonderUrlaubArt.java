@@ -8,20 +8,22 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 @Entity
-@Table(name = "antrag_art")
-public class AntragArt {
+@Table(name = "sonderurlaub_art")
+public class SonderUrlaubArt {
   @Id
-  @Column(name = "antrag_art")
-  private String antragArt;
+  @Column(name = "sonderurlaub_art")
+  private String sonderUrlaubArt;
   private int position;
+  @Column(name = "anzahl_tage")
+  private double anzahlTage;
   private String bezeichnung;
 
-  public String getAntragArt() {
-    return antragArt;
+  public String getSonderUrlaubArt() {
+    return sonderUrlaubArt;
   }
 
-  public void setAntragArt(String antragArt) {
-    this.antragArt = antragArt;
+  public void setSonderUrlaubArt(String sonderUrlaubArt) {
+    this.sonderUrlaubArt = sonderUrlaubArt;
   }
 
   public int getPosition() {
@@ -30,6 +32,14 @@ public class AntragArt {
 
   public void setPosition(int position) {
     this.position = position;
+  }
+
+  public double getAnzahlTage() {
+    return anzahlTage;
+  }
+
+  public void setAnzahlTage(double anzahlTage) {
+    this.anzahlTage = anzahlTage;
   }
 
   public String getBezeichnung() {

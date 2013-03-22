@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/bootstrap"
 	prefix="b"%>
@@ -65,12 +66,10 @@
 	<script src="<c:url value="/resources/js/underscore-min.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular-resource.min.js"/>"></script>
+    <script src="<c:url value="/resources/js/angular-locale_de.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular-ui.min.js"/>"></script>
-	<script src="<c:url value="/resources/js/antrag.js?reload=1"/>"></script>
+	<script src="<c:url value="/resources/js/antrag.js?reload=1"/>" charset="UTF-8"></script>
 	<script src="<c:url value="/bootstrap/js/bootstrap.min.js" />"></script>
-	<script
-        src="<c:url value="/resources/js/angular-ui.js" />"></script>
-	<script
-		src="<c:url value="/resources/js/ui-bootstrap-tpls-0.2.0.js" />"></script>
+	<script src="<c:url value="/resources/js/ui-bootstrap-tpls-0.2.0.js" />"></script>
 </body>
 </html>

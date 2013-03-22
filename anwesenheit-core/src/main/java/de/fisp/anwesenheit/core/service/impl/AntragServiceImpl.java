@@ -1,6 +1,8 @@
 package de.fisp.anwesenheit.core.service.impl;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +18,7 @@ import de.fisp.anwesenheit.core.dao.AntragDao;
 import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
+import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragListeEintrag;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
@@ -27,6 +30,7 @@ import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.AntragHistorie;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
+import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 import de.fisp.anwesenheit.core.service.AntragService;
 import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
@@ -40,13 +44,15 @@ public class AntragServiceImpl implements AntragService {
   private BenutzerDao benutzerDao;
   private AntragHistorieDao antragHistorieDao;
   private BerechtigungsService berechtigungsService;
+  private SonderUrlaubArtDao sonderUrlaubArtDao;
 
   @Autowired
   public AntragServiceImpl(AntragDao antragDao, BewilligungDao bewilligungDao, BenutzerDao benutzerDao,
-      AntragHistorieDao antragHistorieDao, BerechtigungsService berechtigungsService) {
+      SonderUrlaubArtDao sonderUrlaubArtDao, AntragHistorieDao antragHistorieDao, BerechtigungsService berechtigungsService) {
     this.antragDao = antragDao;
     this.bewilligungDao = bewilligungDao;
     this.benutzerDao = benutzerDao;
+    this.sonderUrlaubArtDao = sonderUrlaubArtDao;
     this.antragHistorieDao = antragHistorieDao;
     this.berechtigungsService = berechtigungsService;
   }
@@ -68,8 +74,9 @@ public class AntragServiceImpl implements AntragService {
 
   private AntragsDaten createAntragsDatenFromAntrag(long id, Antrag antrag) {
     BenutzerDaten benutzerDaten = createBenutzerDaten(antrag.getBenutzer());
-    AntragsDaten result = new AntragsDaten(antrag.getId(), antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getVon(),
-        antrag.getBis(), benutzerDaten, loadBewilligungsDaten(id));
+    AntragsDaten result = new AntragsDaten(antrag.getId(), antrag.getAntragArt(), antrag.getAntragStatus(),
+        antrag.getSonderUrlaubArt(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage(), benutzerDaten,
+        loadBewilligungsDaten(id));
 
     log.debug("findAntragById({}) = {}", id, result);
     return result;
@@ -130,8 +137,22 @@ public class AntragServiceImpl implements AntragService {
 
   private AntragListeEintrag createAntragListeEintrag(Antrag antrag) {
     AntragListeEintrag eintrag = new AntragListeEintrag(antrag.getId(), antrag.getAntragArt(), antrag.getAntragStatus(),
-        antrag.getVon(), antrag.getBis());
+        antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage());
     return eintrag;
+  }
+
+  private void updateSonderUrlaubArt(Antrag antrag, String antragArtId, String sonderUrlaubArtId, double anzahlTage) {
+    antrag.setAntragArtId(antragArtId);
+    if ("SONDER".equals(antragArtId)) {
+      antrag.setSonderUrlaubArtId(sonderUrlaubArtId);
+      SonderUrlaubArt sonderUrlaubArt = sonderUrlaubArtDao.findById(sonderUrlaubArtId);
+      if (sonderUrlaubArt == null) {
+        throw new NotFoundException("Sonderurlaubart nicht gefunden");
+      }
+      antrag.setAnzahlTage(sonderUrlaubArt.getAnzahlTage());
+    } else {
+      antrag.setAnzahlTage(anzahlTage);
+    }
   }
 
   @Override
@@ -143,6 +164,7 @@ public class AntragServiceImpl implements AntragService {
 
     antrag.setBenutzerId(command.getBenutzerId());
     antrag.setAntragArtId(command.getAntragArt());
+    updateSonderUrlaubArt(antrag, command.getAntragArt(), command.getSonderUrlaubArt(), command.getAnzahlTage());
     antrag.setAntragStatusId("NEU");
     antrag.setVon(command.getVon());
     antrag.setBis(command.getBis());
@@ -198,6 +220,11 @@ public class AntragServiceImpl implements AntragService {
     return f.format(date);
   }
 
+  private String tageToString(double n) {
+    NumberFormat f = new DecimalFormat("0.#");
+    return f.format(n);
+  }
+
   @Override
   @Transactional
   public AntragsDaten updateAntrag(String benutzerId, long antragId, UpdateAntragCommand command) {
@@ -211,9 +238,10 @@ public class AntragServiceImpl implements AntragService {
     antrag.setAntragArtId(command.getAntragArt());
     antrag.setVon(command.getVon());
     antrag.setBis(command.getBis());
+    updateSonderUrlaubArt(antrag, command.getAntragArt(), command.getSonderUrlaubArt(), command.getAnzahlTage());    
     antragDao.update(antrag);
-    String message = String.format("Antrag geändert: Art: %s, Von: %s, Bis: %s", command.getAntragArt(),
-        dateToString(command.getVon()), dateToString(command.getBis()));
+    String message = String.format("Antrag geändert: Art: %s, Von: %s, Bis: %s, Tage: %s", command.getAntragArt(),
+        dateToString(command.getVon()), dateToString(command.getBis()), tageToString(command.getAnzahlTage()));
     insertAntragHistorie(benutzerId, antrag, message);
     return createAntragsDatenFromAntrag(antragId, antragDao.findById(antragId));
   }

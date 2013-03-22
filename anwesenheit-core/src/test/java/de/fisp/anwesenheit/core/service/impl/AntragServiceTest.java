@@ -19,6 +19,7 @@ import de.fisp.anwesenheit.core.dao.AntragDao;
 import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
+import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
 import de.fisp.anwesenheit.core.entities.Antrag;
@@ -33,6 +34,7 @@ public class AntragServiceTest {
   private AntragDao antragDao;
   private BewilligungDao bewilligungDao;
   private BenutzerDao benutzerDao;
+  private SonderUrlaubArtDao sonderUrlaubArtDao;
   private AntragHistorieDao antragHistorieDao;
   private BerechtigungsService berechtigungsService;
   private AntragServiceImpl antragService;
@@ -44,9 +46,10 @@ public class AntragServiceTest {
     antragDao = mock(AntragDao.class);
     bewilligungDao = mock(BewilligungDao.class);
     benutzerDao = mock(BenutzerDao.class);
+    sonderUrlaubArtDao = mock(SonderUrlaubArtDao.class);
     antragHistorieDao = mock(AntragHistorieDao.class);
     berechtigungsService = mock(BerechtigungsService.class);
-    antragService = new AntragServiceImpl(antragDao, bewilligungDao, benutzerDao, antragHistorieDao, berechtigungsService);
+    antragService = new AntragServiceImpl(antragDao, bewilligungDao, benutzerDao, sonderUrlaubArtDao, antragHistorieDao, berechtigungsService);
   }
 
   @Test
