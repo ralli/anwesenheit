@@ -104,4 +104,12 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
 
     return hatSonderBerechtigungen(currentBenutzerId);
   }
+
+  @Override
+  public boolean darfBewilligungenAendern(String currentBenutzerId, String benutzerId) {
+    if (currentBenutzerId.equals(benutzerId))
+      return true;
+
+    return hatSonderBerechtigungen(currentBenutzerId);
+  }
 }

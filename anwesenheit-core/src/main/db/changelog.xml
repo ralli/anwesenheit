@@ -262,6 +262,11 @@
 			<column name="position" valueNumeric="2" />
 			<column name="bezeichnung" value="Bewilligt" />
 		</insert>
+        <insert tableName="bewilligungs_status">
+            <column name="bewilligungs_status" value="ABGELEHNT" />
+            <column name="position" valueNumeric="3" />
+            <column name="bezeichnung" value="Abgelehnt" />
+        </insert>
 	</changeSet>
 	<changeSet id="createTableBenutzerTyp" author="raljuhn">
 		<createTable tableName="benutzertyp">

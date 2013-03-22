@@ -23,6 +23,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
+import de.fisp.anwesenheit.core.domain.UpdateBewilligungCommand;
 import de.fisp.anwesenheit.core.service.BewilligungService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
@@ -35,8 +36,9 @@ public class BewilligungApiController {
   private BewilligungService bewilligungService;
 
   private String getCurrentUser() {
-    String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId", RequestAttributes.SCOPE_SESSION);
-    if(result == null) {
+    String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId",
+        RequestAttributes.SCOPE_SESSION);
+    if (result == null) {
       throw new NotAuthorizedException("Nicht angemeldet");
     }
     return result;
@@ -64,7 +66,7 @@ public class BewilligungApiController {
   ResponseEntity<String> findByCurrentUser() {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Content-Type", "application/json; charset=utf-8");
-    try {      
+    try {
       String benutzerId = getCurrentUser();
       BewilligungListe liste = bewilligungService.findByBenutzer(benutzerId, benutzerId);
       return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
@@ -100,9 +102,27 @@ public class BewilligungApiController {
 
     try {
       BewilligungsDaten bewilligungsDaten = bewilligungService.addBewilligung(getCurrentUser(), addBewilligungCommand);
-      if (bewilligungsDaten == null) {
-        return new ResponseEntity<String>(jsonMessage("Daten nicht gefunden"), headers, HttpStatus.NOT_FOUND);
-      }
+      return new ResponseEntity<String>(toJson(bewilligungsDaten), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    } catch (NotValidException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @RequestMapping(method = RequestMethod.PUT)
+  public @ResponseBody
+  ResponseEntity<String> updateBewilligung(@PathVariable long id, @Valid @RequestBody UpdateBewilligungCommand command) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+
+    try {
+      BewilligungsDaten bewilligungsDaten;
+
+      command.setId(id);
+      bewilligungsDaten = bewilligungService.updateBewilligungStatus(getCurrentUser(), command);
       return new ResponseEntity<String>(toJson(bewilligungsDaten), headers, HttpStatus.OK);
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);

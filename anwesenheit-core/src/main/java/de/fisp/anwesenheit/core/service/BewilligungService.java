@@ -3,6 +3,8 @@ package de.fisp.anwesenheit.core.service;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
+import de.fisp.anwesenheit.core.domain.UpdateBewilligungCommand;
+import de.fisp.anwesenheit.core.util.NotFoundException;
 
 public interface BewilligungService {
   /**
@@ -31,13 +33,33 @@ public interface BewilligungService {
   BewilligungsDaten addBewilligung(String benutzerId, AddBewilligungCommand command);
 
   /**
-   * Liefert eine Liste aller Bewilligungen die einem Benutzer zugewiesen sind
+   * Liefert eine Liste aller für einen Benutze relevanten Bewilligungen
    * 
    * @param currentUserId
-   *          Die BenutzerId des aktuell angemeldeten Benutzers
+   *          Die ID des aktuellen Benutzers
    * @param benutzerId
-   *          Die BenutzerId des Benutzers
+   *          Die ID des Benutzers dessen Bewilligungen angezeigt werden sollen.
    * @return Die Liste der gefundenen Bewilligungen
+   * @throws NotFoundException
+   *           wenn der Benutzer nicht gefunden wurde
+   * @throws NotAuthorized
+   *           wenn der Benutzer die Bewilligungen nicht anzeigen darf
    */
-  BewilligungListe findByBenutzer(String currentUserId, String benutzerId);
+  public BewilligungListe findByBenutzer(String currentUserId, String benutzerId);
+
+  /**
+   * Setzt den Status eines Urlaubsantrags
+   * 
+   * @param benutzerId
+   *          Die Benutzer-ID des Bewilligers
+   * @param bewilligungId
+   *          Die ID der Bewillugungsanfrage
+   * @throws NotFoundException
+   *           wenn der Benutzer oder die Bewilligungsanfrage nicht gefunden
+   *           wurde
+   * @throws NotAuthorized
+   *           wenn der Benutzer die Bewilligung nicht bewilligen darf
+   * 
+   */
+  BewilligungsDaten updateBewilligungStatus(String benutzerId, UpdateBewilligungCommand command);
 }

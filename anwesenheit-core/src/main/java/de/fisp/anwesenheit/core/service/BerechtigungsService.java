@@ -113,6 +113,20 @@ public interface BerechtigungsService {
   boolean darfBewilligungenAnsehen(String currentBenutzerId, String benutzerId);
 
   /**
+   * Liefert true, wenn der aktuelle Benutzer die Bewilligungen eines anderen
+   * Benutzers ansehen darf
+   * 
+   * @param currentBenutzerId
+   *          Der Benutzer, dessen Berechtigungen geprüft werden sollen
+   * @param benutzerId
+   *          Der Benutzer, dessen Bewilligungen angesehen werden sollen
+   * @return true, wenn der aktuelle Benutzer die Bewilligungen ansehen darf
+   * @throws NotFoundException
+   *           wenn der aktuelle Benutzer nicht existiert
+   */
+  boolean darfBewilligungenAendern(String currentBenutzerId, String benutzerId);
+
+  /**
    * Liefert true, wenn der Benutzer über Sonderberechtigungen verfügt
    * 
    * @param benutzer

@@ -19,6 +19,7 @@ import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungsListeEintrag;
+import de.fisp.anwesenheit.core.domain.UpdateBewilligungCommand;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.AntragHistorie;
 import de.fisp.anwesenheit.core.entities.Benutzer;
@@ -173,5 +174,43 @@ public class BewilligungServiceImpl implements BewilligungService {
     }
     BewilligungListe result = new BewilligungListe(benutzerDaten, eintraege);
     return result;
+  }
+
+  private void insertAntragHistorie(String benutzerId, long antragId, String message) {
+    AntragHistorie antragHistorie = new AntragHistorie();
+    antragHistorie.setAntragId(antragId);
+    antragHistorie.setBenutzerId(benutzerId);
+    antragHistorie.setZeitpunkt(new Date());
+    antragHistorie.setBeschreibung(message);
+    antragHistorieDao.insert(antragHistorie);
+  }
+
+  @Override
+  @Transactional
+  public BewilligungsDaten updateBewilligungStatus(String benutzerId, UpdateBewilligungCommand command) {
+    logger.debug("updateBewilligungStatus({}, {})", new Object[] { benutzerId, command });
+    Bewilligung bewilligung = bewilligungDao.findById(command.getId());
+    
+    if (bewilligung == null) {
+      throw new NotFoundException("Bewilligung nicht gefunden");
+    }
+    
+    if (!berechtigungsService.darfBewilligungenAendern(benutzerId, bewilligung.getBenutzerId())) {
+      throw new NotAuthorizedException("Keine Ausreichenden Berechtigungen zum Anzeigen der Bewilligungen");
+    }
+    
+    if("BEWILLIGT".equals(command.getBewilligungsStatus()) && !"ABGELEHNT".equals(command.getBewilligungsStatus())) {
+      throw new NotValidException("Unbekannter Bewilligungsstatus: " + command.getBewilligungsStatus());
+    }
+    
+    String bewilligungsStatusAlt = bewilligung.getBewilligungsStatusId();
+    bewilligung.setBewilligungsStatusId(command.getBewilligungsStatus());
+    bewilligungDao.update(bewilligung);
+    String message = String.format("Bewilligungstatus geändert. neu: %s (vorher: %s)", command.getBewilligungsStatus(),
+        bewilligungsStatusAlt);
+    insertAntragHistorie(benutzerId, bewilligung.getAntragId(), message);
+    bewilligung = bewilligungDao.findById(command.getId());
+    BewilligungsDaten daten = createBewilligungsDaten(bewilligung);
+    return daten;
   }
 }
