@@ -1,7 +1,8 @@
 // Encoding: UTF-8
 
 var app = angular.module("antrag", [ "ngResource", "ui", "ui.bootstrap" ]);
-app.config(function($routeProvider) {
+
+app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
     .when('/', {
       templateUrl : '/anwesenheit-web/resources/partials/home.html',
@@ -27,57 +28,60 @@ app.config(function($routeProvider) {
         templateUrl : '/anwesenheit-web/resources/partials/bewilligungen/index.html',
         controller : 'ListBewilligungCtrl',
     });
-});
+}]);
 
-app.factory("antragService", function($resource) {
+app.factory("antragService", ['$resource', function($resource) {
   return $resource("/anwesenheit-web/api/antraege/:id", {"id" : "@id" }, {
     "update" : { "method" : "PUT" }
   });
-});
+}]);
 
-app.factory("antragArtService", function($resource) {
+app.factory("antragArtService", ['$resource', function($resource) {
   return $resource("/anwesenheit-web/api/antragsarten/:id");
-});
+}]);
 
-app.factory("sonderUrlaubArtService", function($resource) {
+app.factory("sonderUrlaubArtService", ['$resource', function($resource) {
   return $resource("/anwesenheit-web/api/sonderurlaubarten/:id");
-});
+}]);
 
-app.factory("benutzerService", function($resource) {
+app.factory("benutzerService", ['$resource', function($resource) {
     return $resource("/anwesenheit-web/api/benutzer/:id");
-});
+}]);
 
-app.factory("bewilligungService", function($resource) {
+app.factory("bewilligungService", ['$resource', function($resource) {
     return $resource("/anwesenheit-web/api/bewilligung/:id");
-});
+}]);
 
-app.controller("AppCtrl", function($rootScope) {
+app.controller("AppCtrl", ['$rootScope', function($rootScope) {
     $rootScope.$on("$routeChangeError", function() {
         console.log("Error changing routes");
     });
-});
+}]);
 
-app.controller("HomeCtrl", function($scope) {  
-});
+app.controller("HomeCtrl", ['$scope', function($scope) {  
+}]);
 
-app.controller("ListAntragCtrl", function($scope, antragService) {
+app.controller("ListAntragCtrl", ['$scope', 'antragService', function($scope, antragService) {                                  
   $scope.antragListe = antragService.get({});
     $scope.deleteAntrag = function(antrag) {
         antragService.delete({ "id": antrag.id }, function(data) {
             $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function(a) { return a.id === antrag.id; });        
         });
     };
-});
+  }
+]);
 
-app.controller("AntragDetailsCtrl", function($scope, $routeParams, antragService) {
+app.controller("AntragDetailsCtrl", ['$scope', '$routeParams', 'antragService', 
+  function($scope, $routeParams, antragService) {
     $scope.antrag = antragService.get({
-        "id" : $routeParams.id
+      "id" : $routeParams.id
     });
     
     $scope.sonderUrlaubArtVisible = function() {
       return $scope.antrag && $scope.antrag.antragArt.antragArt === "SONDER";
     };
-});
+  }
+]);
 
 function parseDate(s) {
     var m = /([0-9][0-9]?).([0-9][0-9]?).([0-9]{4})/.exec(s);
@@ -89,8 +93,10 @@ function parseNumber(s) {
   return parseFloat(x);
 }
 
-app.controller("NewAntragCtrl", function($scope, $location, antragService, antragArtService,
-        benutzerService, sonderUrlaubArtService) {
+app.controller("NewAntragCtrl", ['$scope', '$location', 'antragService', 'antragArtService',
+                                 'benutzerService', 'sonderUrlaubArtService',
+  function($scope, $location, antragService, antragArtService,
+           benutzerService, sonderUrlaubArtService) {
     $scope.antragArtListe = antragArtService.query(function(liste) {
         $scope.antrag = {
             antragArt : _.clone(liste[0]),
@@ -186,9 +192,13 @@ app.controller("NewAntragCtrl", function($scope, $location, antragService, antra
         return _.isEqual(x,b);
       });
     };
-});
+  }
+]);
 
-app.controller("EditAntragCtrl", function($scope, $routeParams, $filter, $location, antragArtService,
+app.controller("EditAntragCtrl", ['$scope', '$routeParams', '$filter', '$location', 'antragArtService',
+                                  'antragService', 'benutzerService', 'bewilligungService', 
+                                  'sonderUrlaubArtService',
+ function($scope, $routeParams, $filter, $location, antragArtService,
         antragService, benutzerService, bewilligungService, sonderUrlaubArtService) {
     $scope.antragArtListe = antragArtService.query();
     $scope.sonderUrlaubArtListe = sonderUrlaubArtService.query();
@@ -274,9 +284,10 @@ app.controller("EditAntragCtrl", function($scope, $routeParams, $filter, $locati
           });
         });
     }
-});
+  }
+]);
 
-app.directive("benutzerAutocomplete", function($timeout) {
+app.directive("benutzerAutocomplete", function() {
     return {
         restrict : 'A',
         link : function(scope, iElement, attr, ctrl) {
@@ -293,6 +304,8 @@ app.directive("benutzerAutocomplete", function($timeout) {
     };
 });
 
-app.controller("ListBewilligungCtrl", function($scope, bewilligungService) {
-  $scope.bewilligungsListe = bewilligungService.get({});
-});
+app.controller("ListBewilligungCtrl", ['$scope', 'bewilligungService', 
+  function($scope, bewilligungService) {
+    $scope.bewilligungsListe = bewilligungService.get({});
+  }
+]);
