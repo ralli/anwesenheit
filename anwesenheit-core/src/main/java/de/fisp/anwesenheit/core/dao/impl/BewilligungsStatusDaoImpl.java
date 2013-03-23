@@ -15,30 +15,40 @@ import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 
 @Service
 public class BewilligungsStatusDaoImpl implements BewilligungsStatusDao {
-	private Logger log = LoggerFactory.getLogger(AntragStatusDaoImpl.class);
-	@Autowired
-	private SessionFactory sessionFactory;
+  private Logger log = LoggerFactory.getLogger(AntragStatusDaoImpl.class);
+  @Autowired
+  private SessionFactory sessionFactory;
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
 
-	private Session getCurrentSession() {
-		Session session = sessionFactory.getCurrentSession();
-		if (session == null) {
-			throw new RuntimeException("no current session");
-		}
-		return session;
-	}
+  private Session getCurrentSession() {
+    Session session = sessionFactory.getCurrentSession();
+    if (session == null) {
+      throw new RuntimeException("no current session");
+    }
+    return session;
+  }
 
-	@Override
-	public List<BewilligungsStatus> findAll() {
-		Query query = getCurrentSession().createQuery(
-				"from BewilligungsStatus b order by b.position");
-		@SuppressWarnings("unchecked")
-		List<BewilligungsStatus> list = query.list();
-		log.debug("findAll: {}", list);
-		return list;
-	}
+  @Override
+  public List<BewilligungsStatus> findAll() {
+    Query query = getCurrentSession().createQuery("from BewilligungsStatus b order by b.position");
+    @SuppressWarnings("unchecked")
+    List<BewilligungsStatus> list = query.list();
+    log.debug("findAll: {}", list);
+    return list;
+  }
+
+  @Override
+  public BewilligungsStatus findById(String bewilligungsStatusId) {
+    Query query = getCurrentSession().createQuery("from BewilligungsStatus b where b.bewilligungsStatus = :bewilligungsStatus");
+    query.setString("bewilligungsStatus", bewilligungsStatusId);
+    @SuppressWarnings("unchecked")
+    List<BewilligungsStatus> list = query.list();
+    BewilligungsStatus result = list.isEmpty() ? null : list.get(0);
+    log.debug("findById({}) = {}", bewilligungsStatusId, result);
+    return result;
+  }
 
 }

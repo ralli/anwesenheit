@@ -87,8 +87,7 @@ public class BewilligungApiController {
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
   public @ResponseBody
   ResponseEntity<String> deleteBewilligung(@PathVariable long id) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
+    HttpHeaders headers = createJsonHeaders();
     try {
       bewilligungService.deleteBewilligung(getCurrentUser(), id);
       return new ResponseEntity<String>(jsonMessage("Ok"), headers, HttpStatus.OK);
@@ -104,9 +103,7 @@ public class BewilligungApiController {
   @RequestMapping(method = RequestMethod.POST)
   public @ResponseBody
   ResponseEntity<String> addBewilligung(@Valid @RequestBody AddBewilligungCommand addBewilligungCommand) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
-
+    HttpHeaders headers = createJsonHeaders();
     try {
       BewilligungsDaten bewilligungsDaten = bewilligungService.addBewilligung(getCurrentUser(), addBewilligungCommand);
       return new ResponseEntity<String>(toJson(bewilligungsDaten), headers, HttpStatus.OK);
@@ -119,12 +116,10 @@ public class BewilligungApiController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.PUT)
+  @RequestMapping(value="/{id}", method = RequestMethod.PUT)
   public @ResponseBody
   ResponseEntity<String> updateBewilligung(@PathVariable long id, @Valid @RequestBody UpdateBewilligungCommand command) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
-
+    HttpHeaders headers = createJsonHeaders();
     try {
       BewilligungsDaten bewilligungsDaten;
 

@@ -49,7 +49,13 @@ app.factory("benutzerService", ['$resource', function($resource) {
 }]);
 
 app.factory("bewilligungService", ['$resource', function($resource) {
-    return $resource("/anwesenheit-web/api/bewilligung/:id");
+    return $resource("/anwesenheit-web/api/bewilligung/:id", {"id" : "@id"}, {
+      "update" : { "method" : "PUT" }
+    });
+}]);
+
+app.factory("bewilligungStatusService", ['$resource', function($resource) {
+  return $resource("/anwesenheit-web/api/bewilligungsstatus/:id");
 }]);
 
 app.controller("AppCtrl", ['$rootScope', function($rootScope) {
@@ -307,5 +313,26 @@ app.directive("benutzerAutocomplete", function() {
 app.controller("ListBewilligungCtrl", ['$scope', 'bewilligungService', 
   function($scope, bewilligungService) {
     $scope.bewilligungsListe = bewilligungService.get({});
+    
+    $scope.bewilligeAntrag = function(b) {
+      var updateCommand = {
+          'id' : b.id,
+          'bewilligungsStatus' : 'BEWILLIGT'
+      };
+      bewilligungService.update(updateCommand, function(data) {        
+        b.bewilligungsStatus = data.bewilligungsStatus;
+      });
+      
+    };
+    
+    $scope.lehneAntragAb = function(b) {
+      var updateCommand = {
+          'id' : b.id,
+          'bewilligungsStatus' : 'ABGELEHNT'
+      };
+      bewilligungService.update(updateCommand, function(data) {
+        b.bewilligungsStatus = data.bewilligungsStatus;
+      });
+    };  
   }
 ]);

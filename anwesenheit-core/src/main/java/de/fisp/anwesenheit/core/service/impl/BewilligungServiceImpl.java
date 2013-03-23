@@ -14,6 +14,7 @@ import de.fisp.anwesenheit.core.dao.AntragDao;
 import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
+import de.fisp.anwesenheit.core.dao.BewilligungsStatusDao;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
@@ -39,15 +40,17 @@ public class BewilligungServiceImpl implements BewilligungService {
   private AntragHistorieDao antragHistorieDao;
   private BenutzerDao benutzerDao;
   private BerechtigungsService berechtigungsService;
+  private BewilligungsStatusDao bewilligungsStatusDao;
 
   @Autowired
   public BewilligungServiceImpl(BewilligungDao bewilligungDao, AntragDao antragDao, AntragHistorieDao antragHistorieDao,
-      BenutzerDao benutzerDao, BerechtigungsService berechtigungsService) {
+      BenutzerDao benutzerDao, BerechtigungsService berechtigungsService, BewilligungsStatusDao bewilligungsStatusDao) {
     this.bewilligungDao = bewilligungDao;
     this.antragDao = antragDao;
     this.antragHistorieDao = antragHistorieDao;
     this.benutzerDao = benutzerDao;
     this.berechtigungsService = berechtigungsService;
+    this.bewilligungsStatusDao = bewilligungsStatusDao;
   }
 
   private void addAntragHistorie(long antragId, String benutzerId, String message) {
@@ -190,26 +193,29 @@ public class BewilligungServiceImpl implements BewilligungService {
   public BewilligungsDaten updateBewilligungStatus(String benutzerId, UpdateBewilligungCommand command) {
     logger.debug("updateBewilligungStatus({}, {})", new Object[] { benutzerId, command });
     Bewilligung bewilligung = bewilligungDao.findById(command.getId());
-    
+
     if (bewilligung == null) {
       throw new NotFoundException("Bewilligung nicht gefunden");
     }
-    
+
     if (!berechtigungsService.darfBewilligungenAendern(benutzerId, bewilligung.getBenutzerId())) {
       throw new NotAuthorizedException("Keine Ausreichenden Berechtigungen zum Anzeigen der Bewilligungen");
     }
-    
-    if("BEWILLIGT".equals(command.getBewilligungsStatus()) && !"ABGELEHNT".equals(command.getBewilligungsStatus())) {
-      throw new NotValidException("Unbekannter Bewilligungsstatus: " + command.getBewilligungsStatus());
+
+    BewilligungsStatus bewilligungsStatus = bewilligungsStatusDao.findById(command.getBewilligungsStatus());
+    if (bewilligungsStatus == null) {
+      throw new NotFoundException("Unbekannter Bewilligungsstatus: " + command.getBewilligungsStatus());
     }
-    
+
     String bewilligungsStatusAlt = bewilligung.getBewilligungsStatusId();
     bewilligung.setBewilligungsStatusId(command.getBewilligungsStatus());
     bewilligungDao.update(bewilligung);
-    String message = String.format("Bewilligungstatus geändert. neu: %s (vorher: %s)", command.getBewilligungsStatus(),
+
+    String message = String.format("Bewilligungsstatus geändert. neu: %s (vorher: %s)", command.getBewilligungsStatus(),
         bewilligungsStatusAlt);
+
     insertAntragHistorie(benutzerId, bewilligung.getAntragId(), message);
-    bewilligung = bewilligungDao.findById(command.getId());
+    bewilligung.setBewilligungsStatus(bewilligungsStatus);
     BewilligungsDaten daten = createBewilligungsDaten(bewilligung);
     return daten;
   }

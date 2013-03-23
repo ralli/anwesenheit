@@ -56,6 +56,14 @@ public class AntragApiController {
     return toJson(map);
   }
 
+  private HttpHeaders createJsonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    headers.add("Pragma", "no-cache");
+    headers.add("Cache-Control", "no-cache, no-store");
+    return headers;
+  }
+
   @RequestMapping(method = RequestMethod.GET)
   public @ResponseBody
   ResponseEntity<String> index() {
@@ -67,14 +75,6 @@ public class AntragApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     }
-  }
-
-  private HttpHeaders createJsonHeaders() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
-    headers.add("Pragma", "no-cache");
-    headers.add("Cache-Control", "no-cache, no-store");
-    return headers;
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.GET)
