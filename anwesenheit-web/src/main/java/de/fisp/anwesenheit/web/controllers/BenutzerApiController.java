@@ -26,6 +26,14 @@ import de.fisp.anwesenheit.core.service.BenutzerService;
 public class BenutzerApiController {
   private BenutzerService benutzerService;
 
+  private HttpHeaders createJsonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    headers.add("Pragma", "no-cache");
+    headers.add("Cache-Control", "no-cache, no-store");
+    return headers;
+  }
+
   @Autowired
   public BenutzerApiController(BenutzerService benutzerService) {
     this.benutzerService = benutzerService;
@@ -55,8 +63,7 @@ public class BenutzerApiController {
   @RequestMapping(value = "/search", method = RequestMethod.GET)
   public @ResponseBody
   ResponseEntity<String> search(@RequestParam(value = "term", required = true) String term) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
+    HttpHeaders headers = createJsonHeaders();
     List<LabelValue> list = benutzerService.search(term);
     return new ResponseEntity<String>(toJson(list), headers, HttpStatus.OK);
   }
@@ -71,8 +78,7 @@ public class BenutzerApiController {
   public @ResponseBody
   ResponseEntity<String> findByBenutzerId(@PathVariable String benutzerId) {
     BenutzerDaten daten = benutzerService.findByBenutzerId(benutzerId);
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
+    HttpHeaders headers = createJsonHeaders();
     if (daten == null) {
       return new ResponseEntity<String>(jsonMessage("Benutzer nicht gefunden"), headers, HttpStatus.NOT_FOUND);
     }

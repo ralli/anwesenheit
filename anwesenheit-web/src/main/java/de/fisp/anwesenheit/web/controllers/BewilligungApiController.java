@@ -35,6 +35,14 @@ public class BewilligungApiController {
   @Autowired
   private BewilligungService bewilligungService;
 
+  private HttpHeaders createJsonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    headers.add("Pragma", "no-cache");
+    headers.add("Cache-Control", "no-cache, no-store");
+    return headers;
+  }
+
   private String getCurrentUser() {
     String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId",
         RequestAttributes.SCOPE_SESSION);
@@ -64,8 +72,7 @@ public class BewilligungApiController {
   @RequestMapping(method = RequestMethod.GET)
   public @ResponseBody
   ResponseEntity<String> findByCurrentUser() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
+    HttpHeaders headers = createJsonHeaders();
     try {
       String benutzerId = getCurrentUser();
       BewilligungListe liste = bewilligungService.findByBenutzer(benutzerId, benutzerId);

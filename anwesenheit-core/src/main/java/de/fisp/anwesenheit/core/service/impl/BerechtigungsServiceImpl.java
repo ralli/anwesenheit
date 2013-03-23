@@ -40,6 +40,9 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
 
   @Override
   public boolean darfAntragAnsehen(Antrag antrag, String benutzerId) {
+    if (benutzerId == null)
+      return false;
+
     Benutzer benutzer = benutzerDao.findById(benutzerId);
     if (benutzer == null) {
       throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
@@ -63,6 +66,9 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
 
   @Override
   public boolean isAntragEigentuemerOderErfasser(Antrag antrag, String benutzerId) {
+    if (benutzerId == null)
+      return false;
+
     Benutzer benutzer = benutzerDao.findById(benutzerId);
     if (benutzer == null) {
       throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
@@ -72,6 +78,9 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
 
   @Override
   public boolean darfAlleAntraegeSehen(String currentBenutzerId, String benutzerId) {
+    if (currentBenutzerId == null)
+      return false;
+
     if (currentBenutzerId.equals(benutzerId))
       return true;
 
@@ -90,6 +99,9 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
 
   @Override
   public boolean hatSonderBerechtigungen(String benutzerId) {
+    if (benutzerId == null)
+      return false;
+
     Benutzer benutzer = benutzerDao.findById(benutzerId);
     if (benutzer == null) {
       throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
@@ -99,6 +111,9 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
 
   @Override
   public boolean darfBewilligungenAnsehen(String currentBenutzerId, String benutzerId) {
+    if (currentBenutzerId == null)
+      return false;
+
     if (currentBenutzerId.equals(benutzerId))
       return true;
 

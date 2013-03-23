@@ -7,3 +7,6 @@ target/
 **/.springBeans
 .idea/
 *.iml
+/anwesenheit-core.lck
+/anwesenheit-core.log
+/anwesenheit-core.properties

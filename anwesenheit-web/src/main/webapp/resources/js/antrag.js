@@ -76,7 +76,7 @@ app.controller("AntragDetailsCtrl", function($scope, $routeParams, antragService
     
     $scope.sonderUrlaubArtVisible = function() {
       return $scope.antrag && $scope.antrag.antragArt.antragArt === "SONDER";
-    }
+    };
 });
 
 function parseDate(s) {

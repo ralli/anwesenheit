@@ -60,8 +60,7 @@ public class AntragApiController {
   public @ResponseBody
   ResponseEntity<String> index() {
     final String benutzerId = getCurrentUser();
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
+    HttpHeaders headers = createJsonHeaders();
     try {
       AntragListe liste = antragService.findByBenutzer(getCurrentUser(), benutzerId);
       return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
@@ -70,11 +69,18 @@ public class AntragApiController {
     }
   }
 
+  private HttpHeaders createJsonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json; charset=utf-8");
+    headers.add("Pragma", "no-cache");
+    headers.add("Cache-Control", "no-cache, no-store");
+    return headers;
+  }
+
   @RequestMapping(value = "/{id}", method = RequestMethod.GET)
   public @ResponseBody
   ResponseEntity<String> details(@PathVariable long id) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
+    HttpHeaders headers = createJsonHeaders();
     try {
       AntragsDaten daten = antragService.findAntragById(getCurrentUser(), id);
       return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
@@ -89,8 +95,7 @@ public class AntragApiController {
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
   public @ResponseBody
   ResponseEntity<String> delete(@PathVariable long id) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
+    HttpHeaders headers = createJsonHeaders();
     try {
       antragService.deleteAntrag(getCurrentUser(), id);
       return new ResponseEntity<String>(jsonMessage("Ok"), headers, HttpStatus.OK);
@@ -104,8 +109,7 @@ public class AntragApiController {
   @RequestMapping(method = RequestMethod.POST)
   public @ResponseBody
   ResponseEntity<String> insert(@RequestBody @Valid CreateAntragCommand createAntragCommand) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
+    HttpHeaders headers = createJsonHeaders();
     try {
       createAntragCommand.setBenutzerId(getCurrentUser());
       long antragId = antragService.createAntrag(getCurrentUser(), createAntragCommand);
@@ -124,8 +128,7 @@ public class AntragApiController {
   @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
   public @ResponseBody
   ResponseEntity<String> update(@PathVariable long id, @RequestBody @Valid UpdateAntragCommand updateAntragCommand) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/json; charset=utf-8");
+    HttpHeaders headers = createJsonHeaders();
     try {
       AntragsDaten daten = antragService.updateAntrag(getCurrentUser(), id, updateAntragCommand);
       return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
@@ -137,5 +140,4 @@ public class AntragApiController {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }
   }
-
 }
