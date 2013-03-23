@@ -17,6 +17,7 @@ import de.fisp.anwesenheit.core.dao.AntragDao;
 import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
+import de.fisp.anwesenheit.core.dao.BewilligungsStatusDao;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.entities.Antrag;
@@ -34,6 +35,8 @@ public class BewilligungServiceTest {
   private BenutzerDao benutzerDao;
   private BerechtigungsService berechtigungsService;
   private BewilligungServiceImpl bewilligungService;
+  private BewilligungsStatusDao bewilligungsStatusDao;
+
   private static final Logger logger = LoggerFactory.getLogger(BewilligungServiceTest.class);
   private static final TestDataFactory testDataFactory = new TestDataFactory();
 
@@ -44,7 +47,9 @@ public class BewilligungServiceTest {
     antragHistorieDao = mock(AntragHistorieDao.class);
     benutzerDao = mock(BenutzerDao.class);
     berechtigungsService = mock(BerechtigungsService.class);
-    bewilligungService = new BewilligungServiceImpl(bewilligungDao, antragDao, antragHistorieDao, benutzerDao, berechtigungsService);
+    bewilligungsStatusDao = mock(BewilligungsStatusDao.class);
+    bewilligungService = new BewilligungServiceImpl(bewilligungDao, antragDao, antragHistorieDao, benutzerDao,
+        berechtigungsService, bewilligungsStatusDao);
   }
 
   /**
@@ -343,7 +348,7 @@ public class BewilligungServiceTest {
     when(benutzerDao.findById(benutzerId)).thenReturn(chef);
     when(benutzerDao.findById(currentUserId)).thenReturn(backoffice);
     when(berechtigungsService.darfBewilligungenAnsehen(currentUserId, benutzerId)).thenReturn(true);
-    when(bewilligungDao.findByBewilliger(benutzerId)).thenReturn(list);    
+    when(bewilligungDao.findByBewilliger(benutzerId)).thenReturn(list);
     BewilligungListe result = bewilligungService.findByBenutzer(currentUserId, benutzerId);
     logger.debug("{}", result);
     Assert.assertEquals(1, result.getBewilligungen().size());
