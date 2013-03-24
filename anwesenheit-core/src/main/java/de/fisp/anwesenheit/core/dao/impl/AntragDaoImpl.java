@@ -2,15 +2,20 @@ package de.fisp.anwesenheit.core.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.fisp.anwesenheit.core.dao.AntragDao;
+import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.entities.Antrag;
 
 @Service
@@ -88,4 +93,64 @@ public class AntragDaoImpl implements AntragDao {
     query.executeUpdate();
   }
 
+  @Override
+  public List<Antrag> findByBenutzerAndFilter(String benutzerId, AntragsFilter filter) {
+    Criteria criteria = createFilterCriteria(filter);
+    criteria.add(Restrictions.eq("benutzerId", benutzerId));
+    criteria.addOrder(Order.asc("von"));
+    @SuppressWarnings("unchecked")
+    List<Antrag> list = criteria.list();
+
+    log.debug("findByBenutzerAndFilter({}, {}): count = {}", new Object[] { benutzerId, filter, list.size() });
+
+    return list;
+  }
+
+  private Criteria createFilterCriteria(AntragsFilter filter) {
+    Criteria criteria = getCurrentSession().createCriteria(Antrag.class);
+
+    if (filter.getVon() != null) {
+      criteria.add(Restrictions.ge("bis", filter.getVon()));
+    }
+
+    if (filter.getBis() != null) {
+      criteria.add(Restrictions.le("von", filter.getBis()));
+    }
+
+    // OFFEN, BEWILLIGT, ABGELEHNT
+    if ("OFFEN".equals(filter.getAntragsStatusFilter())) {
+      criteria.add(Restrictions.in("antragStatusId", new String[] { "NEU", "IN_ARBEIT" }));
+    } else if ("BEWILLIGT".equals(filter.getAntragsStatusFilter())) {
+      criteria.add(Restrictions.eq("antragStatusId", "BEWILLIGT"));
+    } else if ("ABGELEHNT".equals(filter.getAntragsStatusFilter())) {
+      criteria.add(Restrictions.eq("antragStatusId", "ABGELEHNT"));
+    }
+
+    criteria.setFetchMode("benutzer", FetchMode.JOIN);
+    criteria.setFetchMode("antragArt", FetchMode.JOIN);
+    criteria.setFetchMode("antragStatus", FetchMode.JOIN);
+
+    return criteria;
+  }
+
+  @Override
+  public List<Antrag> findByBewilligerAndFilter(String bewilligerId, AntragsFilter filter) {
+    Criteria criteria = createFilterCriteria(filter);
+    criteria.createCriteria("bewilligungen").add(Restrictions.eq("benutzerId", bewilligerId));
+    criteria.addOrder(Order.asc("von"));
+    @SuppressWarnings("unchecked")
+    List<Antrag> list = criteria.list();
+    log.debug("findByBewilligerAndFilter({}, {}): count = {}", new Object[] { bewilligerId, filter, list.size() });
+    return list;
+  }
+
+  @Override
+  public List<Antrag> findByFilter(AntragsFilter filter) {
+    Criteria criteria = createFilterCriteria(filter);
+    criteria.addOrder(Order.asc("von"));
+    @SuppressWarnings("unchecked")
+    List<Antrag> list = criteria.list();
+    log.debug("findByFilter({}): count = {}", new Object[] { filter, list.size() });
+    return list;
+  }
 }

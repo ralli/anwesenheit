@@ -13,6 +13,7 @@ import de.fisp.anwesenheit.core.TestConfig;
 import de.fisp.anwesenheit.core.TestDataFactory;
 import de.fisp.anwesenheit.core.dao.AntragDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
+import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 
@@ -57,4 +58,34 @@ public class AntragDaoTest {
   public void testFind() {
     antragDao.findByBenutzerIdAndBewilliger("juhnke_r", "chef");
   }
+
+  @Test
+  public void testFindByBenutzerAndFilter() {
+    AntragsFilter filter = new AntragsFilter();
+    final String benutzerId = "test";
+    filter.setVon(testDataFactory.createDate(13, 11, 1969));
+    filter.setBis(testDataFactory.createDate(13, 11, 1969));
+    filter.setAntragsStatusFilter("OFFEN");
+    antragDao.findByBenutzerAndFilter(benutzerId, filter);
+  }
+
+  @Test
+  public void testFindByBewilligerAndFilter() {
+    AntragsFilter filter = new AntragsFilter();
+    final String benutzerId = "test";
+    filter.setVon(testDataFactory.createDate(13, 11, 1969));
+    filter.setBis(testDataFactory.createDate(13, 11, 1969));
+    filter.setAntragsStatusFilter("OFFEN");
+    antragDao.findByBewilligerAndFilter(benutzerId, filter);
+  }
+  
+  @Test
+  public void testFindByFilter() {
+    AntragsFilter filter = new AntragsFilter();
+    filter.setVon(testDataFactory.createDate(13, 11, 1969));
+    filter.setBis(testDataFactory.createDate(13, 11, 1969));
+    filter.setAntragsStatusFilter("OFFEN");
+    antragDao.findByFilter(filter);
+  }
 }
+

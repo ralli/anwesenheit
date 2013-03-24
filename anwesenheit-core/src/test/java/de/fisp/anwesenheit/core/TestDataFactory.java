@@ -48,7 +48,7 @@ public class TestDataFactory {
 
   public Date createDate(int day, int month, int year) {
     Calendar calendar = Calendar.getInstance();
-    calendar.set(year, month, day, 0, 0, 0);
+    calendar.set(year, month-1, day, 0, 0, 0);
     calendar.set(Calendar.MILLISECOND, 0);
     return calendar.getTime();
   }
@@ -102,4 +102,6 @@ public class TestDataFactory {
   public Bewilligung createBewilligung(long antragId, String benutzerId) {
     return createBewilligung(antragId, "testbenutzer", benutzerId);
   }
+  
+  
 }
