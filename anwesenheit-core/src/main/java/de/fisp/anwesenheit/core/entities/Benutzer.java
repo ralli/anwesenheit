@@ -5,6 +5,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -24,7 +25,8 @@ public class Benutzer {
   @Column(name = "password_hash")
   private String passwordHash;
 
-  @OneToMany(targetEntity = BenutzerRolle.class)  
+  @OneToMany(targetEntity = BenutzerRolle.class) 
+  @JoinColumn(name = "benutzer_id")
   private Set<BenutzerRolle> benutzerRollen;
 
   public String getBenutzerId() {

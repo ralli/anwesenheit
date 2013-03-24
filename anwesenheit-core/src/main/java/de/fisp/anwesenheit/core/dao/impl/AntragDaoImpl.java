@@ -7,6 +7,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -136,7 +137,12 @@ public class AntragDaoImpl implements AntragDao {
   @Override
   public List<Antrag> findByBewilligerAndFilter(String bewilligerId, AntragsFilter filter) {
     Criteria criteria = createFilterCriteria(filter);
-    criteria.createCriteria("bewilligungen").add(Restrictions.eq("benutzerId", bewilligerId));
+    criteria.createAlias("bewilligungen", "bw");
+    Disjunction d = Restrictions.disjunction();   
+    d.add((Restrictions.eq("bw.benutzerId", bewilligerId)));
+    d.add((Restrictions.eq("benutzerId", bewilligerId)));
+    criteria.add(d);
+    
     criteria.addOrder(Order.asc("von"));
     @SuppressWarnings("unchecked")
     List<Antrag> list = criteria.list();

@@ -2,6 +2,7 @@ package de.fisp.anwesenheit.core.service;
 
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
+import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
 import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 
@@ -52,6 +53,36 @@ public interface AntragService {
   AntragListe findByBenutzer(String currentBenutzerId, String benutzerId);
 
   /**
+   * Liefert eine Liste aller eigenen Anträge, die einem Filterkriterium
+   * entsprechen.
+   * 
+   * @param benutzerId
+   *          Die ID des angemeldeten Benutzers
+   * @param filter
+   *          Das Filterkriterium
+   * @return Die Liste der gefundenen Benutzer
+   * @throws NotFoundException
+   *           Wenn der Benutzer nicht gefunden wurde
+   */
+  AntragListe findEigeneByFilter(String benutzerId, AntragsFilter filter);
+
+  /**
+   * Liefert eine Liste aller für einen Benutzer sichtbaren Anträge, die einem
+   * Filterkriterium entsprechen. Das sind die eigenen Angträge und die Anträge
+   * zu denen ein Bewilligungsauftrag für den Benutzer existiert. Bei Benutzern
+   * mit Sonderrechten sind alle Anträge sichtbar.
+   * 
+   * @param benutzerId
+   *          Die ID des angemeldeten Benutzers
+   * @param filter
+   *          Das Filterkriterium
+   * @return Die Liste der gefundenen Benutzer
+   * @throws NotFoundException
+   *           Wenn der Benutzer nicht gefunden wurde
+   */
+  AntragListe findSichtbareByFilter(String benutzerId, AntragsFilter filter);
+
+  /**
    * Legt einen neuen Antrag in der Datenbank an.
    * 
    * @param benutzerId
@@ -79,7 +110,7 @@ public interface AntragService {
    *          Die Id des zu ändernden Antrags
    * @param command
    *          Die zu ändernden Antragsdaten
-   *          
+   * 
    * @return Die geänderten Antragsdaten
    * 
    * @throws NotFoundException

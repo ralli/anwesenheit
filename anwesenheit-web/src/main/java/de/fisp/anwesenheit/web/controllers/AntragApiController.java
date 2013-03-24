@@ -22,6 +22,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
+import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
 import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 import de.fisp.anwesenheit.core.service.AntragService;
@@ -36,7 +37,12 @@ public class AntragApiController {
   private AntragService antragService;
 
   private String getCurrentUser() {
-    return (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId", RequestAttributes.SCOPE_SESSION);
+    String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId",
+        RequestAttributes.SCOPE_SESSION);
+    if (result == null) {
+      throw new NotAuthorizedException("Sie sind nicht angemeldet");
+    }
+    return result;
   }
 
   private String toJson(Object object) {
@@ -64,14 +70,33 @@ public class AntragApiController {
     return headers;
   }
 
+  @RequestMapping(value = "/uebersicht", method = RequestMethod.GET)
+  public @ResponseBody
+  ResponseEntity<String> uebersicht() {
+    HttpHeaders headers = createJsonHeaders();
+    try {
+      final String benutzerId = getCurrentUser();
+      AntragListe liste = antragService.findSichtbareByFilter(benutzerId, new AntragsFilter());
+      return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    } catch (NotValidException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @RequestMapping(method = RequestMethod.GET)
   public @ResponseBody
   ResponseEntity<String> index() {
-    final String benutzerId = getCurrentUser();
     HttpHeaders headers = createJsonHeaders();
     try {
+      final String benutzerId = getCurrentUser();
       AntragListe liste = antragService.findByBenutzer(getCurrentUser(), benutzerId);
       return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     }
@@ -86,7 +111,6 @@ public class AntragApiController {
       return new ResponseEntity<String>(toJson(daten), headers, HttpStatus.OK);
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
-
     } catch (NotAuthorizedException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
     }

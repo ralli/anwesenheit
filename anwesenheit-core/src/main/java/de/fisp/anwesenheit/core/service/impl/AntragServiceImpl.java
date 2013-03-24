@@ -22,6 +22,7 @@ import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragListeEintrag;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
+import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
 import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
@@ -238,11 +239,43 @@ public class AntragServiceImpl implements AntragService {
     antrag.setAntragArtId(command.getAntragArt());
     antrag.setVon(command.getVon());
     antrag.setBis(command.getBis());
-    updateSonderUrlaubArt(antrag, command.getAntragArt(), command.getSonderUrlaubArt(), command.getAnzahlTage());    
+    updateSonderUrlaubArt(antrag, command.getAntragArt(), command.getSonderUrlaubArt(), command.getAnzahlTage());
     antragDao.update(antrag);
     String message = String.format("Antrag geändert: Art: %s, Von: %s, Bis: %s, Tage: %s", command.getAntragArt(),
         dateToString(command.getVon()), dateToString(command.getBis()), tageToString(command.getAnzahlTage()));
     insertAntragHistorie(benutzerId, antrag, message);
     return createAntragsDatenFromAntrag(antragId, antragDao.findById(antragId));
+  }
+
+  @Override
+  @Transactional
+  public AntragListe findEigeneByFilter(String benutzerId, AntragsFilter filter) {
+    Benutzer benutzer = benutzerDao.findById(benutzerId);
+    if (benutzer == null) {
+      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
+    }
+    List<Antrag> antraege = antragDao.findByBenutzerAndFilter(benutzerId, filter);
+    AntragListe liste = createAntragListe(benutzer, antraege);
+    log.debug("findEigeneByFilter({}, {}) = {}", new Object[] { benutzerId, filter, liste });
+    return liste;
+  }
+
+  @Override
+  @Transactional
+  public AntragListe findSichtbareByFilter(String benutzerId, AntragsFilter filter) {
+    Benutzer benutzer = benutzerDao.findById(benutzerId);
+    if (benutzer == null) {
+      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
+    }
+    boolean sonderberechtigungen = berechtigungsService.hatSonderBerechtigungen(benutzer);
+    List<Antrag> antraege;
+    if (sonderberechtigungen) {
+      antraege = antragDao.findByFilter(filter);
+    } else {
+      antraege = antragDao.findByBewilligerAndFilter(benutzerId, filter);
+    }
+    AntragListe liste = createAntragListe(benutzer, antraege);
+    log.debug("findSichtbareByFilter({}, {}) = {}", new Object[] { benutzerId, filter, liste });
+    return liste;
   }
 }
