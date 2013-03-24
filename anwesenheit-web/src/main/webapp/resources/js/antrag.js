@@ -32,7 +32,8 @@ app.config(['$routeProvider', function($routeProvider) {
 
 app.factory("antragService", ['$resource', function($resource) {
   return $resource("/anwesenheit-web/api/antraege/:id", {"id" : "@id" }, {
-    "update" : { "method" : "PUT" }
+    "update" : { "method" : "PUT" },
+  	"remove" : { "method" : "DELETE" }
   });
 }]);
 
@@ -50,7 +51,8 @@ app.factory("benutzerService", ['$resource', function($resource) {
 
 app.factory("bewilligungService", ['$resource', function($resource) {
     return $resource("/anwesenheit-web/api/bewilligung/:id", {"id" : "@id"}, {
-      "update" : { "method" : "PUT" }
+      "update" : { "method" : "PUT" },
+      "remove" : { "method" : "DELETE" }
     });
 }]);
 
@@ -70,7 +72,7 @@ app.controller("HomeCtrl", ['$scope', function($scope) {
 app.controller("ListAntragCtrl", ['$scope', 'antragService', function($scope, antragService) {                                  
   $scope.antragListe = antragService.get({});
     $scope.deleteAntrag = function(antrag) {
-        antragService.delete({ "id": antrag.id }, function(data) {
+        antragService.remove({ "id": antrag.id }, function(data) {
             $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function(a) { return a.id === antrag.id; });        
         });
     };
@@ -284,7 +286,7 @@ app.controller("EditAntragCtrl", ['$scope', '$routeParams', '$filter', '$locatio
     }
     
     $scope.deleteBewilligung = function(b) {
-        bewilligungService.delete({"id" : b.id }, function(data) {
+        bewilligungService.remove({"id" : b.id }, function(data) {
           $scope.antrag.bewilligungen = _.reject($scope.antrag.bewilligungen, function(x) {
             return _.isEqual(x, b);
           });
