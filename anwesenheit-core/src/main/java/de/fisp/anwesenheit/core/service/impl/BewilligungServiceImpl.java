@@ -82,6 +82,7 @@ public class BewilligungServiceImpl implements BewilligungService {
 
     String message = String.format("Bewilligung Bewilliger: %s, Status: %s gelöscht", bewilligung.getBenutzerId(),
         bewilligung.getBewilligungsStatusId());
+    aktualisiereAntragStatus(bewilligung.getAntrag());
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
     bewilligungDao.delete(bewilligung);
   }
@@ -144,7 +145,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     String message = String.format("Bewilligung Bewilliger: %s, Status: %s hinzugefügt", bewilligung.getBenutzerId(),
         bewilligung.getBewilligungsStatusId());
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
-
+    aktualisiereAntragStatus(antrag);
     logger.debug("addBewilligung({}) = {}", command, daten);
 
     return daten;
@@ -188,6 +189,48 @@ public class BewilligungServiceImpl implements BewilligungService {
     antragHistorieDao.insert(antragHistorie);
   }
 
+  private void aktualisiereAntragStatus(Antrag antrag) {
+    String antragStatus = ermittleAntragStatus(antrag);
+    antrag.setAntragStatusId(antragStatus);
+    antragDao.update(antrag);
+  }
+
+  private void aktualisiereAntragStatus(long antragId) {
+    Antrag antrag = antragDao.findById(antragId);
+    if (antrag == null) {
+      throw new NotFoundException("Antrag nicht gefunden");
+    }
+    aktualisiereAntragStatus(antrag);
+  }
+
+  private String ermittleAntragStatus(Antrag antrag) {
+    List<Bewilligung> bewilligungen = bewilligungDao.findByAntrag(antrag.getId());
+    String antragStatus;
+    boolean existOffen = false;
+    boolean existBewilligt = false;
+    boolean existAbgelehnt = false;
+    for (Bewilligung b : bewilligungen) {
+      if ("OFFEN".equals(b.getBewilligungsStatusId()))
+        existOffen = true;
+      if ("BEWILLIGT".equals(b.getBewilligungsStatusId()))
+        existBewilligt = true;
+      if ("ABGELEHNT".equals(b.getBewilligungsStatusId()))
+        existAbgelehnt = true;
+    }
+    if (existAbgelehnt) {
+      antragStatus = "ABGELEHNT";
+    } else if (existBewilligt) {
+      if (existOffen) {
+        antragStatus = "IN_ARBEIT";
+      } else {
+        antragStatus = "BEWILLIGT";
+      }
+    } else {
+      antragStatus = "NEU";
+    }
+    return antragStatus;
+  }
+
   @Override
   @Transactional
   public BewilligungsDaten updateBewilligungStatus(String benutzerId, UpdateBewilligungCommand command) {
@@ -215,8 +258,11 @@ public class BewilligungServiceImpl implements BewilligungService {
         bewilligungsStatusAlt);
 
     insertAntragHistorie(benutzerId, bewilligung.getAntragId(), message);
+    aktualisiereAntragStatus(bewilligung.getAntrag());
+
     bewilligung.setBewilligungsStatus(bewilligungsStatus);
     BewilligungsDaten daten = createBewilligungsDaten(bewilligung);
+
     return daten;
   }
 }
