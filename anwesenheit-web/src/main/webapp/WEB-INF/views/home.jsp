@@ -63,6 +63,7 @@
 	</div>
 	<script src="<c:url value="/resources/js/jquery-1.7.2.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/jquery-ui.js"/>"></script>
+	<script src="<c:url value="/resources/js/jquery.ui.datepicker-de.js"/>"></script>
 	<script src="<c:url value="/resources/js/underscore-min.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular.min.js"/>"></script>
 	<script src="<c:url value="/resources/js/angular-resource.min.js"/>"></script>

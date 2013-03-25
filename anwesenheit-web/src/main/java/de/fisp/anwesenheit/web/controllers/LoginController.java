@@ -30,23 +30,23 @@ public class LoginController {
     return "/login";
   }
   
-  @ModelAttribute("loginData")
+  @ModelAttribute("loginCommand")
   public LoginCommand createLoginCommand() {
     return new LoginCommand();
   }
 
   @RequestMapping(value = "/login", method = RequestMethod.POST)
-  public String login(@Valid LoginCommand loginData, BindingResult bindingResult) {
+  public String login(@Valid LoginCommand loginCommand, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {      
       logger.debug("Login enthält fehlerhafte Angaben");
       return "/login";
     }
-    if (!loginService.login(loginData)) {
+    if (!loginService.login(loginCommand)) {
       logger.debug("Login ist fehlgeschlagen");
       bindingResult.addError(new ObjectError("Login", "Falscher Benutzer oder Passwort"));
       return "/login";
     }
-    RequestContextHolder.currentRequestAttributes().setAttribute("benutzerId", loginData.getLogin(),
+    RequestContextHolder.currentRequestAttributes().setAttribute("benutzerId", loginCommand.getLogin(),
         RequestAttributes.SCOPE_SESSION);
     return "redirect:/";
   }

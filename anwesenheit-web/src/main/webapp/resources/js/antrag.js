@@ -107,6 +107,7 @@ function parseNumber(s) {
   return parseFloat(x);
 }
 
+
 app.controller("AntragUebersichtCtrl", ['$scope', '$resource', 
   function($scope, $resource) {
 	var Uebersicht = $resource('/anwesenheit-web/api/antraege/uebersicht', {});
@@ -114,16 +115,16 @@ app.controller("AntragUebersichtCtrl", ['$scope', '$resource',
   }
 ]);
 
-app.controller("NewAntragCtrl", ['$scope', '$location', 'antragService', 'antragArtService',
+app.controller("NewAntragCtrl", ['$scope', '$location', '$filter', 'antragService', 'antragArtService',
                                  'benutzerService', 'sonderUrlaubArtService',
-  function($scope, $location, antragService, antragArtService,
+  function($scope, $location, $filter, antragService, antragArtService,
            benutzerService, sonderUrlaubArtService) {
     $scope.antragArtListe = antragArtService.query(function(liste) {
         $scope.antrag = {
             antragArt : _.clone(liste[0]),
             sonderUrlaubArt : "UMZUG",
-            von : "01.01.2013",
-            bis : "23.02.2013",
+            von : new Date(),
+            bis : new Date(),
             anzahlTage: "0",
             bewilliger : []
         };
@@ -137,15 +138,15 @@ app.controller("NewAntragCtrl", ['$scope', '$location', 'antragService', 'antrag
             var antragsDaten = {
                 antragArt : $scope.antrag.antragArt.antragArt,
                 sonderUrlaubArt: $scope.antrag.sonderUrlaubArt,
-                von : parseDate($scope.antrag.von),
-                bis : parseDate($scope.antrag.bis),
+                von : $filter("date")( $scope.antrag.von, "yyyy-MM-dd"),
+                bis : $filter("date")( $scope.antrag.bis, "yyyy-MM-dd"),
                 anzahlTage: parseNumber($scope.antrag.anzahlTage),
                 bewilliger : $.map($scope.antrag.bewilliger, function(b) {
                     return b.benutzerId;
                 })
             };
 
-            antragService.save(angular.toJson(antragsDaten), function(data) {                
+            antragService.save(angular.toJson(antragsDaten), function(data) {
                 $location.url("/antraege");
             }, function(data) {
                 console.log(data);
@@ -226,8 +227,8 @@ app.controller("EditAntragCtrl", ['$scope', '$routeParams', '$filter', '$locatio
         "id" : $routeParams.id
     }, function(data) {
         var s = _.isNull(data.sonderUrlaubArt) ? "UMZUG" : data.sonderUrlaubArt.sonderUrlaubArt;
-        data.von = $filter("date")(data.von, "dd.MM.yyyy");
-        data.bis = $filter("date")(data.bis, "dd.MM.yyyy");
+        data.von = new Date(data.von),
+        data.bis = new Date(data.bis),
         data.sonderUrlaubArt = s;
         data.anzahlTage = $filter("number")(data.anzahlTage);        
     }, function(data) {
@@ -267,8 +268,8 @@ app.controller("EditAntragCtrl", ['$scope', '$routeParams', '$filter', '$locatio
           id : $scope.antrag.id,
           antragArt : $scope.antrag.antragArt.antragArt,
           sonderUrlaubArt : $scope.antrag.sonderUrlaubArt,
-          von : parseDate($scope.antrag.von),
-          bis : parseDate($scope.antrag.bis),
+          von : $filter("date")( $scope.antrag.von, "yyyy-MM-dd"),
+          bis : $filter("date")( $scope.antrag.bis, "yyyy-MM-dd"),
           anzahlTage: parseNumber($scope.antrag.anzahlTage)
       };
       antragService.update(antragsDaten, function(data) {

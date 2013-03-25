@@ -1,16 +1,16 @@
 package de.fisp.anwesenheit.core.domain;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 public class LoginCommand {
-  @NotNull
-  @Size(min = 3, max = 30)
+  @NotBlank
+  @Size(max = 30)
   private String login;
-  @NotNull
-  @Size(min = 3, max = 30)
+  @NotBlank
+  @Size(max = 30)
   private String password;
 
   public String getLogin() {
