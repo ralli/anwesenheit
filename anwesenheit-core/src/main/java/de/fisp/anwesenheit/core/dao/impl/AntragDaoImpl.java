@@ -135,17 +135,15 @@ public class AntragDaoImpl implements AntragDao {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public List<Antrag> findByBewilligerAndFilter(String bewilligerId, AntragsFilter filter) {
     Criteria criteria = createFilterCriteria(filter);
     criteria.createAlias("bewilligungen", "bw");
-    Disjunction d = Restrictions.disjunction();   
-    d.add((Restrictions.eq("bw.benutzerId", bewilligerId)));
-    d.add((Restrictions.eq("benutzerId", bewilligerId)));
-    criteria.add(d);
-    
+    criteria.add((Restrictions.eq("bw.benutzerId", bewilligerId)));       
     criteria.addOrder(Order.asc("von"));
-    @SuppressWarnings("unchecked")
-    List<Antrag> list = criteria.list();
+    List<Antrag> list = findByBenutzerAndFilter(bewilligerId, filter);
+    list.addAll(criteria.list());
+    
     log.debug("findByBewilligerAndFilter({}, {}): count = {}", new Object[] { bewilligerId, filter, list.size() });
     return list;
   }
