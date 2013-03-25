@@ -50,7 +50,7 @@
 						<li><a href="<c:url value="#" />">Home</a></li>
 						<li><a href="<c:url value="#/antraege" />">Anträge</a></li>
 						<li><a href="<c:url value="#/bewilligungen" />">Bewilligungen</a></li>
-						<li><a href="<c:url value="#/eintragungen" />">Eintragungen</a></li>
+						<li><a href="<c:url value="#/uebersicht" />">Urlaubsliste</a></li>
 					</ul>
 					<b:currentUserName id="current-user-name">Test</b:currentUserName>
 				</div>

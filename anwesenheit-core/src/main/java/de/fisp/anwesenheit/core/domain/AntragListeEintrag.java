@@ -11,14 +11,17 @@ import de.fisp.anwesenheit.core.util.JsonDateSerializer;
 
 public class AntragListeEintrag {
   private long id;
+  private BenutzerDaten benutzer;
   private AntragArt antragArt;
   private AntragStatus antragStatus;
   private Date von;
   private Date bis;
   private double anzahlTage;
 
-  public AntragListeEintrag(long id, AntragArt antragArt, AntragStatus antragStatus, Date von, Date bis, double anzahlTage) {
+  public AntragListeEintrag(long id, BenutzerDaten benutzer, AntragArt antragArt, AntragStatus antragStatus, Date von, Date bis,
+      double anzahlTage) {
     this.id = id;
+    this.benutzer = benutzer;
     this.antragArt = antragArt;
     this.antragStatus = antragStatus;
     this.von = von;
@@ -28,6 +31,10 @@ public class AntragListeEintrag {
 
   public long getId() {
     return id;
+  }
+
+  public BenutzerDaten getBenutzer() {
+    return benutzer;
   }
 
   public AntragArt getAntragArt() {
@@ -56,5 +63,5 @@ public class AntragListeEintrag {
   public String toString() {
     return ToStringBuilder.reflectionToString(this);
   }
-  
+
 }

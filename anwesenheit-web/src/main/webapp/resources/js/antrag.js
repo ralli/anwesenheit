@@ -16,6 +16,10 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : '/anwesenheit-web/resources/partials/antraege/new.html',
         controller : 'NewAntragCtrl',
     })
+    .when("/uebersicht", {
+        templateUrl : '/anwesenheit-web/resources/partials/antraege/uebersicht.html',
+        controller : 'AntragUebersichtCtrl',        
+    })
     .when("/antraege/:id/edit", {
         templateUrl : '/anwesenheit-web/resources/partials/antraege/edit.html',
         controller : 'EditAntragCtrl',        
@@ -28,6 +32,7 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : '/anwesenheit-web/resources/partials/bewilligungen/index.html',
         controller : 'ListBewilligungCtrl',
     });
+    
 }]);
 
 app.factory("antragService", ['$resource', function($resource) {
@@ -69,12 +74,13 @@ app.controller("AppCtrl", ['$rootScope', function($rootScope) {
 app.controller("HomeCtrl", ['$scope', function($scope) {  
 }]);
 
-app.controller("ListAntragCtrl", ['$scope', 'antragService', function($scope, antragService) {                                  
-  $scope.antragListe = antragService.get({});
+app.controller("ListAntragCtrl", ['$scope', 'antragService', 
+  function($scope, antragService) {                                  
+    $scope.antragListe = antragService.get({});
     $scope.deleteAntrag = function(antrag) {
-        antragService.remove({ "id": antrag.id }, function(data) {
-            $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function(a) { return a.id === antrag.id; });        
-        });
+       antragService.remove({ "id": antrag.id }, function(data) {
+         $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function(a) { return a.id === antrag.id; });            
+       });
     };
   }
 ]);
@@ -100,6 +106,13 @@ function parseNumber(s) {
   var x = s.replace(/,/g, '.');
   return parseFloat(x);
 }
+
+app.controller("AntragUebersichtCtrl", ['$scope', '$resource', 
+  function($scope, $resource) {
+	var Uebersicht = $resource('/anwesenheit-web/api/antraege/uebersicht', {});
+	$scope.antragListe = Uebersicht.get({});
+  }
+]);
 
 app.controller("NewAntragCtrl", ['$scope', '$location', 'antragService', 'antragArtService',
                                  'benutzerService', 'sonderUrlaubArtService',
@@ -132,8 +145,7 @@ app.controller("NewAntragCtrl", ['$scope', '$location', 'antragService', 'antrag
                 })
             };
 
-            antragService.save(angular.toJson(antragsDaten), function(data) {
-                console.log(data);
+            antragService.save(angular.toJson(antragsDaten), function(data) {                
                 $location.url("/antraege");
             }, function(data) {
                 console.log(data);

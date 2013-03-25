@@ -137,8 +137,8 @@ public class AntragServiceImpl implements AntragService {
   }
 
   private AntragListeEintrag createAntragListeEintrag(Antrag antrag) {
-    AntragListeEintrag eintrag = new AntragListeEintrag(antrag.getId(), antrag.getAntragArt(), antrag.getAntragStatus(),
-        antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage());
+    AntragListeEintrag eintrag = new AntragListeEintrag(antrag.getId(), createBenutzerDaten(antrag.getBenutzer()),
+        antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage());
     return eintrag;
   }
 

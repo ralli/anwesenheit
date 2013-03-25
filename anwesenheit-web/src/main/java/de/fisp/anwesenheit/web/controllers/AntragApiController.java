@@ -93,7 +93,7 @@ public class AntragApiController {
     HttpHeaders headers = createJsonHeaders();
     try {
       final String benutzerId = getCurrentUser();
-      AntragListe liste = antragService.findByBenutzer(getCurrentUser(), benutzerId);
+      AntragListe liste = antragService.findByBenutzer(benutzerId, benutzerId);
       return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
     } catch (NotAuthorizedException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
