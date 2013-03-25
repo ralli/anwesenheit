@@ -35,14 +35,14 @@
 			<label for="antrag_von" class="control-label">Von</label>
 			<div class="controls">
 				<input type="text" id="antrag_von" name="von" ng-model="antrag.von"
-					ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+					required="true" ui-date="true"/>
 			</div>
 		</div>
 		<div ng-class="controlClassFor(editForm.bis.$valid)">
 			<label for="antrag_bis" class="control-label">Bis</label>
 			<div class="controls">
 				<input type="text" id="antrag_bis" name="bis" ng-model="antrag.bis"
-					ng-pattern="/[0-9][0-9]?\.[0-9][0-9]?\.[0-9]{4}/" required />
+					required="true" ui-date="true" />
 			</div>
 		</div>
 		<div class="control-group" ng-show="sonderUrlaubArtVisible()">
@@ -76,9 +76,9 @@
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			<td>Bewilliger</td>
-			<td>Status</td>
-			<td>Aktionen</td>
+			<th>Bewilliger</th>
+			<th>Status</th>
+			<th>Aktionen</th>
 		</tr>
 	</thead>
 	<tbody>
