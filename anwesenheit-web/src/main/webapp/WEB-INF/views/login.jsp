@@ -35,8 +35,19 @@ body {
 .form-signin input[type="text"],.form-signin input[type="password"] {
 	font-size: 16px;
 	height: auto;
-	margin-bottom: 15px;
+	margin-top: 15px;
+	margin-bottom: 0px;
 	padding: 7px 9px;
+}
+
+.form-signin button {
+    margin-top: 15px;
+}
+
+.fieldError {
+   color: #ff0000;
+   padding: 0px;
+   margin: 0px;
 }
 </style>
 </head>
@@ -48,14 +59,12 @@ body {
 			</div>
 		</div>
 	</div>
-	<form:form id="login-form" cssClass="form-signin" modelAttribute="loginData"
+	<form:form id="login-form" cssClass="form-signin" modelAttribute="loginCommand"
 		method="POST">
-		<form:errors />
+		<form:errors  cssClass="fieldError"/>
 		<h2 class="form-signin-heading">Bitte melden Sie sich an</h2>
-		<form:input path="login" placeholder="Benutzername" />  <form:errors path="login" cssClass="errorMessage" element="div" />
-     
-		
-		<form:password path="password" placeholder="Passwort" /> <form:errors path="password"/>
+		<form:input path="login" placeholder="Benutzername" />  <form:errors path="login" element="div" cssClass="fieldError"/>
+		<form:password path="password" placeholder="Passwort" /> <form:errors path="password" element="div"  cssClass="fieldError"/>
 		<button class="btn btn-large btn-primary" type="submit">Anmelden</button>
 	</form:form>
 </body>
