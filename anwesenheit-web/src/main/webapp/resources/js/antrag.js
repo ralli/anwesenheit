@@ -65,6 +65,10 @@ app.factory("bewilligungStatusService", ['$resource', function($resource) {
   return $resource("/anwesenheit-web/api/bewilligungsstatus/:id");
 }]);
 
+app.factory("antragUebersicht", ['$resource', function($resource) {
+  return $resource("/anwesenheit-web/api/antraege/uebersicht");
+}]);
+
 app.controller("AppCtrl", ['$rootScope', function($rootScope) {
     $rootScope.$on("$routeChangeError", function() {
         console.log("Error changing routes");
@@ -74,9 +78,27 @@ app.controller("AppCtrl", ['$rootScope', function($rootScope) {
 app.controller("HomeCtrl", ['$scope', function($scope) {  
 }]);
 
-app.controller("ListAntragCtrl", ['$scope', 'antragService', 
-  function($scope, antragService) {                                  
-    $scope.antragListe = antragService.get({});
+app.factory("antragListeData", function() {
+  return { 'filter': { 'status': 'ALLE', 'nur12Monate': true }};
+});
+
+app.controller("ListAntragCtrl", ['$scope', '$filter', 'antragService', 'antragListeData',
+  function($scope, $filter, antragService, antragListeData) {        
+    $scope.filter = antragListeData.filter;
+    $scope.fetchAntragListe = function() {
+      console.log("fetchAntragListe...");
+      var d = new Date();
+      d.setMonth(d.getMonth() - 12);
+      var params = {};
+      params.status = $scope.filter.status;
+      if($scope.filter.nur12Monate) {
+        params.von = $filter("date")( d, "yyyy-MM-dd");
+      }
+      antragService.get(params, function(data) {
+        $scope.antragListe = data;
+      });
+    };
+    $scope.fetchAntragListe();
     $scope.deleteAntrag = function(antrag) {
        antragService.remove({ "id": antrag.id }, function(data) {
          $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function(a) { return a.id === antrag.id; });            
@@ -92,26 +114,19 @@ app.controller("AntragDetailsCtrl", ['$scope', '$routeParams', 'antragService',
     });
     
     $scope.sonderUrlaubArtVisible = function() {
-      return $scope.antrag && $scope.antrag.antragArt.antragArt === "SONDER";
+      return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
     };
   }
 ]);
-
-function parseDate(s) {
-    var m = /([0-9][0-9]?).([0-9][0-9]?).([0-9]{4})/.exec(s);
-    return m[3] + "-" + m[2] + "-" + m[1];
-}
 
 function parseNumber(s) {
   var x = s.replace(/,/g, '.');
   return parseFloat(x);
 }
 
-
-app.controller("AntragUebersichtCtrl", ['$scope', '$resource', 
-  function($scope, $resource) {
-	var Uebersicht = $resource('/anwesenheit-web/api/antraege/uebersicht', {});
-	$scope.antragListe = Uebersicht.get({});
+app.controller("AntragUebersichtCtrl", ['$scope', '$resource', 'antragUebersicht',
+  function($scope, $resource, antragUebersicht) {	
+	$scope.antragListe = antragUebersicht.get({});
   }
 ]);
 
@@ -131,7 +146,6 @@ app.controller("NewAntragCtrl", ['$scope', '$location', '$filter', 'antragServic
     });
     
     $scope.sonderUrlaubArtListe = sonderUrlaubArtService.query();
-    
 
     $scope.createAntrag = function() {
         if ($scope.createForm.$valid) {
@@ -336,8 +350,7 @@ app.controller("ListBewilligungCtrl", ['$scope', 'bewilligungService',
       };
       bewilligungService.update(updateCommand, function(data) {        
         b.bewilligungsStatus = data.bewilligungsStatus;
-      });
-      
+      });      
     };
     
     $scope.lehneAntragAb = function(b) {

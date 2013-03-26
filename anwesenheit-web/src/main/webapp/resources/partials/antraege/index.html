@@ -1,12 +1,32 @@
-<h1>Offene Anträge</h1>
+<h1>Anträge</h1>
 <p>
-	<strong>Benutzer:</strong> {{antragListe.benutzer.vorname}}
-	{{antragListe.benutzer.nachname}}
-</p>
 <a ng-href="#/antraege/new" class="btn" href><i class="icon-plus"></i>Neuer
 	Antrag</a>
 </p>
-<table class="table table-bordered">
+<form class="form-inline" ng-submit="">
+    <label class="checkbox inline"> 
+      <input type="checkbox" name="checkRadios" id="checkRadios1" ng-model="filter.nur12Monate" ng-change="fetchAntragListe()"  />
+      Nur die letzten 12 Monate
+    </label>
+	<label class="radio inline"> <input type="radio"
+	    ng-model="filter.status"
+		name="optionsRadios" id="optionsRadios1" value="ALLE" ng-change="fetchAntragListe()"/>
+		Alle Anträge
+	</label> <label class="radio inline"> <input type="radio"
+	    ng-model="filter.status"
+		name="optionsRadios" id="optionsRadios2" value="OFFEN" ng-change="fetchAntragListe()" /> Offene
+		Anträge
+	</label> <label class="radio inline"> <input type="radio"
+	ng-model="filter.status"
+		name="optionsRadios" id="optionsRadios3" value="BEWILLIGT" ng-change="fetchAntragListe()" /> Bewilligte
+		Anträge
+	</label> <label class="radio inline"> <input type="radio"
+	ng-model="filter.status"
+		name="optionsRadios" id="optionsRadios4" value="ABGELEHNT" ng-change="fetchAntragListe()" /> Abgelehnte
+		Anträge
+	</label>
+</form>
+<table class="table table-bordered" ng-cloak>
 	<thead>
 		<tr>
 			<th>Art</th>

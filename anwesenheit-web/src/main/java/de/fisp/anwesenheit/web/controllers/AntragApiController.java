@@ -1,6 +1,7 @@
 package de.fisp.anwesenheit.web.controllers;
 
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import javax.validation.Valid;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -89,11 +93,15 @@ public class AntragApiController {
 
   @RequestMapping(method = RequestMethod.GET)
   public @ResponseBody
-  ResponseEntity<String> index() {
+  ResponseEntity<String> index(@RequestParam(value = "von", required = false) @DateTimeFormat(iso = ISO.DATE) Date von,
+      @RequestParam(value = "status", required = false) String status) {
     HttpHeaders headers = createJsonHeaders();
     try {
       final String benutzerId = getCurrentUser();
-      AntragListe liste = antragService.findByBenutzer(benutzerId, benutzerId);
+      AntragsFilter filter = new AntragsFilter();
+      filter.setVon(von);
+      filter.setAntragsStatusFilter(status);
+      AntragListe liste = antragService.findEigeneByFilter(benutzerId, filter);
       return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
     } catch (NotAuthorizedException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
