@@ -2,15 +2,20 @@ package de.fisp.anwesenheit.core.dao.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
+import de.fisp.anwesenheit.core.domain.BewilligungsFilter;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
 
 @Service
@@ -104,6 +109,42 @@ public class BewilligungDaoImpl implements BewilligungDao {
     @SuppressWarnings("unchecked")
     List<Bewilligung> list = query.list();
     log.debug("findByBewilliger({}): count = {}", new Object[] { benutzerId, list.size() });
+    return list;
+  }
+
+  private Criteria createFilterCriteria(BewilligungsFilter filter) {
+    Criteria criteria = getCurrentSession().createCriteria(Bewilligung.class);
+    criteria.createAlias("antrag", "antrag");
+    if (StringUtils.isNotBlank(filter.getBenutzerId())) {
+      criteria.add(Restrictions.eq("antrag.benutzerId", filter.getBenutzerId()));
+    }
+    if (filter.getVon() != null) {
+      criteria.add(Restrictions.ge("antrag.bis", filter.getVon()));
+    }
+    if (filter.getBis() != null) {
+      criteria.add(Restrictions.le("antrag.von", filter.getBis()));
+    }
+    criteria.addOrder(Order.asc("antrag.von"));
+    criteria.addOrder(Order.asc("antrag.benutzerId"));
+    return criteria;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<Bewilligung> findByBewilligerAndFilter(String bewilligerId, BewilligungsFilter filter) {
+    Criteria criteria = createFilterCriteria(filter);
+    criteria.add(Restrictions.eq("benutzerId", bewilligerId));
+    List<Bewilligung> list = criteria.list();
+    log.debug("findByBewilligerAndFilter({}, {}): count = {}", new Object[] { bewilligerId, filter, list.size() });
+    return list;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<Bewilligung> findByFilter(BewilligungsFilter filter) {
+    Criteria criteria = createFilterCriteria(filter);
+    List<Bewilligung> list = criteria.list();
+    log.debug("findByFilter({}): count = {}", new Object[] { filter, list.size() });
     return list;
   }
 }

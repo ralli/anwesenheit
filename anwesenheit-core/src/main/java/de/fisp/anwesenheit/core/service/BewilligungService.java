@@ -3,6 +3,7 @@ package de.fisp.anwesenheit.core.service;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
+import de.fisp.anwesenheit.core.domain.BewilligungsFilter;
 import de.fisp.anwesenheit.core.domain.UpdateBewilligungCommand;
 import de.fisp.anwesenheit.core.util.NotFoundException;
 
@@ -46,6 +47,21 @@ public interface BewilligungService {
    *           wenn der Benutzer die Bewilligungen nicht anzeigen darf
    */
   public BewilligungListe findByBenutzer(String currentUserId, String benutzerId);
+
+  /**
+   * Liefert eine Liste aller für einen Benutzer relevanten Bewilligungen.
+   * Filtert nach zusätzlichen Bedingungen.
+   * 
+   * 
+   * @param currentUserId
+   *          Die ID des aktuellen Benutzers
+   * @param Die
+   *          zusätzlichen Filterkriterien
+   * @return Die Liste der gefundenen Bewilligungen
+   * @throws NotFoundException
+   *           wenn der Benutzer nicht gefunden wurde
+   */
+  public BewilligungListe findByBenutzerAndFilter(String currentUserId, BewilligungsFilter filter);
 
   /**
    * Setzt den Status eines Urlaubsantrags

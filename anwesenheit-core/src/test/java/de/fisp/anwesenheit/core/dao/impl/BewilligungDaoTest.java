@@ -1,5 +1,6 @@
 package de.fisp.anwesenheit.core.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -16,6 +17,7 @@ import de.fisp.anwesenheit.core.TestDataFactory;
 import de.fisp.anwesenheit.core.dao.AntragDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
+import de.fisp.anwesenheit.core.domain.BewilligungsFilter;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
@@ -84,5 +86,16 @@ public class BewilligungDaoTest {
 		bewilligungDao.delete(bewilligung);
 		bewilligung = bewilligungDao.findById(id);
 		Assert.assertNull(bewilligung);
+	}
+	
+	@Test
+	public void findByBewilligerAndFilterShouldSucceed() {
+	  final String bewilligerId = "bewilliger";
+	  final String benutzerId = "benutzer";
+	  BewilligungsFilter filter = new BewilligungsFilter();
+	  filter.setBenutzerId(benutzerId);
+	  filter.setVon(new Date());
+	  filter.setBis(new Date());
+	  bewilligungDao.findByBewilligerAndFilter(bewilligerId, filter);
 	}
 }

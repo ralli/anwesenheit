@@ -19,6 +19,7 @@ import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
+import de.fisp.anwesenheit.core.domain.BewilligungsFilter;
 import de.fisp.anwesenheit.core.domain.BewilligungsListeEintrag;
 import de.fisp.anwesenheit.core.domain.UpdateBewilligungCommand;
 import de.fisp.anwesenheit.core.entities.Antrag;
@@ -171,12 +172,7 @@ public class BewilligungServiceImpl implements BewilligungService {
       throw new NotAuthorizedException("Keine Ausreichenden Berechtigungen zum Anzeigen der Bewilligungen");
     }
     List<Bewilligung> list = bewilligungDao.findByBewilliger(benutzerId);
-    List<BewilligungsListeEintrag> eintraege = new ArrayList<BewilligungsListeEintrag>();
-    BenutzerDaten benutzerDaten = createBenutzerDaten(benutzer);
-    for (Bewilligung b : list) {
-      eintraege.add(createBewilligungsListeEintrag(b));
-    }
-    BewilligungListe result = new BewilligungListe(benutzerDaten, eintraege);
+    BewilligungListe result = createBewilligungsListe(benutzer, list);
     return result;
   }
 
@@ -256,5 +252,33 @@ public class BewilligungServiceImpl implements BewilligungService {
     BewilligungsDaten daten = createBewilligungsDaten(bewilligung);
 
     return daten;
+  }
+
+  @Override
+  public BewilligungListe findByBenutzerAndFilter(String currentUserId, BewilligungsFilter filter) {
+    logger.debug("findByBenutzerAndFilter({}, {})", currentUserId, filter);
+    Benutzer benutzer = benutzerDao.findById(currentUserId);
+    if (benutzer == null) {
+      throw new NotFoundException(String.format("Bewilliger %s nicht gefunden", currentUserId));
+    }
+    List<Bewilligung> list;
+    if(berechtigungsService.hatSonderBerechtigungen(benutzer)) {
+      list = bewilligungDao.findByFilter(filter);
+    }
+    else {
+      list = bewilligungDao.findByBewilligerAndFilter(currentUserId, filter);
+    }    
+    BewilligungListe result = createBewilligungsListe(benutzer, list);
+    return result;
+  }
+
+  private BewilligungListe createBewilligungsListe(Benutzer benutzer, List<Bewilligung> list) {
+    List<BewilligungsListeEintrag> eintraege = new ArrayList<BewilligungsListeEintrag>();
+    BenutzerDaten benutzerDaten = createBenutzerDaten(benutzer);
+    for (Bewilligung b : list) {
+      eintraege.add(createBewilligungsListeEintrag(b));
+    }
+    BewilligungListe result = new BewilligungListe(benutzerDaten, eintraege);
+    return result;
   }
 }

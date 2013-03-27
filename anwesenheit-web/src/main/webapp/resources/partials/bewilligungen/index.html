@@ -1,13 +1,35 @@
 <h1>Bewilligungen</h1>
+<p></p>
+<form class="form-inline" ng-submit="">
+	<input class="input-medium" type="text" ng-model="filter.antragsteller"
+		placeholder="Antragsteller" /> <label class="radio"> <input
+		type="radio" ng-model="filter.status" name="optionsRadios"
+		id="optionsRadios1" value="ALLE" ng-change="fetchBewilligungsListe()" />
+		Alle Bewilligungen
+	</label> <label class="radio"> <input type="radio"
+		ng-model="filter.status" name="optionsRadios" id="optionsRadios2"
+		value="OFFEN" ng-change="fetchBewilligungsListe()" /> Offene
+		Bewilligungen
+	</label> <label class="radio"> <input type="radio"
+		ng-model="filter.status" name="optionsRadios" id="optionsRadios3"
+		value="BEWILLIGT" ng-change="fetchBewilligungsListe()" /> Bewilligte
+		Bewilligungen
+	</label> <label class="radio"> <input type="radio"
+		ng-model="filter.status" name="optionsRadios" id="optionsRadios4"
+		value="ABGELEHNT" ng-change="fetchBewilligungsListe()" /> Abgelehnte
+		Bewilligungen
+	</label>
+
+</form>
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			<td>Antragsteller</td>
-			<td>Art</td>
-			<td>Von</td>
-			<td>Bis</td>
-			<td>Status</td>
-			<td>Aktionen</td>
+			<th>Antragsteller</th>
+			<th>Art</th>
+			<th>Von</th>
+			<th>Bis</th>
+			<th>Status</th>
+			<th>Aktionen</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -17,10 +39,11 @@
 			<td>{{b.von|date:"dd.MM.yyyy"}}</td>
 			<td>{{b.bis|date:"dd.MM.yyyy"}}</td>
 			<td>{{b.bewilligungsStatus.bezeichnung}}</td>
-			<td>
-			    <a href="" ng-click="bewilligeAntrag(b)" class="btn btn-small btn-success">Bewilligen</a>
-				<a href="" ng-click="lehneAntragAb(b)" class="btn btn-small btn-danger">Ablehnen</a>
+			<td><a href="" ng-click="bewilligeAntrag(b)"
+				class="btn btn-small btn-success">Bewilligen</a> <a href=""
+				ng-click="lehneAntragAb(b)" class="btn btn-small btn-danger">Ablehnen</a>
 			</td>
 		</tr>
 	</tbody>
 </table>
+<p>{{filter|json}}</p>
