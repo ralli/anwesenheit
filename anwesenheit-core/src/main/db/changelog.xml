@@ -21,6 +21,7 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
 	<changeSet id="createTableAntragArt" author="raljuhn">
 		<createTable tableName="antrag_art">
 			<column name="antrag_art" type="varchar(10)">
@@ -38,6 +39,7 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
 	<changeSet id="createTableSonderUrlaubArt" author="raljuhn">
 		<createTable tableName="sonderurlaub_art">
 			<column name="sonderurlaub_art" type="varchar(10)">
@@ -57,6 +59,7 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
 	<changeSet id="createTableBenutzer" author="raljuhn">
 		<createTable tableName="benutzer">
 			<column name="benutzer_id" type="varchar(30)">
@@ -76,6 +79,29 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
+	<changeSet id="createTableBenutzerTyp" author="raljuhn">
+		<createTable tableName="benutzertyp">
+			<column name="benutzertyp" type="varchar(10)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="position" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="bezeichnung" type="varchar(30)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="addFKToBenutzerTyp" author="raljuhn">
+		<addForeignKeyConstraint constraintName="fk_benutzer_1"
+			referencedTableName="benutzertyp" baseColumnNames="benutzertyp"
+			baseTableName="benutzer" referencedColumnNames="benutzertyp" />
+	</changeSet>
+
 	<changeSet id="createTableAntrag" author="raljuhn">
 		<createTable tableName="antrag">
 			<column name="id" type="BIGINT" autoIncrement="true">
@@ -95,8 +121,9 @@
 					foreignKeyName="fk_antrag_status" deleteCascade="false" />
 			</column>
 			<column name="sonderurlaub_art" type="varchar(10)">
-			 <constraints nullable="true" references="sonderurlaub_art(sonderurlaub_art)"
-                    foreignKeyName="fk_antrag_sonderurlaub" deleteCascade="false" />            
+				<constraints nullable="true"
+					references="sonderurlaub_art(sonderurlaub_art)" foreignKeyName="fk_antrag_sonderurlaub"
+					deleteCascade="false" />
 			</column>
 			<column name="von" type="date">
 				<constraints nullable="false" />
@@ -112,6 +139,16 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
+	<changeSet id="addIndexesToAntrag" author="ralli">
+		<createIndex tableName="antrag" indexName="ix_antrag_von">
+			<column name="von" />
+		</createIndex>
+		<createIndex tableName="antrag" indexName="ix_antrag_bis">
+			<column name="bis" />
+		</createIndex>
+	</changeSet>
+
 	<changeSet id="createTableAntragHistorie" author="raljuhn">
 		<createTable tableName="antrag_historie">
 			<column name="id" type="BIGINT" autoIncrement="true">
@@ -135,6 +172,7 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
 	<changeSet id="createTableRolle" author="raljuhn">
 		<createTable tableName="rolle">
 			<column name="rolle" type="varchar(10)">
@@ -152,6 +190,7 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
 	<changeSet id="createTableBenutzerRolle" author="raljuhn">
 		<createTable tableName="benutzer_rolle">
 			<column name="benutzer_id" type="varchar(30)">
@@ -165,6 +204,7 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
 	<changeSet id="addPKToBenutzerRolle" author="raljuhn">
 		<addPrimaryKey tableName="benutzer_rolle" columnNames="benutzer_id,rolle" />
 		<addForeignKeyConstraint constraintName="fk_benutzer_rolle_1"
@@ -175,6 +215,7 @@
 			referencedTableName="rolle" baseColumnNames="rolle" baseTableName="benutzer_rolle"
 			referencedColumnNames="rolle" deleteCascade="true" />
 	</changeSet>
+
 	<changeSet id="createTableBewilligungStatus" author="raljuhn">
 		<createTable tableName="bewilligungs_status">
 			<column name="bewilligungs_status" type="varchar(10)">
@@ -191,6 +232,7 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
 	<changeSet id="createTableBewilligung" author="raljuhn">
 		<createTable tableName="bewilligung">
 			<column name="id" type="BIGINT" autoIncrement="true">
@@ -213,10 +255,11 @@
 			<append value=" engine innodb" />
 		</modifySql>
 	</changeSet>
+
 	<changeSet id="addFKToBewilligung" author="raljuhn">
 		<addForeignKeyConstraint constraintName="fk_bewilligung_1"
 			referencedTableName="benutzer" baseColumnNames="benutzer_id"
-			baseTableName="benutzer_rolle" referencedColumnNames="benutzer_id"
+			baseTableName="bewilligung" referencedColumnNames="benutzer_id"
 			deleteCascade="true" />
 		<addForeignKeyConstraint constraintName="fk_bewilligung_3"
 			referencedTableName="antrag" baseColumnNames="antrag_id"
@@ -226,6 +269,7 @@
 			baseTableName="bewilligung" referencedColumnNames="bewilligungs_status"
 			deleteCascade="false" />
 	</changeSet>
+
 	<changeSet id="insertAntragArt" author="raljuhn">
 		<insert tableName="antrag_art">
 			<column name="antrag_art" value="URLAUB" />
@@ -243,6 +287,7 @@
 			<column name="bezeichnung" value="Sonderurlaub" />
 		</insert>
 	</changeSet>
+
 	<changeSet id="insertAntragStatus" author="raljuhn">
 		<insert tableName="antrag_status">
 			<column name="antrag_status" value="NEU" />
@@ -265,6 +310,7 @@
 			<column name="bezeichnung" value="Abgelehnt" />
 		</insert>
 	</changeSet>
+
 	<changeSet id="insertSonderUrlaubArt" author="raljuhn">
 		<insert tableName="sonderurlaub_art">
 			<column name="sonderurlaub_art" value="HEIRAT" />
@@ -291,6 +337,7 @@
 			<column name="bezeichnung" value="Umzug" />
 		</insert>
 	</changeSet>
+
 	<changeSet id="insertRolle" author="raljuhn">
 		<insert tableName="rolle">
 			<column name="rolle" value="ADMIN" />
@@ -320,22 +367,7 @@
 			<column name="bezeichnung" value="Abgelehnt" />
 		</insert>
 	</changeSet>
-	<changeSet id="createTableBenutzerTyp" author="raljuhn">
-		<createTable tableName="benutzertyp">
-			<column name="benutzertyp" type="varchar(10)">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="position" type="int">
-				<constraints nullable="false" />
-			</column>
-			<column name="bezeichnung" type="varchar(30)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+
 	<changeSet id="insertBenutzerTyp" author="raljuhn">
 		<insert tableName="benutzertyp">
 			<column name="benutzertyp" value="native" />
@@ -348,9 +380,5 @@
 			<column name="bezeichnung" value="LDAP" />
 		</insert>
 	</changeSet>
-	<changeSet id="addFKToBenutzer" author="raljuhn">
-		<addForeignKeyConstraint constraintName="fk_benutzer_1"
-			referencedTableName="benutzertyp" baseColumnNames="benutzertyp"
-			baseTableName="benutzer" referencedColumnNames="benutzertyp" />
-	</changeSet>
+
 </databaseChangeLog>
