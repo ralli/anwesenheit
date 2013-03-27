@@ -195,14 +195,6 @@ public class BewilligungServiceImpl implements BewilligungService {
     antragDao.update(antrag);
   }
 
-  private void aktualisiereAntragStatus(long antragId) {
-    Antrag antrag = antragDao.findById(antragId);
-    if (antrag == null) {
-      throw new NotFoundException("Antrag nicht gefunden");
-    }
-    aktualisiereAntragStatus(antrag);
-  }
-
   private String ermittleAntragStatus(Antrag antrag) {
     List<Bewilligung> bewilligungen = bewilligungDao.findByAntrag(antrag.getId());
     String antragStatus;

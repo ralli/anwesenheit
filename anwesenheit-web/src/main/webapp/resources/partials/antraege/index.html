@@ -1,6 +1,6 @@
 <h1>Anträge</h1>
 <p>
-<a ng-href="#/antraege/new" class="btn" href><i class="icon-plus"></i>Neuer
+<a ng-href="#/antraege/new" class="btn" href=""><i class="icon-plus"></i>Neuer
 	Antrag</a>
 </p>
 <form class="form-inline" ng-submit="">
@@ -45,8 +45,8 @@
 			<td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
             <td>{{antrag.anzahlTage|number}}</td>
 			<td>
-			   <a ng-href="#/antraege/{{antrag.id}}" href>Details</a> 
-			   <a ng-href="#/antraege/{{antrag.id}}/edit" href>Bearbeiten</a> 
+			   <a ng-href="#/antraege/{{antrag.id}}" href="">Details</a> 
+			   <a ng-href="#/antraege/{{antrag.id}}/edit" href="">Bearbeiten</a> 
 			   <a href="" ng-click="deleteAntrag(antrag)">Löschen</a>
 			</td>
 		</tr>
