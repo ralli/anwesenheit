@@ -103,8 +103,8 @@ app.factory("bewilligungsListeData", function() {
   };
 });
 
-app.controller("ListAntragCtrl", [ '$scope', '$filter', 'antragService', 'antragListeData',
-    function($scope, $filter, antragService, antragListeData) {
+app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', 'antragService', 'antragListeData',
+    function($scope, $filter, $dialog, antragService, antragListeData) {
       
       $scope.fetchAntragListe = function() {
         console.log("fetchAntragListe...");
@@ -120,13 +120,25 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', 'antragService', 'antrag
         });
       };
 
-      $scope.deleteAntrag = function(antrag) {
-        antragService.remove({
-          "id" : antrag.id
-        }, function(data) {
+      $scope.doDelete = function(antrag) {
+        antragService.remove({ "id" : antrag.id }, function(data) {
           $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function(a) {
             return a.id === antrag.id;
           });
+        });        
+      };
+      
+      $scope.deleteAntrag = function(antrag) {
+        var title = 'Antrag löschen?';
+        var msg = 'Möchten Sie diesen Antrag wirklich löschen?';
+        var btns = [{result:'cancel', label: 'Nein' }, {result:'ok', label: 'Ja', cssClass: 'btn-danger'}];
+
+        $dialog.messageBox(title, msg, btns)
+          .open()
+          .then(function(result){
+            if("ok" === result) {
+              $scope.doDelete(antrag);
+            }
         });
       };
 
