@@ -1,7 +1,10 @@
 package de.fisp.anwesenheit.core.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import de.fisp.anwesenheit.core.entities.AntragArt;
@@ -28,8 +31,27 @@ public class BewilligungsListeEintrag {
     this.benutzer = benutzer;
     this.von = von;
     this.bis = bis;
+
   }
 
+  public String getBenutzerName() {
+    List<String> parts = new ArrayList<String>();
+    if (StringUtils.isNotBlank(benutzer.getVorname())) {
+      parts.add(benutzer.getVorname());
+    }
+    if (StringUtils.isNotBlank(benutzer.getNachname())) {
+      parts.add(benutzer.getNachname());
+    }
+    if (parts.isEmpty()) {
+      parts.add(benutzer.getBenutzerId());
+    }
+    return StringUtils.join(parts, ' ');
+  }
+
+  public String getStatus() {
+    return bewilligungsStatus.getBewilligungsStatus(); 
+  }
+  
   public long getId() {
     return id;
   }

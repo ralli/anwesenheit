@@ -1,22 +1,22 @@
 <h1>Bewilligungen</h1>
 <p></p>
 <form class="form-inline" ng-submit="">
-	<input class="input-medium" type="text" ng-model="filter.antragsteller"
+	<input class="input-medium" type="text" ng-model="filter.benutzerName"
 		placeholder="Antragsteller" /> <label class="radio"> <input
 		type="radio" ng-model="filter.status" name="optionsRadios"
-		id="optionsRadios1" value="ALLE" ng-change="fetchBewilligungsListe()" />
+		id="optionsRadios1" value="" />
 		Alle Bewilligungen
 	</label> <label class="radio"> <input type="radio"
 		ng-model="filter.status" name="optionsRadios" id="optionsRadios2"
-		value="OFFEN" ng-change="fetchBewilligungsListe()" /> Offene
+		value="OFFEN" /> Offene
 		Bewilligungen
 	</label> <label class="radio"> <input type="radio"
 		ng-model="filter.status" name="optionsRadios" id="optionsRadios3"
-		value="BEWILLIGT" ng-change="fetchBewilligungsListe()" /> Bewilligte
+		value="BEWILLIGT" /> Bewilligte
 		Bewilligungen
 	</label> <label class="radio"> <input type="radio"
 		ng-model="filter.status" name="optionsRadios" id="optionsRadios4"
-		value="ABGELEHNT" ng-change="fetchBewilligungsListe()" /> Abgelehnte
+		value="ABGELEHNT" /> Abgelehnte
 		Bewilligungen
 	</label>
 
@@ -33,17 +33,16 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="b in bewilligungsListe.bewilligungen">
-			<td>{{b.benutzer.vorname}} {{b.benutzer.nachname}}</td>
+		<tr ng-repeat="b in bewilligungsListe.bewilligungen | filter:filter">
+			<td>{{b.benutzerName}}</td>
 			<td>{{b.antragArt.bezeichnung}}</td>
 			<td>{{b.von|date:"dd.MM.yyyy"}}</td>
 			<td>{{b.bis|date:"dd.MM.yyyy"}}</td>
 			<td>{{b.bewilligungsStatus.bezeichnung}}</td>
-			<td><a href="" ng-click="bewilligeAntrag(b)"
-				class="btn btn-small btn-success">Bewilligen</a> <a href=""
-				ng-click="lehneAntragAb(b)" class="btn btn-small btn-danger">Ablehnen</a>
+			<td>
+			   <a href="" ng-click="bewilligeAntrag(b)" class="btn btn-small btn-success">Bewilligen</a> 
+			   <a href="" ng-click="lehneAntragAb(b)" class="btn btn-small btn-danger">Ablehnen</a>
 			</td>
 		</tr>
 	</tbody>
 </table>
-<p>{{filter|json}}</p>

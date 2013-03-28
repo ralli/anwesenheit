@@ -53,24 +53,27 @@
 		<div class="control-group">
 			<div class="controls">
 				<input type="submit" class="btn btn-primary" value="Speichern" /> 
-				<a ng-href="#/antraege" class="btn">Zurück</a>
+				<a ng-href="#!/antraege" class="btn">Zurück</a>
 			</div>
 		</div>
 	</fieldset>
 </form>
 
 <h2>Bewilligungen</h2>
-<form name="bewilligungForm" class="form-inline"
-	ng-submit="addBewilliger()">
-	<input type="text" placeholder="Bewilliger" id="bewilliger_key"
-		name="bewilliger" ng-model="bewilligerKey"
-		benutzer-autocomplete="true" select="benutzerSelected()" required />
-	<input type="submit" class="btn btn-primary" value="Hinzufügen" /> <span
-		class="error">{{bewilligungError}}</span>
+
+<form name="bewilligungForm" class="form-inline" ng-submit="addBewilliger()">
+	<input type="text" 
+           placeholder="Bewilliger" 
+           id="bewilliger_key"
+		   name="bewilliger" ng-model="bewilligerKey"
+		   benutzer-autocomplete="true" 
+           select="benutzerSelected()" required />
+	<input type="submit" class="btn btn-primary" value="Hinzufügen" /> 
+    <span class="error">{{bewilligungError}}</span>
 </form>
 <ul>
-	<li ng-repeat="b in antrag.bewilliger">{{b.vorname}}
-		{{b.nachname}} <a ng-href="" ng-click="removeBewilliger(b)">Löschen</a>
+	<li ng-repeat="b in antrag.bewilliger">
+       {{b.vorname}} {{b.nachname}} 
+       <a ng-href="" ng-click="removeBewilliger(b)">Löschen</a>
 	</li>
 </ul>
-<p>{{bewilligerKey}}</p>

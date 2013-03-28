@@ -2,7 +2,9 @@
 
 var app = angular.module("antrag", [ "ngResource", "ui", "ui.bootstrap" ]);
 
-app.config([ '$routeProvider', function($routeProvider) {
+app.config([ '$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+  $locationProvider.html5Mode(false);
+  $locationProvider.hashPrefix("!");
   $routeProvider.when('/', {
     templateUrl : '/anwesenheit-web/resources/partials/home.html',
     controller : 'HomeCtrl'
@@ -95,7 +97,8 @@ app.factory("antragListeData", function() {
 app.factory("bewilligungsListeData", function() {
   return {
     'filter' : {
-      'status' : 'ALLE'
+      'benutzerName': '',
+      'status' : ''
     }
   };
 });
@@ -180,7 +183,7 @@ app.controller("NewAntragCtrl", [ '$scope', '$location', '$filter', 'antragServi
           };
 
           antragService.save(angular.toJson(antragsDaten), function(data) {
-            $location.url("/antraege");
+            $location.path("/antraege");
           }, function(data) {
             console.log(data);
           });
@@ -313,7 +316,7 @@ app.controller("EditAntragCtrl", [
           anzahlTage : parseNumber($scope.antrag.anzahlTage)
         };
         antragService.update(antragsDaten, function(data) {
-          $location.url("/antraege");
+          $location.path("/antraege");
         });
       };
 
