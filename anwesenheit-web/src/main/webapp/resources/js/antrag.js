@@ -80,6 +80,7 @@ app.controller("AppCtrl", [ '$rootScope', function($rootScope) {
   $rootScope.$on("$routeChangeError", function() {
     console.log("Error changing routes");
   });
+  $rootScope.alerts = { type: 'success', message: "Hurra"};
 } ]);
 
 app.controller("HomeCtrl", [ '$scope', function($scope) {

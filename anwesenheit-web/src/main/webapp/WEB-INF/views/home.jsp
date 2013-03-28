@@ -59,6 +59,7 @@
 		</div>
 	</div>
 	<div class="container">
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 		<div ng-view></div>
 	</div>
 	<script src="<c:url value="/resources/js/jquery-1.7.2.min.js"/>"></script>
