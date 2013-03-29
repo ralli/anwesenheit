@@ -34,6 +34,7 @@ public class AntragHistorieDaoImpl implements AntragHistorieDao {
   @Override
   public List<AntragHistorie> findByAntrag(long antragId) {
     Query query = getCurrentSession().createQuery("from AntragHistorie a where a.antragId=:antragId order by a.zeitpunkt desc");
+    query.setLong("antragId", antragId);
     @SuppressWarnings("unchecked")
     List<AntragHistorie> list = query.list();
     logger.debug("findByAntrag({}): count = {}", antragId, list.size());
@@ -42,7 +43,7 @@ public class AntragHistorieDaoImpl implements AntragHistorieDao {
 
   @Override
   public AntragHistorie findById(long id) {
-    Query query = getCurrentSession().createQuery("from AntragHistorie ah where ah.id = :id");
+    Query query = getCurrentSession().createQuery("from AntragHistorie ah join fetch ah.benutzer where ah.id = :id");
     query.setLong("id", id);
     @SuppressWarnings("unchecked")
     List<AntragHistorie> list = query.list();

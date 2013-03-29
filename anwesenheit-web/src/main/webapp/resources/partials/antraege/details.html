@@ -69,3 +69,23 @@
 		</tr>
 	</tbody>
 </table>
+<p><button class="btn" ng-click="leseHistorie()" ng-show="!historie"><i class="icon-refresh"></i>Historie</button></p>
+<div ng-show="historie">
+   <h2>Historie</h2>
+   <table class="table table-bordered">
+     <thead>
+       <tr>
+         <th>Benutzer</th>
+         <th>Zeitpunkt</th>
+         <th>Beschreibung</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr ng-repeat="hist in historie">
+         <td>{{hist.benutzer.vorname}} {{hist.benutzer.nachname}}</td>
+         <td>{{hist.zeitpunkt|date:'dd.MM.yyyy HH:mm'}}</td>
+         <td>{{hist.beschreibung}}</td>
+       </tr>
+     </tbody>
+   </table>
+</div>

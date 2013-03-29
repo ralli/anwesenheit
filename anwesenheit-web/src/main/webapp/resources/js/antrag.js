@@ -65,17 +65,18 @@ app.config([ '$routeProvider', '$locationProvider', function($routeProvider, $lo
 } ]);
 
 app.factory("antragService", [ '$resource', function($resource) {
-  return $resource("/anwesenheit-web/api/antraege/:id", {
-    "id" : "@id"
-  }, {
-    "update" : {
-      "method" : "PUT"
-    },
-    "remove" : {
-      "method" : "DELETE"
-    }
-  });
-} ]);
+    return $resource("/anwesenheit-web/api/antraege/:id", { "id" : "@id" }, 
+        { 
+          "update" : { "method" : "PUT" },
+          "remove" : { "method" : "DELETE" }
+        });
+  }
+]);
+
+app.factory("antragHistorieService", [ "$resource", function($resource) {
+    return $resource("/anwesenheit-web/api/antraege/:antragId/historie", { "antragId" : "@antragId" });
+  }
+]);
 
 app.factory("antragArtService", [ '$resource', function($resource) {
   return $resource("/anwesenheit-web/api/antragsarten/:id");
@@ -182,13 +183,19 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', 'antragServic
       $scope.fetchAntragListe();
     } ]);
 
-app.controller("AntragDetailsCtrl", [ '$scope', '$routeParams', 'antragService', function($scope, $routeParams, antragService) {
+app.controller("AntragDetailsCtrl", [ '$scope', '$routeParams', 'antragService', 'antragHistorieService', function($scope, $routeParams, antragService, antragHistorieService) {
   $scope.antrag = antragService.get({
     "id" : $routeParams.id
   });
 
   $scope.sonderUrlaubArtVisible = function() {
     return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
+  };
+  
+  $scope.leseHistorie = function() {
+    antragHistorieService.query({'antragId' : $scope.antrag.id }, function(data) {
+      $scope.historie = data;
+    });
   };
   
   $scope.rowClassFor = rowClassForBewilligung;

@@ -19,6 +19,7 @@ import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
+import de.fisp.anwesenheit.core.domain.AntragHistorieDaten;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragListeEintrag;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
@@ -277,5 +278,32 @@ public class AntragServiceImpl implements AntragService {
     AntragListe liste = createAntragListe(benutzer, antraege);
     log.debug("findSichtbareByFilter({}, {}) = {}", new Object[] { benutzerId, filter, liste });
     return liste;
+  }
+
+  @Override
+  public List<AntragHistorieDaten> leseHistorie(String benutzerId, long antragId) {
+    Benutzer benutzer = benutzerDao.findById(benutzerId);
+    if (benutzer == null) {
+      throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
+    }
+    Antrag antrag = antragDao.findById(antragId);
+    if (antrag == null) {
+      throw new NotFoundException("Antrag nicht gefunden");
+    }
+    if (!berechtigungsService.darfAntragAnsehen(antrag, benutzer)) {
+      throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zur Anzeige des Antrags");
+    }
+    List<AntragHistorie> list = antragHistorieDao.findByAntrag(antragId);
+    List<AntragHistorieDaten> result = new ArrayList<AntragHistorieDaten>();
+    for (AntragHistorie antragHistorie : list) {
+      result.add(createAntragHistorieDaten(antragHistorie));
+
+    }
+    return result;
+  }
+
+  private AntragHistorieDaten createAntragHistorieDaten(AntragHistorie antragHistorie) {
+    return new AntragHistorieDaten(antragHistorie.getId(), antragHistorie.getAntragId(), antragHistorie.getBenutzerId(),
+        antragHistorie.getZeitpunkt(), antragHistorie.getBeschreibung(), createBenutzerDaten(antragHistorie.getBenutzer()));
   }
 }
