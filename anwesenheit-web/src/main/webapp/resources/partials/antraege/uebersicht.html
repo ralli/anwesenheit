@@ -12,7 +12,7 @@
 		</tr>
 	</thead>
 	<tbody>
-	   <tr ng-repeat="antrag in antragListe.antraege">
+	   <tr ng-repeat="antrag in antragListe.antraege" ng-class="rowClassFor(antrag)">
 	     <td>{{antrag.benutzer.vorname}} {{antrag.benutzer.nachname}}</td>
 	     <td>{{antrag.antragArt.bezeichnung}}</td>
 	     <td>{{antrag.antragStatus.bezeichnung}}</td>

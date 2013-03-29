@@ -1,26 +1,44 @@
 <h1>Bewilligungen</h1>
 <p></p>
 <form class="form-inline" ng-submit="">
-	<input class="input-medium" type="text" ng-model="filter.benutzerName"
-		placeholder="Antragsteller" /> <label class="radio"> <input
-		type="radio" ng-model="filter.status" name="optionsRadios"
-		id="optionsRadios1" value="" />
+	<input class="input-medium" 
+           type="text" 
+           ng-model="filter.benutzerName"
+		   placeholder="Antragsteller" />
+    <label class="radio"> 
+       <input type="radio" 
+              ng-model="filter.status" 
+              name="optionsRadios"
+		      id="optionsRadios1" 
+              value="" />
 		Alle Bewilligungen
-	</label> <label class="radio"> <input type="radio"
-		ng-model="filter.status" name="optionsRadios" id="optionsRadios2"
-		value="OFFEN" /> Offene
-		Bewilligungen
-	</label> <label class="radio"> <input type="radio"
-		ng-model="filter.status" name="optionsRadios" id="optionsRadios3"
-		value="BEWILLIGT" /> Bewilligte
-		Bewilligungen
-	</label> <label class="radio"> <input type="radio"
-		ng-model="filter.status" name="optionsRadios" id="optionsRadios4"
-		value="ABGELEHNT" /> Abgelehnte
-		Bewilligungen
+	</label> 
+    <label class="radio"> 
+       <input type="radio"
+		      ng-model="filter.status" 
+              name="optionsRadios" 
+              id="optionsRadios2"
+		      value="OFFEN" /> 
+        Offene Bewilligungen
+	</label> 
+    <label class="radio"> 
+       <input type="radio"
+		      ng-model="filter.status"
+              name="optionsRadios" 
+              id="optionsRadios3"
+		      value="BEWILLIGT" /> 
+        Bewilligte Bewilligungen
+	</label> 
+    <label class="radio"> 
+       <input type="radio"
+		      ng-model="filter.status"
+              name="optionsRadios" 
+              id="optionsRadios4"
+		      value="ABGELEHNT" />
+        Abgelehnte Bewilligungen
 	</label>
-
 </form>
+
 <table class="table table-bordered">
 	<thead>
 		<tr>
@@ -33,7 +51,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="b in bewilligungsListe.bewilligungen | filter:filter">
+		<tr ng-repeat="b in bewilligungsListe.bewilligungen | filter:filter" ng-class="rowClassFor(b)">
 			<td>{{b.benutzerName}}</td>
 			<td>{{b.antragArt.bezeichnung}}</td>
 			<td>{{b.von|date:"dd.MM.yyyy"}}</td>

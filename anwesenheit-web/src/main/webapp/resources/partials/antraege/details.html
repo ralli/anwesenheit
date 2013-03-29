@@ -62,7 +62,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="bewilligung in antrag.bewilligungen">
+		<tr ng-repeat="bewilligung in antrag.bewilligungen" ng-class="rowClassFor(bewilligung)">
 			<td>{{bewilligung.benutzer.vorname}}
 				{{bewilligung.benutzer.nachname}}</td>
 			<td>{{bewilligung.bewilligungsStatus.bezeichnung}}</td>

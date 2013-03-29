@@ -105,7 +105,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="b in antrag.bewilligungen">
+		<tr ng-repeat="b in antrag.bewilligungen" ng-class="rowClassFor(b)">
 			<td>{{b.benutzer.vorname}} {{b.benutzer.nachname}}</td>
 			<td>{{b.bewilligungsStatus.bezeichnung}}</td>
 			<td><a ng-href="" href="" ng-click="deleteBewilligung(b)">Löschen</a></td>

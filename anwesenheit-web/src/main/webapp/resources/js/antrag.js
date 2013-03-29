@@ -2,6 +2,40 @@
 
 var app = angular.module("antrag", [ "ngResource", "ui", "ui.bootstrap" ]);
 
+function rowClassForAntrag(antrag) {
+  var status = antrag.antragStatus.antragStatus;
+  var result = "";
+  
+  if(status === 'NEU') {
+    result = '';
+  }
+  else if(status === 'IN_ARBEIT') {
+    result = 'info';
+  }
+  else if(status === 'BEWILLIGT') {
+    result = 'success';
+  }
+  else if(status === 'ABGELEHNT') {
+    result = 'error';
+  }
+  
+  return result;
+};
+
+function rowClassForBewilligung(b) {
+  var status = b.bewilligungsStatus.bewilligungsStatus;
+  var result = ""; 
+  if(status === 'ABGELEHNT') {
+    result = "error";
+  }
+  else if(status == 'OFFEN') {
+    result = "";
+  }
+  else if(status == 'BEWILLIGT') {
+    result = "success";
+  }
+  return result;
+};
 app.config([ '$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(false);
   $locationProvider.hashPrefix("!");
@@ -142,7 +176,8 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', 'antragServic
             }
         });
       };
-
+      
+      $scope.rowClassFor = rowClassForAntrag;
       $scope.filter = antragListeData.filter;
       $scope.fetchAntragListe();
     } ]);
@@ -155,6 +190,8 @@ app.controller("AntragDetailsCtrl", [ '$scope', '$routeParams', 'antragService',
   $scope.sonderUrlaubArtVisible = function() {
     return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
   };
+  
+  $scope.rowClassFor = rowClassForBewilligung;
 } ]);
 
 function parseNumber(s) {
@@ -164,6 +201,7 @@ function parseNumber(s) {
 
 app.controller("AntragUebersichtCtrl", [ '$scope', '$resource', 'antragUebersicht', function($scope, $resource, antragUebersicht) {
   $scope.antragListe = antragUebersicht.get({});
+  $scope.rowClassFor = rowClassForAntrag;
 } ]);
 
 app.controller("NewAntragCtrl", [ '$scope', '$location', '$filter', 'antragService', 'antragArtService', 'benutzerService',
@@ -362,7 +400,10 @@ app.controller("EditAntragCtrl", [
           });
         });
       }
-    } ]);
+      
+      $scope.rowClassFor = rowClassForBewilligung;
+    } 
+]);
 
 app.directive("benutzerAutocomplete", function() {
   return {
@@ -411,10 +452,11 @@ app.controller("ListBewilligungCtrl", [ '$scope', 'bewilligungService', 'bewilli
           'bewilligungsStatus' : 'ABGELEHNT'
         };
         bewilligungService.update(updateCommand, function(data) {
-          b.bewilligungsStatus = data.bewilligungsStatus;
+          b.bewilligungsStatus = data.bewilligungsStatus;          
         });
       };
-      
+
+      $scope.rowClassFor = rowClassForBewilligung;      
       $scope.filter = bewilligungsListeData.filter;
       $scope.fetchBewilligungsListe();
     } 

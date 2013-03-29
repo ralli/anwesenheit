@@ -61,7 +61,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="antrag in antragListe.antraege">
+		<tr ng-repeat="antrag in antragListe.antraege" ng-class="rowClassFor(antrag)">
 			<td>{{antrag.antragArt.bezeichnung}}</td>
 			<td>{{antrag.antragStatus.bezeichnung}}</td>
 			<td>{{antrag.von|date:'dd.MM.yyyy'}}</td>
