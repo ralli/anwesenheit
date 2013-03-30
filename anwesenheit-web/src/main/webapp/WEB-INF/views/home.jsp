@@ -44,8 +44,14 @@
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
+             <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+          </a>
+   
 				<a class="brand" href="<c:url value="/" />">Anwesenheit</a>
-				<div class="nav-collapse">
+				<div class="container nav-collapse">
 					<ul class="nav">
 						<li><a href="<c:url value="#!" />">Home</a></li>
 						<li><a href="<c:url value="#!/antraege" />">Anträge</a></li>

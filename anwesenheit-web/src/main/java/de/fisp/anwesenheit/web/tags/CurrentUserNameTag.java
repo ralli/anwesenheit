@@ -13,21 +13,22 @@ public class CurrentUserNameTag extends AbstractHtmlElementTag {
     HttpSession session = pageContext.getSession();
     if(session == null)
       return "";
-    return (String) session.getAttribute("benutzerId");
+    return (String) session.getAttribute("benutzerName");
   }
 
   @Override
   protected int writeTagContent(TagWriter tagWriter) throws JspException {
-    tagWriter.startTag("div");
-    tagWriter.writeAttribute("class", "navbar-form pull-right");
-    tagWriter.startTag("span");
+    tagWriter.startTag("ul");
+    tagWriter.writeAttribute("class", "nav pull-right");
+    tagWriter.startTag("li");
     tagWriter.writeAttribute("class", "navbar-text");
     tagWriter.appendValue(getCurrentUser());
     tagWriter.endTag();
+    tagWriter.startTag("li");
     tagWriter.startTag("a");
     tagWriter.writeAttribute("href", getRequestContext().getContextUrl("/logoff"));
-    tagWriter.writeAttribute("class", "btn");    
     tagWriter.appendValue("Abmelden");
+    tagWriter.endTag();
     tagWriter.endTag(); 
     tagWriter.endTag();    
     return SKIP_BODY;
