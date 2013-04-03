@@ -47,19 +47,19 @@ app.config([ '$routeProvider', '$locationProvider', function($routeProvider, $lo
     controller : 'ListAntragCtrl'
   }).when("/antraege/new", {
     templateUrl : '/anwesenheit-web/resources/partials/antraege/new.html',
-    controller : 'NewAntragCtrl',
+    controller : 'NewAntragCtrl'
   }).when("/uebersicht", {
     templateUrl : '/anwesenheit-web/resources/partials/antraege/uebersicht.html',
-    controller : 'AntragUebersichtCtrl',
+    controller : 'AntragUebersichtCtrl'
   }).when("/antraege/:id/edit", {
     templateUrl : '/anwesenheit-web/resources/partials/antraege/edit.html',
-    controller : 'EditAntragCtrl',
+    controller : 'EditAntragCtrl'
   }).when("/antraege/:id", {
     templateUrl : '/anwesenheit-web/resources/partials/antraege/details.html',
-    controller : 'AntragDetailsCtrl',
+    controller : 'AntragDetailsCtrl'
   }).when("/bewilligungen", {
     templateUrl : '/anwesenheit-web/resources/partials/bewilligungen/index.html',
-    controller : 'ListBewilligungCtrl',
+    controller : 'ListBewilligungCtrl'
   });
 
 } ]);
