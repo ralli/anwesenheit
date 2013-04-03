@@ -17,7 +17,9 @@ public class DataSourceConfig {
 		datasource.setPassword("anwesenheit");
 		datasource.setInitialSize(5);
 		datasource.setMaxActive(10);
-		datasource.setMaxIdle(5);
+		datasource.setMaxIdle(0);
+		datasource.setTimeBetweenEvictionRunsMillis(1000 * 60 * 10);
+		datasource.setMinEvictableIdleTimeMillis(1000 * 60 * 15);
 		return datasource;
 	}
 	//    @Bean
