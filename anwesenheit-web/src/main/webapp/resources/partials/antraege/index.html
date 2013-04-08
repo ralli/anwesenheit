@@ -69,8 +69,11 @@
             <td>{{antrag.anzahlTage|number}}</td>
 			<td>
 			   <a ng-href="#!/antraege/{{antrag.id}}" href="">Details</a> 
-			   <a ng-href="#!/antraege/{{antrag.id}}/edit" href="">Bearbeiten</a> 
-			   <a href="" ng-click="deleteAntrag(antrag)">Löschen</a>
+			   <a ng-href="#!/antraege/{{antrag.id}}/edit" ng-show="antragAenderbar(antrag)" href="">Bearbeiten</a> 
+               <a ng-href="#!/antraege/{{antrag.id}}/copy" ng-show="antragKopierbar(antrag)" href="">Kopieren</a>
+			   <a href="" ng-click="deleteAntrag(antrag)" ng-show="antragAenderbar(antrag)">Löschen</a>
+               <a href="" ng-click="storniereAntrag(antrag)" ng-show="antragKopierbar(antrag)">Stornieren</a>
+      
 			</td>
 		</tr>
 	</tbody>

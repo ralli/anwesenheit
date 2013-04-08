@@ -309,6 +309,11 @@
 			<column name="position" valueNumeric="4" />
 			<column name="bezeichnung" value="Abgelehnt" />
 		</insert>
+        <insert tableName="antrag_status">
+            <column name="antrag_status" value="STORNIERT" />
+            <column name="position" valueNumeric="5" />
+            <column name="bezeichnung" value="Storniert" />
+        </insert>
 	</changeSet>
 
 	<changeSet id="insertSonderUrlaubArt" author="raljuhn">
@@ -380,5 +385,4 @@
 			<column name="bezeichnung" value="LDAP" />
 		</insert>
 	</changeSet>
-
 </databaseChangeLog>

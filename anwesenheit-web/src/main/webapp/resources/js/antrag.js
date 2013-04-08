@@ -54,6 +54,9 @@ app.config([ '$routeProvider', '$locationProvider', function($routeProvider, $lo
   }).when("/antraege/:id/edit", {
     templateUrl : '/anwesenheit-web/resources/partials/antraege/edit.html',
     controller : 'EditAntragCtrl'
+  }).when("/antraege/:id/copy", {
+    templateUrl : '/anwesenheit-web/resources/partials/antraege/new.html',
+    controller : 'NewAntragCtrl'
   }).when("/antraege/:id", {
     templateUrl : '/anwesenheit-web/resources/partials/antraege/details.html',
     controller : 'AntragDetailsCtrl'
@@ -68,7 +71,7 @@ app.factory("antragService", [ '$resource', function($resource) {
     return $resource("/anwesenheit-web/api/antraege/:id", { "id" : "@id" }, 
         { 
           "update" : { "method" : "PUT" },
-          "remove" : { "method" : "DELETE" }
+          "remove" : { "method" : "DELETE" },
         });
   }
 ]);
@@ -139,8 +142,8 @@ app.factory("bewilligungsListeData", function() {
   };
 });
 
-app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', 'antragService', 'antragListeData',
-    function($scope, $filter, $dialog, antragService, antragListeData) {
+app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'antragService', 'antragListeData',
+    function($scope, $filter, $dialog, $http, antragService, antragListeData) {
       
       $scope.fetchAntragListe = function() {
         console.log("fetchAntragListe...");
@@ -163,7 +166,14 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', 'antragServic
           });
         });        
       };
-      
+
+      $scope.doStorno = function(antrag) {
+        $http.put('/anwesenheit-web/api/antraege/' + antrag.id + "/storno").success(function(data) {
+          antrag.antragStatus.antragStatus = "STORNIERT";
+          antrag.antragStatus.bezeichnung = "Storniert";              
+        });        
+      };
+
       $scope.deleteAntrag = function(antrag) {
         var title = 'Antrag löschen?';
         var msg = 'Möchten Sie diesen Antrag wirklich löschen?';
@@ -177,8 +187,28 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', 'antragServic
             }
         });
       };
+
+      $scope.storniereAntrag = function(antrag) {
+        var title = 'Antrag stornieren?';
+        var msg = 'Möchten Sie diesen Antrag wirklich stornieren?';
+        var btns = [{result:'cancel', label: 'Nein' }, {result:'ok', label: 'Ja', cssClass: 'btn-danger'}];
+
+        $dialog.messageBox(title, msg, btns)
+          .open()
+          .then(function(result){
+            if("ok" === result) {
+              $scope.doStorno(antrag);
+            }
+        });
+      };
       
       $scope.rowClassFor = rowClassForAntrag;
+      $scope.antragAenderbar = function(antrag) {
+        return antrag.antragStatus.antragStatus === "NEU";
+      };
+      $scope.antragKopierbar = function(antrag) {
+        return !$scope.antragAenderbar(antrag);
+      };
       $scope.filter = antragListeData.filter;
       $scope.fetchAntragListe();
     } ]);
@@ -211,22 +241,46 @@ app.controller("AntragUebersichtCtrl", [ '$scope', '$resource', 'antragUebersich
   $scope.rowClassFor = rowClassForAntrag;
 } ]);
 
-app.controller("NewAntragCtrl", [ '$scope', '$location', '$filter', 'antragService', 'antragArtService', 'benutzerService',
+app.controller("NewAntragCtrl", [ '$scope', '$location', '$filter', '$routeParams', 'antragService', 'antragArtService', 'benutzerService',
     'sonderUrlaubArtService',
-    function($scope, $location, $filter, antragService, antragArtService, benutzerService, sonderUrlaubArtService) {
-      $scope.antragArtListe = antragArtService.query(function(liste) {
-        $scope.antrag = {
-          antragArt : _.clone(liste[0]),
-          sonderUrlaubArt : "UMZUG",
-          von : new Date(),
-          bis : new Date(),
-          anzahlTage : "0",
-          bewilliger : []
-        };
-      });
-
-      $scope.sonderUrlaubArtListe = sonderUrlaubArtService.query();
-
+    function($scope, $location, $filter, $routeParams, antragService, antragArtService, benutzerService, sonderUrlaubArtService) {
+      if($routeParams.id) {
+        /*
+         * routeParams.id != null ==> Bestehender Antrag soll kopiert werden...
+         */
+        $scope.title = "Antrag kopieren";
+        $scope.antragArtListe = antragArtService.query();
+        $scope.sonderUrlaubArtListe = sonderUrlaubArtService.query();
+        $scope.antrag = antragService.get({"id" : $routeParams.id }, function(data) {
+          var s = _.isNull(data.sonderUrlaubArt) ? "UMZUG" : data.sonderUrlaubArt.sonderUrlaubArt;
+          data.von = new Date(data.von); 
+          data.bis = new Date(data.bis);
+          data.sonderUrlaubArt = s;
+          data.anzahlTage = $filter("number")(data.anzahlTage);
+          data.bewilliger = _.map(data.bewilligungen, function(x) { return x.benutzer }); 
+          data.bewilligungen = [];
+        }, function(data) {
+          console.log(data);
+        });
+      } else {
+        /*
+         * routeParams.id === null ==> Neuer Antrag soll angelegt werden
+         */   
+         $scope.title = "Neuer Antrag";
+         $scope.antragArtListe = antragArtService.query(function(liste) {
+            $scope.antrag = {
+               antragArt : _.clone(liste[0]),
+               sonderUrlaubArt : "UMZUG",
+               von : new Date(),
+               bis : new Date(),
+               anzahlTage : "0",
+               bewilliger : []
+            };
+         });
+         
+         $scope.sonderUrlaubArtListe = sonderUrlaubArtService.query();
+      }
+            
       $scope.createAntrag = function() {
         if ($scope.createForm.$valid) {
           var antragsDaten = {
@@ -250,7 +304,7 @@ app.controller("NewAntragCtrl", [ '$scope', '$location', '$filter', 'antragServi
       };
 
       $scope.sonderUrlaubArtVisible = function() {
-        return $scope.antrag && $scope.antrag.antragArt.antragArt === "SONDER";
+        return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
       }
 
       $scope.anzahlTageVisible = function() {
@@ -330,7 +384,9 @@ app.controller("EditAntragCtrl", [
         "id" : $routeParams.id
       }, function(data) {
         var s = _.isNull(data.sonderUrlaubArt) ? "UMZUG" : data.sonderUrlaubArt.sonderUrlaubArt;
-        data.von = new Date(data.von), data.bis = new Date(data.bis), data.sonderUrlaubArt = s;
+        data.von = new Date(data.von);
+        data.bis = new Date(data.bis);
+        data.sonderUrlaubArt = s;
         data.anzahlTage = $filter("number")(data.anzahlTage);
       }, function(data) {
         console.log(data);
@@ -465,6 +521,9 @@ app.controller("ListBewilligungCtrl", [ '$scope', 'bewilligungService', 'bewilli
 
       $scope.rowClassFor = rowClassForBewilligung;      
       $scope.filter = bewilligungsListeData.filter;
+      $scope.antragAenderbar = function(antrag) {
+        antrag.antragStatus.antragStatus === "NEU";
+      }
       $scope.fetchBewilligungsListe();
     } 
 ]);

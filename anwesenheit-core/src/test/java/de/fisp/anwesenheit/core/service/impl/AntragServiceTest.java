@@ -22,12 +22,14 @@ import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
+import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
+import de.fisp.anwesenheit.core.util.NotValidException;
 
 public class AntragServiceTest {
   private static final Logger logger = LoggerFactory.getLogger(AntragServiceTest.class);
@@ -49,7 +51,8 @@ public class AntragServiceTest {
     sonderUrlaubArtDao = mock(SonderUrlaubArtDao.class);
     antragHistorieDao = mock(AntragHistorieDao.class);
     berechtigungsService = mock(BerechtigungsService.class);
-    antragService = new AntragServiceImpl(antragDao, bewilligungDao, benutzerDao, sonderUrlaubArtDao, antragHistorieDao, berechtigungsService);
+    antragService = new AntragServiceImpl(antragDao, bewilligungDao, benutzerDao, sonderUrlaubArtDao, antragHistorieDao,
+        berechtigungsService);
   }
 
   @Test
@@ -130,5 +133,78 @@ public class AntragServiceTest {
     StringWriter writer = new StringWriter();
     mapper.writeValue(writer, bla);
     logger.info(writer.toString());
+  }
+
+  @Test
+  public void antragImStatusNeuDarfGeaendertWerden() {
+    final String benutzerId = "demo123";
+    final long antragId = 10L;
+    final String antragArt = "URLAUB";
+    Antrag antrag = testDataFactory.createAntrag(antragArt, benutzerId);
+    antrag.setId(antragId);
+
+    UpdateAntragCommand command = new UpdateAntragCommand();
+    command.setId(antragId);
+    command.setAntragArt(antragArt);
+    command.setSonderUrlaubArt("");
+    command.setVon(antrag.getVon());
+    command.setBis(antrag.getBis());
+    when(antragDao.findById(antragId)).thenReturn(antrag);
+    when(berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)).thenReturn(true);
+    antragService.updateAntrag(benutzerId, antragId, command);
+  }
+
+  @Test
+  public void antragImStatusInBearbeitungDarfNichtGeaendertWerden() {
+    final String benutzerId = "demo123";
+    final long antragId = 10L;
+    final String antragArt = "URLAUB";
+    Antrag antrag = testDataFactory.createAntrag(antragArt, benutzerId);
+    antrag.setId(antragId);
+    antrag.setAntragStatusId("IN_BEARBEITUNG");
+    UpdateAntragCommand command = new UpdateAntragCommand();
+    command.setId(antragId);
+    command.setAntragArt(antragArt);
+    command.setSonderUrlaubArt("");
+    command.setVon(antrag.getVon());
+    command.setBis(antrag.getBis());
+    when(antragDao.findById(antragId)).thenReturn(antrag);
+    when(berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)).thenReturn(true);
+    try {
+      antragService.updateAntrag(benutzerId, antragId, command);
+    } catch (NotValidException ex) {
+      return;
+    }
+    Assert.fail("NotValidException erwartet");
+  }
+  
+  @Test
+  public void antragImStatusNeuDarfGeloeschtWerden() {
+    final String benutzerId = "demo123";
+    final long antragId = 10L;
+    final String antragArt = "URLAUB";
+    Antrag antrag = testDataFactory.createAntrag(antragArt, benutzerId);
+    antrag.setId(antragId);
+    when(antragDao.findById(antragId)).thenReturn(antrag);
+    when(berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)).thenReturn(true);
+    antragService.deleteAntrag(benutzerId, antragId);
+  }
+  
+  @Test
+  public void antragImStatusInBearbeitungDarfNichtGeloeschtWerden() {
+    final String benutzerId = "demo123";
+    final long antragId = 10L;
+    final String antragArt = "URLAUB";
+    Antrag antrag = testDataFactory.createAntrag(antragArt, benutzerId);
+    antrag.setId(antragId);
+    antrag.setAntragStatusId("IN_BEARBEITUNG");
+    when(antragDao.findById(antragId)).thenReturn(antrag);
+    when(berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)).thenReturn(true);
+    try {
+      antragService.deleteAntrag(benutzerId, antragId);
+    } catch (NotValidException ex) {
+      return;
+    }
+    Assert.fail("NotValidException erwartet");
   }
 }

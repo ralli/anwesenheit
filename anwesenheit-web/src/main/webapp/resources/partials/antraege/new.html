@@ -1,5 +1,5 @@
+<h1>{{title}}</h1>
 
-<h1>Neuer Antrag</h1>
 <form name="createForm" class="form-horizontal" ng-submit="createAntrag()">
     <fieldset>
 		<legend>Antrag</legend>	
@@ -77,3 +77,5 @@
        <a ng-href="" ng-click="removeBewilliger(b)">Löschen</a>
 	</li>
 </ul>
+
+<p>{{antrag|json}}</p> 

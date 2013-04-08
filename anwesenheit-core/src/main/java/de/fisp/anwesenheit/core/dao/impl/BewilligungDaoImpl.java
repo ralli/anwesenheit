@@ -103,7 +103,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
 
   @Override
   public List<Bewilligung> findByBewilliger(String benutzerId) {
-    final String hql = "from Bewilligung b join fetch b.antrag join fetch b.benutzer join fetch b.bewilligungsStatus join fetch b.antrag.benutzer join fetch b.antrag.antragStatus join fetch b.antrag.antragArt where b.benutzerId=:benutzerId order by b.antrag.von";
+    final String hql = "from Bewilligung b join fetch b.antrag join fetch b.benutzer join fetch b.bewilligungsStatus join fetch b.antrag.benutzer join fetch b.antrag.antragStatus join fetch b.antrag.antragArt where b.benutzerId=:benutzerId and b.antrag.antragStatusId <> 'STORNIERT' order by b.antrag.von";
     Query query = getCurrentSession().createQuery(hql);
     query.setString("benutzerId", benutzerId);
     @SuppressWarnings("unchecked")
@@ -124,6 +124,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
     if (filter.getBis() != null) {
       criteria.add(Restrictions.le("antrag.von", filter.getBis()));
     }
+    criteria.add(Restrictions.ne("antrag.antragStatusId", "STORNIERT"));
     criteria.addOrder(Order.asc("antrag.von"));
     criteria.addOrder(Order.asc("antrag.benutzerId"));
     return criteria;

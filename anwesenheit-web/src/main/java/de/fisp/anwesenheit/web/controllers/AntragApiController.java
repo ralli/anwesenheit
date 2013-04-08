@@ -177,6 +177,22 @@ public class AntragApiController {
     }
   }
 
+  @RequestMapping(value="/{id}/storno", method=RequestMethod.PUT)
+  public @ResponseBody 
+  ResponseEntity<String> storniereAntrag(@PathVariable long id) {
+    HttpHeaders headers = createJsonHeaders();
+    try {
+      antragService.storniereAntrag(getCurrentUser(), id);
+      return new ResponseEntity<String>(jsonMessage("OK"), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    } catch (NotValidException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
+    }  
+  }
+  
   @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
   public @ResponseBody
   ResponseEntity<String> update(@PathVariable long id, @RequestBody @Valid UpdateAntragCommand updateAntragCommand) {

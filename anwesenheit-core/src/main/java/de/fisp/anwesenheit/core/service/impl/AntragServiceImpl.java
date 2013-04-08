@@ -37,6 +37,7 @@ import de.fisp.anwesenheit.core.service.AntragService;
 import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
+import de.fisp.anwesenheit.core.util.NotValidException;
 
 @Service
 public class AntragServiceImpl implements AntragService {
@@ -210,13 +211,35 @@ public class AntragServiceImpl implements AntragService {
     if (antrag == null) {
       throw new NotFoundException("Antrag nicht gefunden");
     }
+    
+    if (darfAntragGeaendertOderGeloeschtWerden(antrag)) {
+      throw new NotValidException("Anträge im Status" + antrag.getAntragStatusId() + " dürfen nicht mehr gelöscht werden");
+    }
+    
     if (!berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)) {
       throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zum Löschen des Antrags");
     }
+    
     antragDao.delete(antrag);
     return true;
   }
-
+  
+  @Override
+  @Transactional
+  public void storniereAntrag(String benutzerId, long antragId) {
+    Antrag antrag = antragDao.findById(antragId);
+    if (antrag == null) {
+      throw new NotFoundException("Antrag nicht gefunden");
+    }
+    if (!berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)) {
+      throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zum Löschen des Antrags");
+    }
+    antrag.setAntragStatusId("STORNIERT");
+    antragDao.update(antrag);
+    String message = String.format("Antrag storniert.");
+    insertAntragHistorie(benutzerId, antrag, message);
+  }
+  
   private String dateToString(Date date) {
     DateFormat f = new SimpleDateFormat("dd.MM.yyyy");
     return f.format(date);
@@ -237,6 +260,9 @@ public class AntragServiceImpl implements AntragService {
     if (!berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)) {
       throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zum Ändern des Antrags");
     }
+    if (darfAntragGeaendertOderGeloeschtWerden(antrag)) {
+      throw new NotValidException("Anträge im Status" + antrag.getAntragStatusId() + " dürfen nicht mehr geändert werden");
+    }
     antrag.setAntragArtId(command.getAntragArt());
     antrag.setVon(command.getVon());
     antrag.setBis(command.getBis());
@@ -246,6 +272,10 @@ public class AntragServiceImpl implements AntragService {
         dateToString(command.getVon()), dateToString(command.getBis()), tageToString(command.getAnzahlTage()));
     insertAntragHistorie(benutzerId, antrag, message);
     return createAntragsDatenFromAntrag(antragId, antragDao.findById(antragId));
+  }
+
+  private boolean darfAntragGeaendertOderGeloeschtWerden(Antrag antrag) {
+    return !"NEU".equals(antrag.getAntragStatusId());
   }
 
   @Override
@@ -305,5 +335,5 @@ public class AntragServiceImpl implements AntragService {
   private AntragHistorieDaten createAntragHistorieDaten(AntragHistorie antragHistorie) {
     return new AntragHistorieDaten(antragHistorie.getId(), antragHistorie.getAntragId(), antragHistorie.getBenutzerId(),
         antragHistorie.getZeitpunkt(), antragHistorie.getBeschreibung(), createBenutzerDaten(antragHistorie.getBenutzer()));
-  }
+  } 
 }

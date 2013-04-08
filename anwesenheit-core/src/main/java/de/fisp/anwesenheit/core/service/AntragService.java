@@ -149,9 +149,23 @@ public interface AntragService {
    * @throws NotFoundException
    *           wenn ein Eintrag nicht gefunden wurde
    * @throws NotValidException
-   *           wenn der Antrag inkonsistente oder falsche Daten enthält
+   *           wenn der Antrag nicht gelöscht werden darf
    * @throws NotAuthorizedException
-   *           wenn der aktuelle Benutzer den Antrag nicht anlegen darf
+   *           wenn der aktuelle Benutzer den Antrag nicht löschen darf
    */
   boolean deleteAntrag(String benutzerId, long antragId);
+
+  /**
+   * Storniert einen Antrag
+   * 
+   * @param benutzerId
+   *          Der aktuell angemeldete Benutzer
+   * @param antragId
+   *          Der Antrag, der gelöscht werden soll
+   * @throws NotFoundException
+   *           wenn ein Eintrag nicht gefunden wurde
+   * @throws NotAuthorizedException
+   *           wenn der aktuelle Benutzer den Antrag nicht stornieren darf
+   */
+  void storniereAntrag(String benutzerId, long antragId);
 }
