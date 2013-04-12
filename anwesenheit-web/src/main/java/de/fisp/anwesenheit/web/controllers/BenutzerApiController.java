@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.LabelValue;
 import de.fisp.anwesenheit.core.service.BenutzerService;
+import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 
 @Controller
 @RequestMapping("/api/benutzer")
@@ -40,7 +43,12 @@ public class BenutzerApiController {
   }
 
   private String getCurrentUser() {
-    return "juhnke_r";
+    String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId",
+        RequestAttributes.SCOPE_SESSION);
+    if (result == null) {
+      throw new NotAuthorizedException("Sie sind nicht angemeldet");
+    }
+    return result;
   }
 
   private String toJson(Object object) {
@@ -71,7 +79,12 @@ public class BenutzerApiController {
   @RequestMapping(value = "/current", method = RequestMethod.GET)
   public @ResponseBody
   ResponseEntity<String> findCurrentUser() {
-    return findByBenutzerId(getCurrentUser());
+    HttpHeaders headers = createJsonHeaders();
+    try {
+      return findByBenutzerId(getCurrentUser());
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    }
   }
 
   @RequestMapping(value = "/{benutzerId}", method = RequestMethod.GET)
