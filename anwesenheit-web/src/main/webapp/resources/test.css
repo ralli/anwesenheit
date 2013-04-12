@@ -7,3 +7,8 @@ ng-invalid {
 	border-width: 1px;
 	border-style: solid;
 }
+
+tr.storniert {
+	background-color: #eeeeee;
+	color: #aaaaaa; 
+}

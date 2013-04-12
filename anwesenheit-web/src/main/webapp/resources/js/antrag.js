@@ -18,6 +18,9 @@ function rowClassForAntrag(antrag) {
   else if(status === 'ABGELEHNT') {
     result = 'error';
   }
+  else if(status === 'STORNIERT') {
+    result = 'storniert'
+  }
   
   return result;
 };
@@ -206,6 +209,9 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'ant
       $scope.antragAenderbar = function(antrag) {
         return antrag.antragStatus.antragStatus === "NEU";
       };
+      $scope.antragStornierbar = function(antrag) {
+        return !$scope.antragAenderbar(antrag) && !(antrag.antragStatus.antragStatus === "STORNIERT");
+      }
       $scope.antragKopierbar = function(antrag) {
         return !$scope.antragAenderbar(antrag);
       };
