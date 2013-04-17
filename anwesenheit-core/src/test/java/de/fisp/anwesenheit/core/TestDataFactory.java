@@ -1,8 +1,10 @@
 package de.fisp.anwesenheit.core;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.BenutzerRolle;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
+import de.fisp.anwesenheit.core.entities.FeiertagDefinition;
 
 @Service
 public class TestDataFactory {
@@ -48,7 +51,7 @@ public class TestDataFactory {
 
   public Date createDate(int day, int month, int year) {
     Calendar calendar = Calendar.getInstance();
-    calendar.set(year, month-1, day, 0, 0, 0);
+    calendar.set(year, month - 1, day, 0, 0, 0);
     calendar.set(Calendar.MILLISECOND, 0);
     return calendar.getTime();
   }
@@ -102,6 +105,29 @@ public class TestDataFactory {
   public Bewilligung createBewilligung(long antragId, String benutzerId) {
     return createBewilligung(antragId, "testbenutzer", benutzerId);
   }
-  
-  
+
+  public List<FeiertagDefinition> createDefinitionen() {
+    List<FeiertagDefinition> result = new ArrayList<FeiertagDefinition>();
+    result.add(createFeiertagDefinition(0, 0, 1.0, 2, -2, "Karfreitag"));
+    result.add(createFeiertagDefinition(0, 0, 1.0, 2, 0, "Ostersonntag"));
+    result.add(createFeiertagDefinition(0, 0, 1.0, 2, 1, "Ostermontag"));
+    result.add(createFeiertagDefinition(0, 0, 1.0, 2, 39, "Himmelfahrt"));
+    result.add(createFeiertagDefinition(0, 0, 1.0, 2, 49, "Pfingstsonntag"));
+    result.add(createFeiertagDefinition(0, 0, 1.0, 2, 50, "Pfingstmontag"));
+    result.add(createFeiertagDefinition(0, 0, 1.0, 2, 60, "Fronleichnam"));
+    result.add(createFeiertagDefinition(0, 0, 1.0, 3, 0, "Muttertag"));
+    result.add(createFeiertagDefinition(0, 0, 1.0, 4, 1, "Buß und Bettag"));
+    return result;
+  }
+
+  public FeiertagDefinition createFeiertagDefinition(int tag, int monat, double anteil, int typ, int offset, String name) {
+    FeiertagDefinition definition = new FeiertagDefinition();
+    definition.setName(name);
+    definition.setReferenzTag(tag);
+    definition.setReferenzMonat(monat);
+    definition.setOffset(offset);
+    definition.setAnteilArbeitszeit(anteil);
+    definition.setType(typ);
+    return definition;
+  }
 }

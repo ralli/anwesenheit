@@ -18,6 +18,8 @@ import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.BenutzerRolle;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
+import de.fisp.anwesenheit.core.entities.Feiertag;
+import de.fisp.anwesenheit.core.entities.FeiertagDefinition;
 import de.fisp.anwesenheit.core.entities.Rolle;
 import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 
@@ -34,7 +36,7 @@ public class HibernateConfig {
 		Class<?>[] classes = { Antrag.class, AntragArt.class,
 				AntragHistorie.class, AntragStatus.class, Benutzer.class,
 				BenutzerRolle.class, Rolle.class, BewilligungsStatus.class,
-				Bewilligung.class, SonderUrlaubArt.class };
+				Bewilligung.class, SonderUrlaubArt.class, FeiertagDefinition.class, Feiertag.class };
 		localSessionFactoryBean.setAnnotatedClasses(classes);
 		return localSessionFactoryBean;
 	}

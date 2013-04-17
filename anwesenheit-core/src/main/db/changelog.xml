@@ -270,6 +270,63 @@
 			deleteCascade="false" />
 	</changeSet>
 
+	<changeSet id="create_table_feiertagdefinition" author="ralli">
+		<createTable tableName="feiertagdefinition">
+			<column name="id" autoIncrement="true" type="integer">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="typ" type="integer">
+				<constraints nullable="false" />
+			</column>
+			<column name="name" type="varchar(40)">
+				<constraints nullable="false" />
+			</column>
+			<column name="anteil_arbeitszeit" type="double(5,2)">
+				<constraints nullable="false" />
+			</column>
+			<column name="referenz_tag" type="integer">
+				<constraints nullable="false" />
+			</column>
+			<column name="referenz_monat" type="integer">
+				<constraints nullable="false" />
+			</column>
+			<column name="offset" type="integer">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="create_table_feiertag" author="ralli">
+		<createTable tableName="feiertag">
+			<column name="id" autoIncrement="true" type="integer">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="name" type="varchar(40)">
+				<constraints nullable="false" />
+			</column>
+			<column name="anteil_arbeitszeit" type="double(5,2)">
+				<constraints nullable="false" />
+			</column>
+			<column name="datum" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="definition_id" type="integer" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" engine innodb" />
+		</modifySql>
+	</changeSet>
+	<changeSet id="feiertag_indexes" author="ralli">
+		<addForeignKeyConstraint constraintName="fk_feiertag_def"
+			referencedTableName="feiertagdefinition" baseColumnNames="definition_id"
+			baseTableName="feiertag" referencedColumnNames="id" deleteCascade="true" />
+		<createIndex tableName="feiertag" indexName="ix_feiertag_1">
+			<column name="datum" />
+		</createIndex>
+	</changeSet>
+
 	<changeSet id="insertAntragArt" author="raljuhn">
 		<insert tableName="antrag_art">
 			<column name="antrag_art" value="URLAUB" />
@@ -309,11 +366,11 @@
 			<column name="position" valueNumeric="4" />
 			<column name="bezeichnung" value="Abgelehnt" />
 		</insert>
-        <insert tableName="antrag_status">
-            <column name="antrag_status" value="STORNIERT" />
-            <column name="position" valueNumeric="5" />
-            <column name="bezeichnung" value="Storniert" />
-        </insert>
+		<insert tableName="antrag_status">
+			<column name="antrag_status" value="STORNIERT" />
+			<column name="position" valueNumeric="5" />
+			<column name="bezeichnung" value="Storniert" />
+		</insert>
 	</changeSet>
 
 	<changeSet id="insertSonderUrlaubArt" author="raljuhn">
@@ -383,6 +440,160 @@
 			<column name="benutzertyp" value="ldap" />
 			<column name="position" valueNumeric="2" />
 			<column name="bezeichnung" value="LDAP" />
+		</insert>
+	</changeSet>
+	<changeSet author="raljuhn" id="insert_feiertagdefinition">
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="1" />
+			<column name="referenz_monat" valueNumeric="1" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="1" />
+			<column name="offset" valueNumeric="0" />
+			<column name="name" value="Neujahr" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="1" />
+			<column name="referenz_monat" valueNumeric="5" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="1" />
+			<column name="offset" valueNumeric="0" />
+			<column name="name" value="Maifeiertag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="3" />
+			<column name="referenz_monat" valueNumeric="10" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="1" />
+			<column name="offset" valueNumeric="0" />
+			<column name="name" value="gesetzlicher Feiertag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="25" />
+			<column name="referenz_monat" valueNumeric="12" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="1" />
+			<column name="offset" valueNumeric="0" />
+			<column name="name" value="1. Weihnachtsfeiertag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="26" />
+			<column name="referenz_monat" valueNumeric="12" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="1" />
+			<column name="offset" valueNumeric="0" />
+			<column name="name" value="2. Weihnachtsfeiertag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="2" />
+			<column name="offset" valueNumeric="-2" />
+			<column name="name" value="Karfreitag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="2" />
+			<column name="offset" valueNumeric="0" />
+			<column name="name" value="Ostersonntag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="2" />
+			<column name="offset" valueNumeric="1" />
+			<column name="name" value="Ostermontag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="2" />
+			<column name="offset" valueNumeric="39" />
+			<column name="name" value="Himmelfahrt" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="2" />
+			<column name="offset" valueNumeric="49" />
+			<column name="name" value="Pfingstsonntag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="2" />
+			<column name="offset" valueNumeric="50" />
+			<column name="name" value="Pfingstmontag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="2" />
+			<column name="offset" valueNumeric="60" />
+			<column name="name" value="Fronleichnam" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="3" />
+			<column name="offset" valueNumeric="0" />
+			<column name="name" value="Muttertag" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="4" />
+			<column name="offset" valueNumeric="12" />
+			<column name="name" value="1. Advent" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="4" />
+			<column name="offset" valueNumeric="19" />
+			<column name="name" value="2. Advent" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="4" />
+			<column name="offset" valueNumeric="26" />
+			<column name="name" value="3. Advent" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="0" />
+			<column name="referenz_monat" valueNumeric="0" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="4" />
+			<column name="offset" valueNumeric="33" />
+			<column name="name" value="4. Advent" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="24" />
+			<column name="referenz_monat" valueNumeric="12" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="1" />
+			<column name="offset" valueNumeric="0" />
+			<column name="name" value="Heiligabend" />
+		</insert>
+		<insert tableName="feiertagdefinition">
+			<column name="referenz_tag" valueNumeric="31" />
+			<column name="referenz_monat" valueNumeric="12" />
+			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
+			<column name="typ" valueNumeric="1" />
+			<column name="offset" valueNumeric="0" />
+			<column name="name" value="Silvester" />
 		</insert>
 	</changeSet>
 </databaseChangeLog>
