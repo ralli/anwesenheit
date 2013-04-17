@@ -1,6 +1,12 @@
 package de.fisp.anwesenheit.core.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,4 +42,37 @@ public class FeiertagServiceImpl implements FeiertagService {
     log.info("generateForYear({}): feiertage = {}", year, feiertage);
   }
 
+  private String dateStr(Date d) {
+    DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+    return fmt.format(d);
+  }
+  
+  @Override
+  public double berechneAnzahlArbeitstage(Date von, Date bis) {
+    List<Feiertag> feiertage = feiertagDao.findByZeitraum(von, bis);
+    Set<String> dateStrings = new HashSet<String>();    
+    for(Feiertag f : feiertage) {
+      dateStrings.add(dateStr(f.getDatum()));
+    }
+    
+    Calendar d = Calendar.getInstance();
+    d.setTime(von);
+    Calendar tbis = Calendar.getInstance();
+    tbis.setTime(bis);
+    int anzahlTage = 0;
+    while(d.compareTo(tbis) <= 0) {
+      int dow = d.get(Calendar.DAY_OF_WEEK);
+      boolean arbeitsTagFlag; 
+      if(dow == Calendar.SUNDAY || dow == Calendar.SATURDAY)
+        arbeitsTagFlag = false;
+      else if(dateStrings.contains(dateStr(d.getTime())))
+        arbeitsTagFlag = false;
+      else
+        arbeitsTagFlag = true;
+      if(arbeitsTagFlag)
+        ++anzahlTage;
+      d.add(Calendar.DAY_OF_MONTH, 1);
+    }
+    return anzahlTage;
+  }
 }

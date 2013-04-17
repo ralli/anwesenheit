@@ -44,12 +44,14 @@ public class FeiertagDaoImpl implements FeiertagDao {
 
   private Date getStartDate(int year) {
     Calendar cal = Calendar.getInstance();
+    cal.clear();
     cal.set(year, 0, 1, 0, 0, 0);
     return cal.getTime();
   }
 
   private Date getEndDate(int year) {
     Calendar cal = Calendar.getInstance();
+    cal.clear();
     cal.set(year, 11, 31, 23, 59, 59);
     return cal.getTime();
   }
@@ -67,7 +69,8 @@ public class FeiertagDaoImpl implements FeiertagDao {
 
   @Override
   public void deleteByYear(int year) {
-    Query q = getCurrentSession().createQuery("delete from Feiertag f where f.datum between :start and :end and f.definitionId is not null");
+    Query q = getCurrentSession().createQuery(
+        "delete from Feiertag f where f.datum between :start and :end and f.definitionId is not null");
     q.setParameter("start", getStartDate(year));
     q.setParameter("end", getEndDate(year));
     int count = q.executeUpdate();
@@ -90,5 +93,16 @@ public class FeiertagDaoImpl implements FeiertagDao {
   public void delete(Feiertag feiertag) {
     log.info("delete({}", feiertag);
     getCurrentSession().delete(feiertag);
+  }
+
+  @Override
+  public List<Feiertag> findByZeitraum(Date von, Date bis) {
+    Query q = getCurrentSession().createQuery("from Feiertag f where f.datum >= :start and datum <= :end");
+    q.setParameter("start", von);
+    q.setParameter("end", bis);
+    @SuppressWarnings("unchecked")
+    List<Feiertag> list = q.list();
+    log.info("findByZeitraum({}, {}): count={} Feiertage gelöscht", new Object[] { von, bis, list.size() });
+    return list;
   }
 }

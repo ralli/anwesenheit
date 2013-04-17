@@ -1,5 +1,6 @@
 package de.fisp.anwesenheit.core.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import de.fisp.anwesenheit.core.entities.Feiertag;
@@ -23,6 +24,17 @@ public interface FeiertagDao {
    * @return Die Liste der Feiertage
    */
   List<Feiertag> findByYear(int year);
+
+  /**
+   * Liefert die Liste aller Feiertage innerhalb eines gegebenen Zeitraums
+   * 
+   * @param von
+   *          Das Anfangsdatum (inklusive)
+   * @param bis
+   *          Das Enddatum (inklusive)
+   * @return Die Liste der Feiertage
+   */
+  List<Feiertag> findByZeitraum(Date von, Date bis);
 
   /**
    * Löscht alle Feiertage eines gegebenen Jahrs
