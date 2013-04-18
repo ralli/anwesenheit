@@ -2,11 +2,7 @@ package de.fisp.anwesenheit.core.service.impl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,29 +44,32 @@ public class FeiertagServiceImpl implements FeiertagService {
   }
   
   @Override
+  @Transactional
   public double berechneAnzahlArbeitstage(Date von, Date bis) {
     List<Feiertag> feiertage = feiertagDao.findByZeitraum(von, bis);
-    Set<String> dateStrings = new HashSet<String>();    
+    Map<String, Feiertag> dateStrings = new HashMap<String, Feiertag>();
     for(Feiertag f : feiertage) {
-      dateStrings.add(dateStr(f.getDatum()));
+      dateStrings.put(dateStr(f.getDatum()), f);
     }
     
     Calendar d = Calendar.getInstance();
     d.setTime(von);
     Calendar tbis = Calendar.getInstance();
     tbis.setTime(bis);
-    int anzahlTage = 0;
+    double anzahlTage = 0.0;
     while(d.compareTo(tbis) <= 0) {
       int dow = d.get(Calendar.DAY_OF_WEEK);
       boolean arbeitsTagFlag; 
       if(dow == Calendar.SUNDAY || dow == Calendar.SATURDAY)
         arbeitsTagFlag = false;
-      else if(dateStrings.contains(dateStr(d.getTime())))
+      else if(dateStrings.containsKey(dateStr(d.getTime()))) {
         arbeitsTagFlag = false;
+        anzahlTage += 1.0 - dateStrings.get(dateStr(d.getTime())).getAnteilArbeitszeit();
+      }
       else
         arbeitsTagFlag = true;
       if(arbeitsTagFlag)
-        ++anzahlTage;
+        anzahlTage += 1.0;
       d.add(Calendar.DAY_OF_MONTH, 1);
     }
     return anzahlTage;

@@ -15,6 +15,7 @@ import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.BenutzerRolle;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
+import de.fisp.anwesenheit.core.entities.Feiertag;
 import de.fisp.anwesenheit.core.entities.FeiertagDefinition;
 
 @Service
@@ -51,6 +52,7 @@ public class TestDataFactory {
 
   public Date createDate(int day, int month, int year) {
     Calendar calendar = Calendar.getInstance();
+    calendar.clear();
     calendar.set(year, month - 1, day, 0, 0, 0);
     calendar.set(Calendar.MILLISECOND, 0);
     return calendar.getTime();
@@ -129,5 +131,15 @@ public class TestDataFactory {
     definition.setAnteilArbeitszeit(anteil);
     definition.setType(typ);
     return definition;
+  }
+
+  public Feiertag createFeiertag(Date date, double anteilArbeitszeit, String name) {
+    Feiertag feiertag = new Feiertag();
+    feiertag.setAnteilArbeitszeit(anteilArbeitszeit);
+    feiertag.setDatum(date);
+    feiertag.setDefinition(createFeiertagDefinition(0, 0, anteilArbeitszeit, 1, 0, name));
+    feiertag.setName(name);
+    feiertag.setDefinitionId(feiertag.getDefinition().getId());
+    return feiertag;
   }
 }
