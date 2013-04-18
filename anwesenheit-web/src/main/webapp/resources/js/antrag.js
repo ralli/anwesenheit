@@ -19,7 +19,7 @@ function rowClassForAntrag(antrag) {
         result = 'error';
     }
     else if (status === 'STORNIERT') {
-        result = 'storniert'
+        result = 'storniert';
     }
 
     return result;
@@ -74,7 +74,7 @@ app.factory("antragService", [ '$resource', function ($resource) {
     return $resource("/anwesenheit-web/api/antraege/:id", { "id": "@id" },
         {
             "update": { "method": "PUT" },
-            "remove": { "method": "DELETE" },
+            "remove": { "method": "DELETE" }
         });
 }
 ]);
