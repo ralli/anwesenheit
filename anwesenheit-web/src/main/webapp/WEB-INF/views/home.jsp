@@ -20,6 +20,8 @@
 <link href="<c:url value="/resources/jquery-ui.css" />" rel="stylesheet" />
 <link href="<c:url value="/resources/css/angular-ui.css" />"
 	rel="stylesheet" />
+<link href="<c:url value="/resources/css/toastr.css" />"
+    rel="stylesheet" />
 <link href="<c:url value="/resources/test.css?reload=1" />"
 	rel="stylesheet" />
 
@@ -79,5 +81,6 @@
 	<script src="<c:url value="/resources/js/antrag.js?reload=1"/>" charset="UTF-8"></script>
 	<script src="<c:url value="/bootstrap/js/bootstrap.min.js" />"></script>
 	<script src="<c:url value="/resources/js/ui-bootstrap-tpls-0.2.0.js" />"></script>
+    <script src="<c:url value="/resources/js/toastr.js" />"></script>
 </body>
 </html>

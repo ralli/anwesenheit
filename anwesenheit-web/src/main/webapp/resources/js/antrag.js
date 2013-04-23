@@ -164,17 +164,26 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'ant
         };
 
         $scope.doDelete = function (antrag) {
-            antragService.remove({ "id": antrag.id }, function (data) {
-                $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function (a) {
-                    return a.id === antrag.id;
-                });
-            });
+          antragService.remove({ "id": antrag.id }, 
+            function (data) {
+              $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function (a) {
+                return a.id === antrag.id;
+              });
+              toastr.success("Ihr Antrag wurde gelöscht");
+            },
+            function(data) {
+              toastr.error(data.message);
+            }
+          );
         };
 
         $scope.doStorno = function (antrag) {
             $http.put('/anwesenheit-web/api/antraege/' + antrag.id + "/storno").success(function (data) {
                 antrag.antragStatus.antragStatus = "STORNIERT";
                 antrag.antragStatus.bezeichnung = "Storniert";
+                toastr.success("Ihr Antrag wurde storniert");
+            }).error(function(data) {
+              toastr.error(data.message);
             });
         };
 
@@ -318,6 +327,7 @@ app.controller("NewAntragCtrl", [ '$scope',
 
                 antragService.save(angular.toJson(antragsDaten), function (data) {
                     $location.path("/antraege");
+                    toastr.success("Ihr Antrag wurde gespeichert");
                 }, function (data) {
                     console.log(data);
                 });
@@ -431,7 +441,7 @@ app.controller("EditAntragCtrl", [
             data.sonderUrlaubArt = s;
             data.anzahlTage = $filter("number")(data.anzahlTage);
         }, function (data) {
-            console.log(data);
+            toastr.error(data.message);
         });
 
         $scope.controlClassFor = function (flag) {
@@ -462,7 +472,6 @@ app.controller("EditAntragCtrl", [
         }
 
         $scope.saveAntrag = function () {
-
             var antragsDaten = {
                 id: $scope.antrag.id,
                 antragArt: $scope.antrag.antragArt.antragArt,
@@ -471,9 +480,16 @@ app.controller("EditAntragCtrl", [
                 bis: $filter("date")($scope.antrag.bis, "yyyy-MM-dd"),
                 anzahlTage: parseNumber($scope.antrag.anzahlTage)
             };
-            antragService.update(antragsDaten, function (data) {
+            
+            antragService.update(antragsDaten, 
+              function (data) {
                 $location.path("/antraege");
-            });
+                toastr.success("Ihre Änderungen wurden gespeichert");
+              },
+              function(data) {
+                toastr.error(data.message);
+              }
+            );
         };
 
         $scope._addBewilliger = function (bewilligerKey) {
@@ -551,23 +567,35 @@ app.controller("ListBewilligungCtrl", [ '$scope', 'bewilligungService', 'bewilli
         };
 
         $scope.bewilligeAntrag = function (b) {
-            var updateCommand = {
-                'id': b.id,
-                'bewilligungsStatus': 'BEWILLIGT'
-            };
-            bewilligungService.update(updateCommand, function (data) {
-                b.bewilligungsStatus = data.bewilligungsStatus;
-            });
+          var updateCommand = {
+              'id': b.id,
+              'bewilligungsStatus': 'BEWILLIGT'
+          };
+          bewilligungService.update(updateCommand, 
+            function (data) {
+              b.bewilligungsStatus = data.bewilligungsStatus;
+              toastr.success("Der Antrag wurde bewilligt");
+            },
+            function(data) {
+              toastr.error(data.message);
+            }
+          );
         };
 
         $scope.lehneAntragAb = function (b) {
-            var updateCommand = {
-                'id': b.id,
-                'bewilligungsStatus': 'ABGELEHNT'
-            };
-            bewilligungService.update(updateCommand, function (data) {
-                b.bewilligungsStatus = data.bewilligungsStatus;
-            });
+          var updateCommand = {
+              'id': b.id,
+              'bewilligungsStatus': 'ABGELEHNT'
+          };
+          bewilligungService.update(updateCommand, 
+            function (data) {
+              b.bewilligungsStatus = data.bewilligungsStatus;
+              toastr.success("Der Antrag wurde abgelehnt");
+            },
+            function(data) {
+              toastr.error(data.message);
+            }
+          );
         };
 
         $scope.rowClassFor = rowClassForBewilligung;
@@ -575,6 +603,7 @@ app.controller("ListBewilligungCtrl", [ '$scope', 'bewilligungService', 'bewilli
         $scope.antragAenderbar = function (antrag) {
             antrag.antragStatus.antragStatus === "NEU";
         }
+        
         $scope.fetchBewilligungsListe();
     }
 ]);
