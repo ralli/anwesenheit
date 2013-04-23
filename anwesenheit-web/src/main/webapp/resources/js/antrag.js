@@ -362,6 +362,7 @@ app.controller("NewAntragCtrl", [ '$scope',
             benutzerService.get({
                 "id": benutzerId
             }, function (benutzerDaten) {
+                benutzerDaten.position = $scope.antrag.bewilliger.length + 1;
                 $scope.antrag.bewilliger.push(benutzerDaten);
                 $scope.bewilligerKey = "";
             }, function (data) {
@@ -393,6 +394,17 @@ app.controller("NewAntragCtrl", [ '$scope',
             arbeitstageService.get(params, function (data) {
                 $scope.antrag.anzahlTage = $filter("number")(data.arbeitsTage);
             });
+        };
+        
+        $scope.titleForBewilliger = function(b) {
+           if(b.position === 1) {
+             return "1. Unterschrift";
+           } else if(b.position === 2) {
+             return "2. Unterschrift";             
+           }
+           else {
+             return "Zur Info";
+           }
         };
     }]);
 

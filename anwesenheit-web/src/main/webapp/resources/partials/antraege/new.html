@@ -60,9 +60,15 @@
 	</fieldset>
 </form>
 
-<h2>Bewilligungen</h2>
-
-<form name="bewilligungForm" class="form-inline" ng-submit="addBewilliger()">
+<div>
+  <h2 style="float:left">Bewilligungen</h2>
+  <a style="float:left" 
+     tooltip-placement="right" 
+     tooltip="Für Ihren Urlaubsantrag benötigen Sie zwei Unterschriften: Die erste Unterschrift wird durch Ihren Projektleiter geleistet. Die zweite Unterschrift erfolgt durch Ihren Projektmanager.">
+        <span class="icon-info-sign"></span>
+  </a>
+</div >
+<form style="clear:both" name="bewilligungForm" class="form-inline" ng-submit="addBewilliger()">
 	<input type="text" 
            placeholder="Bewilliger" 
            id="bewilliger_key"
@@ -72,9 +78,21 @@
 	<input type="submit" class="btn btn-primary" value="Hinzufügen" /> 
     <span class="error">{{bewilligungError}}</span>
 </form>
-<ul>
-	<li ng-repeat="b in antrag.bewilliger">
-       {{b.vorname}} {{b.nachname}} 
-       <a ng-href="" ng-click="removeBewilliger(b)">Löschen</a>
-	</li>
-</ul> 
+<table class="table table-bordered" ng-show="antrag.bewilliger.length > 0">
+    <thead>
+      <tr>
+        <th>Bewilliger</th>
+        <th>Rolle</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="b in antrag.bewilliger">
+        <td>{{b.vorname}} {{b.nachname}}</td>
+        <td>{{titleForBewilliger(b)}}</td>
+        <td>
+            <a ng-href="" ng-click="removeBewilliger(b)">Löschen</a>
+        </td>
+      </tr>
+    </tbody>  
+</table>
