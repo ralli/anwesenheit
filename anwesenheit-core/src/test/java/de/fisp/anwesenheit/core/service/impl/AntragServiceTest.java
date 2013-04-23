@@ -11,6 +11,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
+import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
 import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
@@ -177,7 +179,7 @@ public class AntragServiceTest {
     }
     Assert.fail("NotValidException erwartet");
   }
-  
+
   @Test
   public void antragImStatusNeuDarfGeloeschtWerden() {
     final String benutzerId = "demo123";
@@ -189,7 +191,7 @@ public class AntragServiceTest {
     when(berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)).thenReturn(true);
     antragService.deleteAntrag(benutzerId, antragId);
   }
-  
+
   @Test
   public void antragImStatusInBearbeitungDarfNichtGeloeschtWerden() {
     final String benutzerId = "demo123";
@@ -206,5 +208,59 @@ public class AntragServiceTest {
       return;
     }
     Assert.fail("NotValidException erwartet");
+  }
+
+  @Test
+  public void antragMitWenigerAlsZweiBewilligernDarfNichtAngelegtWerden() {
+    final String benutzerId = "testbenutzer";
+
+    CreateAntragCommand cmd = new CreateAntragCommand();
+    cmd.setAntragArt("URLAUB");
+    cmd.setAnzahlTage(1);
+    cmd.setVon(testDataFactory.createDate(7, 12, 2013));
+    cmd.setBis(testDataFactory.createDate(7, 12, 2013));
+    cmd.setBenutzerId(benutzerId);
+    cmd.setBewilliger(new String[] {});
+    try {
+      antragService.createAntrag(benutzerId, cmd);
+    } catch (NotValidException ex) {
+      return;
+    }
+    Assert.fail("NotValidException erwartet");
+  }
+
+  @Test
+  public void antragAnlageOhneBerechtigung() {
+    final String benutzerId = "testbenutzer";
+
+    CreateAntragCommand cmd = new CreateAntragCommand();
+    cmd.setAntragArt("URLAUB");
+    cmd.setAnzahlTage(1);
+    cmd.setVon(testDataFactory.createDate(7, 12, 2013));
+    cmd.setBis(testDataFactory.createDate(7, 12, 2013));
+    cmd.setBenutzerId(benutzerId);
+    cmd.setBewilliger(new String[] { "chef", "boss" });
+    when(berechtigungsService.isAntragEigentuemerOderErfasser(Mockito.isA(Antrag.class), Mockito.eq(benutzerId))).thenReturn(false);
+    try {
+      antragService.createAntrag(benutzerId, cmd);
+    } catch (NotAuthorizedException ex) {
+      return;
+    }
+    Assert.fail("NotAuthorizedException erwartet");
+  }
+
+  @Test
+  public void antragAnlageErfolgreich() {
+    final String benutzerId = "testbenutzer";
+
+    CreateAntragCommand cmd = new CreateAntragCommand();
+    cmd.setAntragArt("URLAUB");
+    cmd.setAnzahlTage(1);
+    cmd.setVon(testDataFactory.createDate(7, 12, 2013));
+    cmd.setBis(testDataFactory.createDate(7, 12, 2013));
+    cmd.setBenutzerId(benutzerId);
+    cmd.setBewilliger(new String[] { "chef", "boss" });
+    when(berechtigungsService.isAntragEigentuemerOderErfasser(Mockito.isA(Antrag.class), Mockito.eq(benutzerId))).thenReturn(true);
+    antragService.createAntrag(benutzerId, cmd);
   }
 }

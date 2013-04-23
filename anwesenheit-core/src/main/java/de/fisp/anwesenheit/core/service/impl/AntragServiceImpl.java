@@ -163,6 +163,10 @@ public class AntragServiceImpl implements AntragService {
   public long createAntrag(String benutzerId, CreateAntragCommand command) {
     log.debug("createAntrag({})", command);
 
+    if(command.getBewilliger().length < 2) {
+      throw new NotValidException("Geben Sie bitte mindestens zwei Bewilliger für die Unterschriften an.");
+    }
+    
     Antrag antrag = new Antrag();
 
     antrag.setBenutzerId(command.getBenutzerId());

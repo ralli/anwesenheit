@@ -328,8 +328,8 @@ app.controller("NewAntragCtrl", [ '$scope',
                 antragService.save(angular.toJson(antragsDaten), function (data) {
                     $location.path("/antraege");
                     toastr.success("Ihr Antrag wurde gespeichert");
-                }, function (data) {
-                    console.log(data);
+                }, function (response) {
+                    toastr.error(response.data.message);
                 });
             }
         };
