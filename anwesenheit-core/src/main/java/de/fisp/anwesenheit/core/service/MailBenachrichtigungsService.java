@@ -1,6 +1,6 @@
 package de.fisp.anwesenheit.core.service;
 
-public interface MailBenachtigungsService {
+public interface MailBenachrichtigungsService {
 
   /**
    * Versendet eine Mail für einen neu angelegten Antrag

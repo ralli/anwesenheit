@@ -15,14 +15,20 @@ import javax.mail.internet.MimeMultipart;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import de.fisp.anwesenheit.core.service.MailService;
 
+@Service
 public class MailServiceImpl implements MailService {
   private static Logger log = LoggerFactory.getLogger(MailServiceImpl.class);
   private String host;
 
-  public MailServiceImpl(String host) {
+  public String getHost() {
+    return host;
+  }
+
+  public void setHost(String host) {
     this.host = host;
   }
 
