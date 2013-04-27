@@ -37,7 +37,7 @@ public class MailBenachrichtigungsServiceImpl implements
 	}
 
 	@Override
-	public void sendeAnragsMail(String benutzerId, long antragId) {
+	public void sendeAntragsMail(String benutzerId, long antragId) {
 		AntragsDaten antrag = antragService
 				.findAntragById(benutzerId, antragId);
 		for (BewilligungsDaten b : antrag.getBewilligungen()) {

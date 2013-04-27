@@ -61,7 +61,7 @@ public class MailBenachrichtigungsServiceTest {
 		long antragId = 1L;
 		AntragsDaten antragsDaten = createAntragsDaten(antragId);
 		when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
-		mailBenachrichtigungsServiceImpl.sendeAnragsMail(benutzerId,
+		mailBenachrichtigungsServiceImpl.sendeAntragsMail(benutzerId,
 				antragId);
 	}
 }

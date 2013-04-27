@@ -1,5 +1,8 @@
 package de.fisp.anwesenheit.core.util;
 
+/**
+ * Signalisiert, dass ein Datensatz nicht gefunden wurde.
+ */
 public class NotFoundException extends RuntimeException {
   private static final long serialVersionUID = 1L;
 

@@ -7,11 +7,11 @@ import de.fisp.anwesenheit.core.service.impl.DummyMailServiceImpl;
 
 @Configuration
 public class TestDataConfig {
-	public TestDataFactory testDataFactory() {
-		return new TestDataFactory();
-	}
-	
-	public MailService mailService() {
-	  return new DummyMailServiceImpl();
-	}
+  public TestDataFactory testDataFactory() {
+    return new TestDataFactory();
+  }
+
+  public MailService mailService() {
+    return new DummyMailServiceImpl();
+  }
 }
