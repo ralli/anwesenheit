@@ -57,7 +57,7 @@ public class MailBenachrichtigungsServiceTest {
   }
 
   private AntragsDaten createAntragsDaten(long antragId) {
-    AntragArt antragArt = testDataFactory.createAntragArt("Urlaub");
+    AntragArt antragArt = testDataFactory.createAntragArt("URLAUB", "Urlaub");
     SonderUrlaubArt sonderUrlaubArt = null;
     Date von = testDataFactory.createDate(24, 12, 2013);
     Date bis = testDataFactory.createDate(6, 1, 2014);
