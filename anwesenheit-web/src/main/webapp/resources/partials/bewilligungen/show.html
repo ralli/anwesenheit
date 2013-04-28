@@ -1,4 +1,4 @@
-<h1>Bewilligung</h1>
+<h1>Bewilligungsdetails</h1>
 
 <div class="form-horizontal">
 	<legend>Bewilligung</legend>
@@ -52,9 +52,36 @@
 	</div>
 	<div class="control-group">
 		<div class="controls">
-			
+			<a href="" class="btn btn-success" ng-click="bewilligeAntrag(bewilligung)" ><i class="icon-ok"></i> Bewilligen</a>
+			<a href="" class="btn btn-danger" ng-click="lehneAntragAb(bewilligung)"><i class="icon-remove"></i> Ablehnen</a>
+			<a href="#!/bewilligungen" class="btn">Zurück</a>
 		</div>
-	</div></div>
+	</div>
+</div>
+<h2>Anträge im gleichen Zeitraum</h2>
+<p class="well" ng-show="!hatGleichzeitigeAntraege()"><i class="icon-info-sign"></i> Es sind keine Anträge im gleichen Zeitraum vorhanden.</p>
+<table class="table table-bordered" ng-show="hatGleichzeitigeAntraege()">
+  <thead>
+    <tr>
+      <th>Antragsteller</th>
+      <th>Status</th>
+      <th>Art</th>
+      <th>Von</th>
+      <th>Bis</th>
+      <th>Anzahl Tage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="a in bewilligung.gleichzeitigeAntraege" ng-class="rowClassForAntrag(a)">
+      <td>{{a.benutzer.vorname}} {{a.benutzer.nachname}}</td>
+      <td>{{a.antragStatus.bezeichnung}}</td>
+      <td>{{a.antragArt.bezeichnung}}</td>
+      <td>{{a.von|date}}</td>
+      <td>{{a.bis|date}}</td>
+      <td>{{a.anzahlTage|number}}</td>
+    </tr>
+  </tbody>
+</table>
 <h2>Bewilligungen</h2>
 <table class="table table-bordered">
   <thead>

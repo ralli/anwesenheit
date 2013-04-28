@@ -314,7 +314,7 @@ public class BewilligungServiceImpl implements BewilligungService {
       antraege = antragDao.findByFilter(filter);
     }
     else {
-      antraege = antragDao.findByBenutzerAndFilter(benutzerId, filter);
+      antraege = antragDao.findByBewilligerAndFilter(benutzerId, filter);
     }
     
     for (Antrag a : antraege) {

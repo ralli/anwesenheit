@@ -39,9 +39,9 @@
 				<div class="container nav-collapse">
 					<a class="brand" href="<c:url value="#!" />">Anwesenheit</a>
 					<ul class="nav">
-						<li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i>Anträge</a></li>
-						<li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i>Bewilligungen</a></li>
-						<li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i>Übersicht</a></li>
+						<li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i> Anträge</a></li>
+						<li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i> Bewilligungen</a></li>
+						<li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i> Übersicht</a></li>
 					</ul>
 					<b:currentUserName id="current-user-name">Username</b:currentUserName>
 				</div>

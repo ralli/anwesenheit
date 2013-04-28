@@ -64,9 +64,9 @@
 			<td>{{b.bis|date:"dd.MM.yyyy"}}</td>
 			<td>{{b.bewilligungsStatus.bezeichnung}}</td>
 			<td>
-			   <a href="" ng-click="bewilligeAntrag(b)" class="btn btn-small btn-success">Bewilligen</a> 
-			   <a href="" ng-click="lehneAntragAb(b)" class="btn btn-small btn-danger">Ablehnen</a>
-			   <a ng-href="#!/bewilligungen/{{b.id}}" class="btn">Details</a>
+			   <a href="" ng-click="bewilligeAntrag(b)" class="btn btn-small btn-success"><i class="icon-ok"></i> Bewilligen</a> 
+			   <a href="" ng-click="lehneAntragAb(b)" class="btn btn-small btn-danger"><i class="icon-remove"></i> Ablehnen</a>
+			   <a ng-href="#!/bewilligungen/{{b.id}}" class="btn btn-small btn-info">Details</a>
 			</td>
 		</tr>
 	</tbody>
