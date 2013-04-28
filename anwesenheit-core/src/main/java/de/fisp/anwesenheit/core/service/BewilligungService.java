@@ -3,6 +3,7 @@ package de.fisp.anwesenheit.core.service;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
+import de.fisp.anwesenheit.core.domain.BewilligungsDetails;
 import de.fisp.anwesenheit.core.domain.BewilligungsFilter;
 import de.fisp.anwesenheit.core.domain.UpdateBewilligungCommand;
 import de.fisp.anwesenheit.core.util.NotFoundException;
@@ -78,4 +79,21 @@ public interface BewilligungService {
    * 
    */
   BewilligungsDaten updateBewilligungStatus(String benutzerId, UpdateBewilligungCommand command);
+
+  /**
+   * Ließt Detailinformationen zu einer Bewilligung ein.
+   * 
+   * @param benutzerId
+   *          Der aktuell angemeldete Benutzer (zur Berechtigungsprüfung)
+   * @param bewilligungId
+   *          Die ID der Bewilligung
+   * @return Die eingelesenen Bewilligungsdetails
+   * @throws NotFoundException
+   *           wenn keine passende Bewillung oder kein passender Benutzer
+   *           gefunden wurde
+   * @throws NotAuthorizedException
+   *           wenn der Benutzer nicht über ausreichende Berechtigungen verfügt
+   * 
+   */
+  BewilligungsDetails leseBewilligungsDetails(String benutzerId, long bewilligungId);
 }

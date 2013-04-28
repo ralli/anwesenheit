@@ -34,12 +34,16 @@ public class TestDataFactory {
     return benutzer;
   }
 
-  public AntragArt createAntragArt(String antragArt) {
+  public AntragArt createAntragArt(String antragArt, String bezeichnung) {
     AntragArt art = new AntragArt();
     art.setAntragArt(antragArt);
     art.setPosition(1);
-    art.setBezeichnung("Test");
+    art.setBezeichnung(bezeichnung);
     return art;
+  }
+
+  public AntragArt createAntragArt(String antragArt) {
+    return createAntragArt(antragArt, antragArt);
   }
 
   public AntragStatus createAntragStatus(String antragStatus) {
