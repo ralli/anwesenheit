@@ -37,29 +37,18 @@
 		<div class="navbar-inner">
 			<div class="container">
 				<div class="container nav-collapse">
-					<a class="brand" href="<c:url value="#!" />"><i class="icon-home">&nbsp;</i>Anwesenheit</a>
+					<a class="brand" href="<c:url value="#!" />">Anwesenheit</a>
 					<ul class="nav">
-						<li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i>&nbsp;Anträge</a></li>
-						<li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i>&nbsp;Bewilligungen</a></li>
-						<li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i>&nbsp;Übersicht</a></li>
-					</ul>icon-user
-					<div class="btn-group">
-  						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-  							<em><b:currentUserName id="current-user-name">-</b:currentUserName></em>
-						    <span class="caret"></span>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="#!">Einstellungen</a></li>
-							<li><a href="#!">Logout</a></li>
-						</ul>
-					</div>
+						<li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i>Anträge</a></li>
+						<li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i>Bewilligungen</a></li>
+						<li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i>Übersicht</a></li>
+					</ul>
+					<b:currentUserName id="current-user-name">Username</b:currentUserName>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="container">
-        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-		<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 		<div ng-view></div>
 	</div>
 	<script src="<c:url value="/resources/js/jquery-1.7.2.min.js"/>"></script>

@@ -1,42 +1,48 @@
 <h1>Bewilligungen</h1>
 <p></p>
 <form class="form-inline" ng-submit="">
-	<input class="input-medium" 
-           type="text" 
-           ng-model="filter.benutzerName"
-		   placeholder="Antragsteller" />
-    <label class="radio"> 
-       <input type="radio" 
-              ng-model="filter.status" 
-              name="optionsRadios"
-		      id="optionsRadios1" 
-              value="" />
-		Alle Bewilligungen
-	</label> 
-    <label class="radio"> 
-       <input type="radio"
-		      ng-model="filter.status" 
-              name="optionsRadios" 
-              id="optionsRadios2"
-		      value="OFFEN" /> 
-        Offene Bewilligungen
-	</label> 
-    <label class="radio"> 
-       <input type="radio"
-		      ng-model="filter.status"
-              name="optionsRadios" 
-              id="optionsRadios3"
-		      value="BEWILLIGT" /> 
-        Bewilligte Bewilligungen
-	</label> 
-    <label class="radio"> 
-       <input type="radio"
-		      ng-model="filter.status"
-              name="optionsRadios" 
-              id="optionsRadios4"
-		      value="ABGELEHNT" />
-        Abgelehnte Bewilligungen
-	</label>
+    <div class="row">
+	    <div class="span3">
+			<input class="input-medium" 
+		           type="text" 
+		           ng-model="filter.benutzerName"
+				   placeholder="Antragsteller" />
+		</div>
+		<div class="pull-right">		   
+		    <label class="radio"> 
+		       <input type="radio" 
+		              ng-model="filter.status" 
+		              name="optionsRadios"
+				      id="optionsRadios1" 
+		              value="" />
+				Alle
+			</label> 
+		    <label class="radio"> 
+		       <input type="radio"
+				      ng-model="filter.status" 
+		              name="optionsRadios" 
+		              id="optionsRadios2"
+				      value="OFFEN" /> 
+		        Offen
+			</label> 
+		    <label class="radio"> 
+		       <input type="radio"
+				      ng-model="filter.status"
+		              name="optionsRadios" 
+		              id="optionsRadios3"
+				      value="BEWILLIGT" /> 
+		        Bewilligt
+			</label> 
+		    <label class="radio"> 
+		       <input type="radio"
+				      ng-model="filter.status"
+		              name="optionsRadios" 
+		              id="optionsRadios4"
+				      value="ABGELEHNT" />
+		        Abgelehnt
+			</label>
+		</div>
+	</div>
 </form>
 
 <table class="table table-bordered">

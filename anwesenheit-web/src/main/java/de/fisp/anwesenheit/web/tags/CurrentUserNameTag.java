@@ -27,7 +27,12 @@ public class CurrentUserNameTag extends AbstractHtmlElementTag {
     tagWriter.startTag("li");
     tagWriter.startTag("a");
     tagWriter.writeAttribute("href", getRequestContext().getContextUrl("/logoff"));
+    tagWriter.startTag("i");
+    tagWriter.writeAttribute("class", "icon-off");
+    tagWriter.appendValue("&nbsp;");
+    tagWriter.endTag();
     tagWriter.appendValue("Abmelden");
+    
     tagWriter.endTag();
     tagWriter.endTag(); 
     tagWriter.endTag();    

@@ -54,7 +54,7 @@ body {
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-				<a class="brand" href="<c:url value="/" />"><i class="icon-home">&nbsp;</i>Anwesenheit</a>
+				<a class="brand" href="<c:url value="/" />">Anwesenheit</a>
 			</div>
 		</div>
 	</div>
@@ -64,7 +64,7 @@ body {
 		<h2 class="form-signin-heading">Bitte melden Sie sich an</h2>
 		<form:input path="login" placeholder="Benutzername" />  <form:errors path="login" element="div" cssClass="fieldError"/>
 		<form:password path="password" placeholder="Passwort" /> <form:errors path="password" element="div"  cssClass="fieldError"/>
-		<button class="btn btn-large btn-primary" type="submit"><i class="icon-ok">&nbsp;</i>Anmelden</button>
+		<button class="btn btn-large btn-primary" type="submit"><i class="icon-ok"></i>Anmelden</button>
 	</form:form>
 </body>
 </html>

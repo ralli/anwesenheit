@@ -4,7 +4,7 @@
    <i class="icon-plus"></i>Neuer Antrag</a>
 </p>
 <form class="form-inline" ng-submit="">
-	<div class="row-fluid">
+	<div class="row">
 		<div class="span6">
 			<label class="checkbox inline"> 
 				<input type="checkbox" 
@@ -15,43 +15,43 @@
 					Nur die letzten 12 Monate
     		</label>
 		</div>
-		<div class="span6">
-    <label class="radio inline">
-	   <input type="radio"
-	          ng-model="filter.status"
-		      name="optionsRadios" 
-		      id="optionsRadios1" 
-		      value="ALLE" 
-		      ng-change="fetchAntragListe()"/>
-	   alle
-	</label> 
-    <label class="radio inline"> 
-       <input type="radio"
-	          ng-model="filter.status"
-		      name="optionsRadios" 
-              id="optionsRadios2" 
-              value="OFFEN" 
-              ng-change="fetchAntragListe()" /> 
-       offen
-	</label> 
-    <label class="radio inline"> 
-       <input type="radio" 
-              ng-model="filter.status" 
-              name="optionsRadios" 
-              id="optionsRadios3" 
-              value="BEWILLIGT" 
-              ng-change="fetchAntragListe()" /> 
-       bewilligt
-	</label> 
-    <label class="radio inline"> 
-       <input type="radio" 
-              ng-model="filter.status"
-		      name="optionsRadios" 
-              id="optionsRadios4"
-              value="ABGELEHNT" 
-              ng-change="fetchAntragListe()" /> 
-       abgelehnt
-	</label>
+		<div class="pull-right">
+		    <label class="radio inline">
+			   <input type="radio"
+			          ng-model="filter.status"
+				      name="optionsRadios" 
+				      id="optionsRadios1" 
+				      value="ALLE" 
+				      ng-change="fetchAntragListe()"/>
+			   Alle
+			</label> 
+		    <label class="radio inline"> 
+		       <input type="radio"
+			          ng-model="filter.status"
+				      name="optionsRadios" 
+		              id="optionsRadios2" 
+		              value="OFFEN" 
+		              ng-change="fetchAntragListe()" /> 
+		       Offen
+			</label> 
+		    <label class="radio inline"> 
+		       <input type="radio" 
+		              ng-model="filter.status" 
+		              name="optionsRadios" 
+		              id="optionsRadios3" 
+		              value="BEWILLIGT" 
+		              ng-change="fetchAntragListe()" /> 
+		       Bewilligt
+			</label> 
+		    <label class="radio inline"> 
+		       <input type="radio" 
+		              ng-model="filter.status"
+				      name="optionsRadios" 
+		              id="optionsRadios4"
+		              value="ABGELEHNT" 
+		              ng-change="fetchAntragListe()" /> 
+		       Abgelehnt
+			</label>
 		</div>
 	</div>
 </form>
