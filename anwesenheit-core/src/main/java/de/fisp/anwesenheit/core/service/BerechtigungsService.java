@@ -2,6 +2,7 @@ package de.fisp.anwesenheit.core.service;
 
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
+import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.util.NotFoundException;
 
 public interface BerechtigungsService {
@@ -111,6 +112,18 @@ public interface BerechtigungsService {
    *           wenn der aktuelle Benutzer nicht existiert
    */
   boolean darfBewilligungenAnsehen(String currentBenutzerId, String benutzerId);
+
+  /**
+   * Liefert true, wenn der aktuelle Benutzer eine Bewilligung ansehen darf.
+   * 
+   * @param benutzerId
+   *          Der zu prüfende Benutzer
+   * @param bewilligung
+   *          Die zu prüfende Bewilligung
+   * 
+   * @return true, wenn der Benutzer die Bewilligung ansehen darf
+   */
+  boolean darfBewilligungAnsehen(String benutzerId, Bewilligung bewilligung);
 
   /**
    * Liefert true, wenn der aktuelle Benutzer die Bewilligungen eines anderen

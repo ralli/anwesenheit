@@ -23,6 +23,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
+import de.fisp.anwesenheit.core.domain.BewilligungsDetails;
 import de.fisp.anwesenheit.core.domain.UpdateBewilligungCommand;
 import de.fisp.anwesenheit.core.service.BewilligungService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
@@ -84,6 +85,22 @@ public class BewilligungApiController {
     }
   }
 
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+  public @ResponseBody
+  ResponseEntity<String> show(@PathVariable long id) {
+    HttpHeaders headers = createJsonHeaders();
+    try {
+      BewilligungsDetails details = bewilligungService.leseBewilligungsDetails(getCurrentUser(), id);
+      return new ResponseEntity<String>(toJson(details), headers, HttpStatus.OK);
+    } catch (NotFoundException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
+    } catch (NotAuthorizedException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+    } catch (NotValidException ex) {
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
   public @ResponseBody
   ResponseEntity<String> deleteBewilligung(@PathVariable long id) {
@@ -116,7 +133,7 @@ public class BewilligungApiController {
     }
   }
 
-  @RequestMapping(value="/{id}", method = RequestMethod.PUT)
+  @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
   public @ResponseBody
   ResponseEntity<String> updateBewilligung(@PathVariable long id, @Valid @RequestBody UpdateBewilligungCommand command) {
     HttpHeaders headers = createJsonHeaders();

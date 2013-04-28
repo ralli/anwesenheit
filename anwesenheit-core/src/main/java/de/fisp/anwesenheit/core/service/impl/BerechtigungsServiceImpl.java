@@ -10,6 +10,7 @@ import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 import de.fisp.anwesenheit.core.entities.BenutzerRolle;
+import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.util.NotFoundException;
 
@@ -120,6 +121,11 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
     return hatSonderBerechtigungen(currentBenutzerId);
   }
 
+  @Override
+  public boolean darfBewilligungAnsehen(String benutzerId, Bewilligung bewilligung) {
+    return darfBewilligungenAnsehen(benutzerId, bewilligung.getBenutzerId());    
+  }
+  
   @Override
   public boolean darfBewilligungenAendern(String currentBenutzerId, String benutzerId) {
     if (currentBenutzerId.equals(benutzerId))
