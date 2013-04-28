@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<div class="control-group" ng-show="sonderUrlaubArtVisible()">
-			<label class="control-label" for="sonderurlaub_art">Grund für Sonderurlaub</label>
+			<label class="control-label" for="sonderurlaub_art">Grund f&uuml;r Sonderurlaub</label>
 			<div class="controls">
 				<select id="sonderurlaub_art" 
 				        name="sonderUrlaubArt"
@@ -79,12 +79,12 @@
 		<div class="control-group">
 			<div class="controls">
 				<input type="submit" class="btn btn-primary" value="Speichern" /> 
-				<a ng-href="#!/antraege" class="btn">Zurück</a>
+				<a ng-href="#!/antraege" class="btn">Zur&uuml;ck</a>
 			</div>
 		</div>
 	</fieldset>
 </form>
-<h2>Bewilligungen</h2>
+<h2><i class="icon-refresh"></i>&nbsp;Bewilligungen</h2>
 <form name="addBewilligerForm" 
       class="form-inline"
 	  ng-submit="addBewilliger()">
@@ -94,7 +94,7 @@
 		   benutzer-autocomplete="true" /> 
     <input type="submit" 
            class="btn btn-primary" 
-           value="Hinzufügen" /> 
+           value="Hinzuf&uuml;gen" /> 
     <span class="error">{{bewilligungError}}</span>
 </form>
 <table class="table table-bordered">
@@ -109,7 +109,7 @@
 		<tr ng-repeat="b in antrag.bewilligungen" ng-class="rowClassFor(b)">
 			<td>{{b.benutzer.vorname}} {{b.benutzer.nachname}}</td>
 			<td>{{b.bewilligungsStatus.bezeichnung}}</td>
-			<td><a ng-href="" href="" ng-click="deleteBewilligung(b)">Löschen</a></td>
+			<td><a ng-href="" href="" ng-click="deleteBewilligung(b)">L&ouml;schen</a></td>
 		</tr>
 	</tbody>
 </table>
