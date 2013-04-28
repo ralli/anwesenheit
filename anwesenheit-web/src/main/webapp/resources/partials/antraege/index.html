@@ -4,22 +4,26 @@
    <i class="icon-plus"></i>Neuer Antrag</a>
 </p>
 <form class="form-inline" ng-submit="">
-    <label class="checkbox inline"> 
-       <input type="checkbox" 
-              name="checkRadios" 
-              id="checkRadios1" 
-              ng-model="filter.nur12Monate" 
-              ng-change="fetchAntragListe()"  />
-       Nur die letzten 12 Monate
-    </label>
-	<label class="radio inline">
+	<div class="row-fluid">
+		<div class="span6">
+			<label class="checkbox inline"> 
+				<input type="checkbox" 
+					name="checkRadios" 
+					id="checkRadios1" 
+					ng-model="filter.nur12Monate" 
+					ng-change="fetchAntragListe()"  />
+					Nur die letzten 12 Monate
+    		</label>
+		</div>
+		<div class="span6">
+    <label class="radio inline">
 	   <input type="radio"
 	          ng-model="filter.status"
 		      name="optionsRadios" 
 		      id="optionsRadios1" 
 		      value="ALLE" 
 		      ng-change="fetchAntragListe()"/>
-	   Alle Anträge
+	   alle
 	</label> 
     <label class="radio inline"> 
        <input type="radio"
@@ -28,7 +32,7 @@
               id="optionsRadios2" 
               value="OFFEN" 
               ng-change="fetchAntragListe()" /> 
-       Offene Anträge
+       offen
 	</label> 
     <label class="radio inline"> 
        <input type="radio" 
@@ -37,7 +41,7 @@
               id="optionsRadios3" 
               value="BEWILLIGT" 
               ng-change="fetchAntragListe()" /> 
-       Bewilligte Anträge
+       bewilligt
 	</label> 
     <label class="radio inline"> 
        <input type="radio" 
@@ -46,8 +50,10 @@
               id="optionsRadios4"
               value="ABGELEHNT" 
               ng-change="fetchAntragListe()" /> 
-       Abgelehnte Anträge
+       abgelehnt
 	</label>
+		</div>
+	</div>
 </form>
 <table class="table table-bordered" ng-cloak>
 	<thead>
@@ -73,7 +79,6 @@
                <a ng-href="#!/antraege/{{antrag.id}}/copy" ng-show="antragKopierbar(antrag)" href="">Kopieren</a>
 			   <a href="" ng-click="deleteAntrag(antrag)" ng-show="antragAenderbar(antrag)">Löschen</a>
                <a href="" ng-click="storniereAntrag(antrag)" ng-show="antragStornierbar(antrag)">Stornieren</a>
-      
 			</td>
 		</tr>
 	</tbody>
