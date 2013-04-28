@@ -24,6 +24,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         log.info("Getting resources path...");
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
         registry.addResourceHandler("/bootstrap/**").addResourceLocations("/bootstrap/");
+        registry.addResourceHandler("/font-awesome/**").addResourceLocations("/font-awesome/");
     }
 
     @Bean
