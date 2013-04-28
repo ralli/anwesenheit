@@ -49,12 +49,6 @@ mvn install
 
 Das War befindet sich dann im Verzeichnis anwesenheit-web/target/anwesenheit-web.war
 
-<<<<<<< HEAD
-
-## Deploy
-
-Die Anwendug wird als normales WAR auf dem Servlet-Container deployed.
-=======
 ## Integration in Eclipse
 Um das Projekt in Eclipse zu bearbeiten muss Eclipse maven, WTP und git verstehen.
 Die notwendigen Eclipse-Plugins können über den Eclipse Marketplace direkt installiert werden:
