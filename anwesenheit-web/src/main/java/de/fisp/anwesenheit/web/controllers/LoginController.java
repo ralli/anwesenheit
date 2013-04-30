@@ -16,6 +16,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -30,25 +31,28 @@ public class LoginController {
   private Logger logger = LoggerFactory.getLogger(LoginController.class);
 
   @RequestMapping(value = "/login", method = RequestMethod.GET)
-  public String login(Model model) {
-    model.addAttribute("loginData", new LoginCommand());
+  public String login(@RequestParam(value = "redirectUrl", required = false) String redirectUrl, Model model) {
+    logger.debug("redirectUrl={}", redirectUrl);
+    LoginCommand loginCommand = new LoginCommand();
+    loginCommand.setRedirectUrl(redirectUrl);
+    model.addAttribute("loginCommand", loginCommand);
     return "/login";
   }
-  
+
   @ModelAttribute("loginCommand")
   public LoginCommand createLoginCommand() {
     return new LoginCommand();
   }
-  
+
   private String getBenutzerName(BenutzerDaten benutzerDaten) {
     List<String> list = new ArrayList<String>();
-    if(StringUtils.isNotBlank(benutzerDaten.getVorname())) {
+    if (StringUtils.isNotBlank(benutzerDaten.getVorname())) {
       list.add(benutzerDaten.getVorname());
     }
-    if(StringUtils.isNotBlank(benutzerDaten.getNachname())) {
+    if (StringUtils.isNotBlank(benutzerDaten.getNachname())) {
       list.add(benutzerDaten.getNachname());
     }
-    if(list.isEmpty()) {
+    if (list.isEmpty()) {
       list.add(benutzerDaten.getBenutzerId());
     }
     return StringUtils.join(list, ' ');
@@ -56,7 +60,7 @@ public class LoginController {
 
   @RequestMapping(value = "/login", method = RequestMethod.POST)
   public String login(@Valid LoginCommand loginCommand, BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {      
+    if (bindingResult.hasErrors()) {
       logger.debug("Login enthält fehlerhafte Angaben");
       return "/login";
     }
@@ -70,12 +74,14 @@ public class LoginController {
         RequestAttributes.SCOPE_SESSION);
     RequestContextHolder.currentRequestAttributes().setAttribute("benutzerName", getBenutzerName(benutzerDaten),
         RequestAttributes.SCOPE_SESSION);
-    return "redirect:/";
+    String result = StringUtils.isNotBlank(loginCommand.getRedirectUrl()) ? "redirect:" + "/#!/" + loginCommand.getRedirectUrl()
+        : "redirect:/";
+    return result;
   }
-  
+
   @RequestMapping(value = "/logoff", method = RequestMethod.GET)
   public String logoff() {
-    
+
     RequestContextHolder.currentRequestAttributes().removeAttribute("benutzerId", RequestAttributes.SCOPE_SESSION);
     return "redirect:/login";
   }
