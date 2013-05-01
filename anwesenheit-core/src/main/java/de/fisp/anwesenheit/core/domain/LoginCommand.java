@@ -6,10 +6,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
 public class LoginCommand {
-  @NotBlank
+  @NotBlank(message = "Geben Sie bitte einen Benutzernamen an")
   @Size(max = 30)
   private String login;
-  @NotBlank
+  @NotBlank(message = "Geben Sie bitte ein Passwort an")
   @Size(max = 30)
   private String password;
   private String redirectUrl;
