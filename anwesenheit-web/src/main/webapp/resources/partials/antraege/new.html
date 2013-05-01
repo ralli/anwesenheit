@@ -2,97 +2,97 @@
 
 <form name="createForm" class="form-horizontal" ng-submit="createAntrag()">
     <fieldset>
-		<legend>Antrag</legend>	
-		<div class="control-group">
-			<label class="control-label" for="antrag_art">Art</label>
-			<div class="controls">
-				<select id="antrag_art" name="antragArt"
-					ng-model="antrag.antragArt.antragArt"
-					ng-options="a.antragArt as a.bezeichnung for a in antragArtListe">
-			    </select>
-			</div>
-		</div>
-		<div class="control-group" ng-show="sonderUrlaubArtVisible()">
-	        <label class="control-label" for="sonderurlaub_art">Grund für Sonderurlaub</label>
-	        <div class="controls">
-	            <select id="sonderurlaub_art" name="sonderUrlaubArt"
-	                ng-model="antrag.sonderUrlaubArt"
-	                ng-options="a.sonderUrlaubArt as a.bezeichnung for a in sonderUrlaubArtListe">
-	            </select>
-	        </div>
-	    </div>
-	    
-		<div ng-class="controlClassFor(createForm.von.$valid)">
-			<label for="antrag_von" class="control-label">Von</label>
-			<div class="controls">
-				<input type="text" id="antrag_von" name="von" ng-model="antrag.von"
-					ui-date="true" required="required" />
-			</div>
-		</div>
-		<div ng-class="controlClassFor(createForm.bis.$valid)">
-			<label for="antrag_bis" class="control-label">Bis</label>
-			<div class="controls">
-				<input type="text" id="antrag_bis" name="bis" ng-model="antrag.bis"
-					ui-date="true" required="required" />
-			</div>
-		</div>
-		<div class="control-group" ng-show="sonderUrlaubArtVisible()">
-			<label class="control-label">Anzahl Tage</label>
-			<div class="controls">
-				<span class="uneditable-input">{{getAnzahlTage()}}</span>
-			</div>
-		</div>
-		<div ng-class="controlClassFor(createForm.anzahlTage.$valid)" ng-show="anzahlTageVisible()">
-	        <label for="antrag_bis" class="control-label">Anzahl Tage</label>
-	        <div class="controls">
-	            <input type="text" id="antrag_anzahl_tage" name="anzahlTage" ng-model="antrag.anzahlTage"
-	                ng-pattern="/^[0-9]+(,[05])?$/" required />
-                <a ng-href="" ng-click="aktualisiereArbeitstage()" class="btn"><i class="icon-refresh"></i>Berechnen</a>
-	        </div>
-	    </div>
-		
-		<div class="control-group">
-			<div class="controls">
-				<input type="submit" class="btn btn-primary" value="Speichern" /> 
-				<a ng-href="#!/antraege" class="btn">Zurück</a>
-			</div>
-		</div>
-	</fieldset>
+        <legend>Antrag</legend>
+        <div class="control-group">
+            <label class="control-label" for="antrag_art">Art</label>
+            <div class="controls">
+                <select id="antrag_art" name="antragArt"
+                        ng-model="antrag.antragArt.antragArt"
+                        ng-options="a.antragArt as a.bezeichnung for a in antragArtListe">
+                </select>
+            </div>
+        </div>
+        <div class="control-group" ng-show="sonderUrlaubArtVisible()">
+            <label class="control-label" for="sonderurlaub_art">Grund für Sonderurlaub</label>
+            <div class="controls">
+                <select id="sonderurlaub_art" name="sonderUrlaubArt"
+                        ng-model="antrag.sonderUrlaubArt"
+                        ng-options="a.sonderUrlaubArt as a.bezeichnung for a in sonderUrlaubArtListe">
+                </select>
+            </div>
+        </div>
+
+        <div ng-class="controlClassFor(createForm.von.$valid)">
+            <label for="antrag_von" class="control-label">Von</label>
+            <div class="controls">
+                <input type="text" id="antrag_von" name="von" ng-model="antrag.von"
+                       ui-date="true" required="required" />
+            </div>
+        </div>
+        <div ng-class="controlClassFor(createForm.bis.$valid)">
+            <label for="antrag_bis" class="control-label">Bis</label>
+            <div class="controls">
+                <input type="text" id="antrag_bis" name="bis" ng-model="antrag.bis"
+                       ui-date="true" required="required" />
+            </div>
+        </div>
+        <div class="control-group" ng-show="sonderUrlaubArtVisible()">
+            <label class="control-label">Anzahl Tage</label>
+            <div class="controls">
+                <span class="uneditable-input">{{getAnzahlTage()}}</span>
+            </div>
+        </div>
+        <div ng-class="controlClassFor(createForm.anzahlTage.$valid)" ng-show="anzahlTageVisible()">
+            <label for="antrag_bis" class="control-label">Anzahl Tage</label>
+            <div class="controls">
+                <input type="text" id="antrag_anzahl_tage" name="anzahlTage" ng-model="antrag.anzahlTage"
+                       ng-pattern="/^[0-9]+(,[05])?$/" required />
+                <a ng-href="" ng-click="aktualisiereArbeitstage()" class="btn"><i class="icon-refresh"></i> Berechnen</a>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" class="btn btn-primary" value="Speichern" />
+                <a ng-href="#!/antraege" class="btn">Zurück</a>
+            </div>
+        </div>
+    </fieldset>
 </form>
 
 <div>
-  <h2 style="float:left">Bewilligungen</h2>
-  <a style="float:left" 
-     tooltip-placement="right" 
-     tooltip="Für Ihren Urlaubsantrag benötigen Sie zwei Unterschriften: Die erste Unterschrift wird durch Ihren Projektleiter geleistet. Die zweite Unterschrift erfolgt durch Ihren Projektmanager.">
+    <h2 style="float:left">Bewilligungen</h2>
+    <a style="float:left"
+       tooltip-placement="right"
+       tooltip="Für Ihren Urlaubsantrag benötigen Sie zwei Unterschriften: Die erste Unterschrift wird durch Ihren Projektleiter geleistet. Die zweite Unterschrift erfolgt durch Ihren Projektmanager.">
         <span class="icon-info-sign"></span>
-  </a>
+    </a>
 </div >
 <form style="clear:both" name="bewilligungForm" class="form-inline" ng-submit="addBewilliger()">
-	<input type="text" 
-           placeholder="Bewilliger" 
+    <input type="text"
+           placeholder="Bewilliger"
            id="bewilliger_key"
-		   name="bewilliger" ng-model="bewilligerKey"
-		   benutzer-autocomplete="true" 
+           name="bewilliger" ng-model="bewilligerKey"
+           benutzer-autocomplete="true"
            select="benutzerSelected()" required />
-	<input type="submit" class="btn btn-primary" value="Hinzufügen" /> 
+    <input type="submit" class="btn btn-primary" value="Hinzufügen" />
     <span class="error">{{bewilligungError}}</span>
 </form>
 <table class="table table-bordered" ng-show="antrag.bewilliger.length > 0">
     <thead>
-      <tr>
+    <tr>
         <th>Bewilliger</th>
         <th>Rolle</th>
         <th>Aktionen</th>
-      </tr>
+    </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="b in antrag.bewilliger">
+    <tr ng-repeat="b in antrag.bewilliger">
         <td>{{b.vorname}} {{b.nachname}}</td>
         <td>{{titleForBewilliger(b)}}</td>
         <td>
             <a ng-href="" ng-click="removeBewilliger(b)">Löschen</a>
         </td>
-      </tr>
-    </tbody>  
+    </tr>
+    </tbody>
 </table>

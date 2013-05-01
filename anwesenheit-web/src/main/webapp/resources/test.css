@@ -1,14 +1,18 @@
 body {
-	padding-top: 60px;
+    padding-top: 60px;
 }
 
 ng-invalid {
-	border-color: red;
-	border-width: 1px;
-	border-style: solid;
+    border-color: red;
+    border-width: 1px;
+    border-style: solid;
 }
 
 tr.storniert {
-	background-color: #eeeeee;
-	color: #aaaaaa; 
+    background-color: #eeeeee;
+    color: #aaaaaa;
+}
+
+li.home-button {
+    margin-top: 1em;
 }
