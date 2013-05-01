@@ -45,11 +45,13 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   public void sendeAntragsMail(String benutzerId, long antragId) {
     AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
     for (BewilligungsDaten b : antrag.getBewilligungen()) {
-      BenutzerDaten bewilliger = b.getBenutzer();
-      String email = bewilliger.getEmail();
-      String betreff = getBetreff(antrag, b);
-      String text = getAntragsText(antrag, b);
-      mailService.sendeMail(betreff, text, "noreply@f-i-solutions-plus.de", email);
+      if(b.getPosition() == 2) {
+        BenutzerDaten bewilliger = b.getBenutzer();
+        String email = bewilliger.getEmail();
+        String betreff = getBetreff(antrag, b);
+        String text = getAntragsText(antrag, b);
+        mailService.sendeMail(betreff, text, "noreply@f-i-solutions-plus.de", email);
+      }
     }
   }
 
@@ -64,7 +66,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   public String getAntragsText(AntragsDaten antrag, BewilligungsDaten bewilligungsDaten) {  
     Context context = toolManager.createContext();
     context.put("antrag", antrag);
-    context.put("antragUrl", getUrlFor(antrag.getId()));
+    context.put("bewilligungsUrl", getUrlForBewilligung(bewilligungsDaten.getId()));
     StringWriter writer = new StringWriter();
     velocityEngine.mergeTemplate("de/fisp/anwesenheit/mailtemplates/neuerantrag.vm", "UTF-8", context, writer);
     String text = writer.toString();
@@ -77,8 +79,8 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
     return fmt.format(tage);
   }
 
-  private Object getUrlFor(long antragId) {
-    return "http://srv-1822direkt2:8080/anwesenheit-web/#!/antraege/" + antragId;
+  private String getUrlForBewilligung(long bewilligungsId) {
+    return "http://srv-1822direkt2:8080/anwesenheit-web/?deepLinkUrl=bewilligungen/" + bewilligungsId;
   }
 
   private String formatDate(Date date) {

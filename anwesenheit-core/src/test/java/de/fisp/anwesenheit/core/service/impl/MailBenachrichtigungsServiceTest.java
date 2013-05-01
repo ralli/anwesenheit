@@ -66,9 +66,9 @@ public class MailBenachrichtigungsServiceTest {
     BenutzerDaten benutzer = new BenutzerDaten("test", "Horst", "Hrubesch", "test.test.de");
     BewilligungsStatus bewilligungsStatus = testDataFactory.createBewilligungsStatus("OFFEN");
     BenutzerDaten bewilliger = new BenutzerDaten("bewilliger", "Charly", "Chan", "oliver.porzel@f-i-solutions-plus.de");
-    BewilligungsDaten bewilligungsDaten = new BewilligungsDaten(0, antragId, 1, bewilligungsStatus, bewilliger);
+    BewilligungsDaten bewilligungsDaten = new BewilligungsDaten(1, antragId, 1, bewilligungsStatus, bewilliger);
     BenutzerDaten bewilliger2 = new BenutzerDaten("bewilliger", "King", "Kong", "ralph.juhnke@f-i-solutions-plus.de");
-    BewilligungsDaten bewilligungsDaten2 = new BewilligungsDaten(0, antragId, 2, bewilligungsStatus, bewilliger2);
+    BewilligungsDaten bewilligungsDaten2 = new BewilligungsDaten(2, antragId, 2, bewilligungsStatus, bewilliger2);
     List<BewilligungsDaten> bewilligungen = new ArrayList<BewilligungsDaten>();
     bewilligungen.add(bewilligungsDaten);
     bewilligungen.add(bewilligungsDaten2);

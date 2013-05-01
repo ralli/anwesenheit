@@ -1,5 +1,4 @@
-<p>${antrag.benutzer.vorname} ${antrag.benutzer.nachname} legt Ihnen einen neuen Antrag auf zur Bewilligung
-    auf ${antrag.antragArt.bezeichnung} vor:</p>
+<p>${bewilligung.benutzer.vorname} ${bewilligung.benutzer.nachname} hat Ihrem Antrag auf ${antrag.antragArt.bezeichnung} zugestimmt.</p>
 <ul>
     <li>Art des Antrags: ${antrag.antragArt.bezeichnung}</li>
     <li>Zeitraum vom: $date.format('dd.MM.yyyy', ${antrag.von})
@@ -10,4 +9,5 @@
         <li>Art des Sonderurlaubs: ${antrag.sonderUrlaubArt.sonderUrlaubArt}</li>
     #end
 </ul>
-<p>Über den folgenden Link gelangen Sie direkt zum Antrag: <a href="${bewilligungsUrl}">Link zum Antrag</a></p>
+<p>Über den folgenden Link gelangen Sie direkt zum Antrag: <a href="${antragUrl}">Link zum Antrag</a></p>
+
