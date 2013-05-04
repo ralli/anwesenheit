@@ -5,6 +5,7 @@
 <head>
 <title>Login</title>
 <link href="<c:url value="webjars/bootstrap/2.3.1/css/bootstrap.min.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/bootstrap/2.3.1/css/bootstrap-responsive.min.css" />" rel="stylesheet" />
 <link href="<c:url value="webjars/font-awesome/3.0.2/css/font-awesome.min.css" />" rel="stylesheet" />
 <style type="text/css">
 body {
@@ -61,9 +62,9 @@ body {
 	<form:form id="login-form" cssClass="form-signin" modelAttribute="loginCommand"
 		method="POST">
 		<form:errors  cssClass="fieldError"/>
-		<h2 class="form-signin-heading">Bitte melden Sie sich an</h2>
+		<h2 class="form-signin-heading">Anmeldung</h2>
 		<form:input path="login" placeholder="Benutzername" />  <form:errors path="login" element="div" cssClass="fieldError"/>
-		<form:password path="password" placeholder="Passwort" /> <form:errors path="password" element="div"  cssClass="fieldError"/>
+		<form:password path="password" placeholder="Passwort" /> <form:errors path="password" element="div" cssClass="fieldError"/>
 		<button class="btn btn-large btn-primary" type="submit"><i class="icon-ok">&nbsp;</i>Anmelden</button>
 	</form:form>
 </body>

@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/bootstrap" prefix="b"%>
 <html ng-app="antrag">
 <head>
 <title>Anwesenheiten</title>
 <meta charset="utf-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
@@ -20,10 +18,7 @@
 <link href="<c:url value="webjars/jquery-ui/1.10.2/themes/base/minified/jquery-ui.min.css" />" rel="stylesheet" />
 <link href="<c:url value="webjars/angular-ui/0.4.0/angular-ui.min.css" />" rel="stylesheet" />
 <link href="<c:url value="/resources/toastr/toastr.css" />" rel="stylesheet" />
-
-
-<link href="<c:url value="/resources/test.css?reload=1" />" rel="stylesheet" />
-
+<link href="<c:url value="/resources/css/test.css?reload=1" />" rel="stylesheet" />
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
@@ -43,17 +38,16 @@
 						<li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i>&nbsp;Anträge</a></li>
 						<li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i>&nbsp;Bewilligungen</a></li>
 						<li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i>&nbsp;Übersicht</a></li>
-					</ul>icon-user
-					<div class="btn-group">
-  						<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-  							<em><b:currentUserName id="current-user-name">-</b:currentUserName></em>
-						    <span class="caret"></span>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="#!">Einstellungen</a></li>
-							<li><a href="#!">Logout</a></li>
-						</ul>
-					</div>
+					</ul>
+					<ul class="nav pull-right">
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><b:currentUserName /> <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="<c:url value="#!/einstellungen" />"><i class="icon-cogs"></i> Einstellungen</a></li>
+								<li class="divider"></li>
+								<li><a href="<c:url value="/logoff" />"><i class="icon-off"></i> Abmelden</a></li>
+							</ul>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -63,8 +57,7 @@
 		<div ng-view></div>
 	</div>
 	<script src="<c:url value="webjars/jquery/2.0.0/jquery.min.js"/>"></script>
-	<script src="<c:url value="webjars/jquery-ui/1.10.2/ui/jquery-ui.js"/>"></script>
-	<script src="<c:url value="webjars/jquery-ui/1.10.2/themes/base/minified/jquery.ui.datepicker.min.css"/>"></script>
+	<script src="<c:url value="webjars/jquery-ui/1.10.2/ui/minified/jquery-ui.min.js"/>"></script>
 	<script src="<c:url value="webjars/angularjs/1.1.4/angular.min.js"/>"></script>
 	<script src="<c:url value="webjars/angularjs/1.1.4/angular-resource.min.js"/>"></script>
 	<script src="<c:url value="webjars/angularjs/1.1.4/angular-bootstrap.min.js"/>"></script>
@@ -74,9 +67,7 @@
 	<script src="<c:url value="webjars/bootstrap/2.3.1/js/bootstrap.min.js" />"></script>
 	<script src="<c:url value="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js" />"></script>
 	<script src="<c:url value="webjars/bootstrap-timepicker/0.2.1/js/bootstrap-timepicker.min.js" />"></script>
-	
-	<script src="<c:url value="resources/js/ui-bootstrap-tpls-0.2.0.min.js" />"></script>
-	
+	<script src="<c:url value="resources/gh-pages/ui-bootstrap-tpls-0.3.0.min.js" />"></script>
 	<script src="<c:url value="resources/js/antrag.js?reload=1"/>" charset="UTF-8"></script>
 	<script src="<c:url value="webjars/underscorejs/1.4.4/underscore.min.js"/>"></script>
 	<script src="<c:url value="resources/toastr/toastr.js" />"></script>
