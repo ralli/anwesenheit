@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.fisp.anwesenheit</groupId>
 	<artifactId>anwesenheit</artifactId>
@@ -170,8 +169,7 @@
 				<artifactId>javax.inject</artifactId>
 				<version>1</version>
 			</dependency>
-			<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-cglib-repack</artifactId> 
-				<version>2.1_3</version> <scope>test</scope> </dependency> -->
+			<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-cglib-repack</artifactId> <version>2.1_3</version> <scope>test</scope> </dependency> -->
 			<dependency>
 				<groupId>cglib</groupId>
 				<artifactId>cglib-nodep</artifactId>
@@ -197,27 +195,33 @@
 				<artifactId>joda-time</artifactId>
 				<version>2.2</version>
 			</dependency>
-			<!-- -->
+			<!-- Logging -->
 			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>1.6.4</version>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>0.9.18</version>
 			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.7.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.7.2</version>
-			</dependency>
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
-			</dependency>
+
+			<!-- <dependency> -->
+			<!-- <groupId>org.slf4j</groupId> -->
+			<!-- <artifactId>jcl-over-slf4j</artifactId> -->
+			<!-- <version>1.6.4</version> -->
+			<!-- </dependency> -->
+			<!-- <dependency> -->
+			<!-- <groupId>org.slf4j</groupId> -->
+			<!-- <artifactId>slf4j-api</artifactId> -->
+			<!-- <version>1.7.2</version> -->
+			<!-- </dependency> -->
+			<!-- <dependency> -->
+			<!-- <groupId>org.slf4j</groupId> -->
+			<!-- <artifactId>slf4j-log4j12</artifactId> -->
+			<!-- <version>1.7.2</version> -->
+			<!-- </dependency> -->
+			<!-- <dependency> -->
+			<!-- <groupId>log4j</groupId> -->
+			<!-- <artifactId>log4j</artifactId> -->
+			<!-- <version>1.2.17</version> -->
+			<!-- </dependency> -->
 			<dependency>
 				<groupId>commons-lang</groupId>
 				<artifactId>commons-lang</artifactId>
