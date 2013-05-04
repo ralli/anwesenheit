@@ -1,0 +1,3 @@
+[submodule "anwesenheit-web/src/main/webapp/resources/toastr"]
+	path = anwesenheit-web/src/main/webapp/resources/toastr
+	url = https://github.com/CodeSeven/toastr.git

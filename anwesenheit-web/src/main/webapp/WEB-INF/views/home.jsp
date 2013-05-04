@@ -12,13 +12,18 @@
 <meta name="author" content="">
 
 <!-- Le styles -->
-<link href="<c:url value="/bootstrap/css/bootstrap.min.css" />" rel="stylesheet" />
-<link href="<c:url value="/bootstrap/css/bootstrap-responsive.min.css" />" rel="stylesheet" />
-<link href="<c:url value="/font-awesome/css/font-awesome.min.css" />" rel="stylesheet" />
-<link href="<c:url value="/resources/jquery-ui.css" />" rel="stylesheet" />
-<link href="<c:url value="/resources/css/angular-ui.css" />" rel="stylesheet" />
-<link href="<c:url value="/resources/css/toastr.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/bootstrap/2.3.1/css/bootstrap.min.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/bootstrap/2.3.1/css/bootstrap-responsive.min.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/bootstrap-datepicker/1.0.1/css/datepicker.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/bootstrap-timepicker/0.2.1/css/bootstrap-timepicker.min.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/font-awesome/3.0.2/css/font-awesome.min.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/jquery-ui/1.10.2/themes/base/minified/jquery-ui.min.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/angular-ui/0.4.0/angular-ui.min.css" />" rel="stylesheet" />
+<link href="<c:url value="/resources/toastr/toastr.css" />" rel="stylesheet" />
+
+
 <link href="<c:url value="/resources/test.css?reload=1" />" rel="stylesheet" />
+
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
@@ -27,10 +32,6 @@
 
 <!-- Le fav and touch icons -->
 <link rel="shortcut icon" href="<c:url value="/bootstrap/ico/favicon.ico" />" />
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="<c:url value="/bootstrap/ico/apple-touch-icon-144-precomposed.png" />" />
-<link rel="apple-touch-icon-precomposed" sizes="114x114" href="<c:url value="/bootstrap/ico/apple-touch-icon-114-precomposed.png" />" />
-<link rel="apple-touch-icon-precomposed" sizes="72x72" href="<c:url value="/bootstrap/ico/apple-touch-icon-72-precomposed.png" />" />
-<link rel="apple-touch-icon-precomposed" href="<c:url value="/bootstrap/ico/apple-touch-icon-57-precomposed.png" />" />
 </head>
 <body>
 	<div class="navbar navbar-fixed-top">
@@ -61,17 +62,19 @@
 		<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 		<div ng-view></div>
 	</div>
-	<script src="<c:url value="/resources/js/jquery-1.7.2.min.js"/>"></script>
-	<script src="<c:url value="/resources/js/jquery-ui.js"/>"></script>
-	<script src="<c:url value="/resources/js/jquery.ui.datepicker-de.js"/>"></script>
-	<script src="<c:url value="/resources/js/underscore-min.js"/>"></script>
-	<script src="<c:url value="/resources/js/angular.min.js"/>"></script>
-	<script src="<c:url value="/resources/js/angular-resource.min.js"/>"></script>
-	<script src="<c:url value="/resources/js/angular-locale_de.js"/>"></script>
-	<script src="<c:url value="/resources/js/angular-ui.min.js"/>"></script>
-	<script src="<c:url value="/resources/js/antrag.js?reload=1"/>" charset="UTF-8"></script>
-	<script src="<c:url value="/bootstrap/js/bootstrap.min.js" />"></script>
-	<script src="<c:url value="/resources/js/ui-bootstrap-tpls-0.2.0.js" />"></script>
-	<script src="<c:url value="/resources/js/toastr.js" />"></script>
+	<script src="<c:url value="webjars/bootstrap/2.3.1/js/bootstrap.min.js" />"></script>
+	<script src="<c:url value="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js" />"></script>
+	<script src="<c:url value="webjars/bootstrap-timepicker/0.2.1/js/bootstrap-timepicker.min.js" />"></script>
+	<script src="<c:url value="webjars/jquery/2.0.0/jquery.min.js"/>"></script>
+	<script src="<c:url value="webjars/jquery-ui/1.10.2/ui/jquery-ui.js"/>"></script>
+	<script src="<c:url value="webjars/jquery-ui/1.10.2/themes/base/minified/jquery.ui.datepicker.min.css"/>"></script>
+	<script src="<c:url value="webjars/angularjs/1.1.4/angular.min.js"/>"></script>
+	<script src="<c:url value="webjars/angularjs/1.1.4/angular-resource.min.js"/>"></script>
+	<script src="<c:url value="webjars/angularjs/1.1.4/angular-bootstrap.min.js"/>"></script>
+	<script src="<c:url value="webjars/angularjs/1.1.4/i18n/angular-locale_de.js"/>"></script>
+	<script src="<c:url value="webjars/angular-ui/0.4.0/angular-ui.min.js"/>"></script>
+	<script src="<c:url value="webjars/underscorejs/1.4.4/underscore.min.js"/>"></script>
+	<script src="<c:url value="resources/toastr/toastr.js" />"></script>
+	<script src="<c:url value="resources/js/antrag.js?reload=1"/>" charset="UTF-8"></script>
 </body>
 </html>

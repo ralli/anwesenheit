@@ -4,8 +4,8 @@
 <html>
 <head>
 <title>Login</title>
-<link href="<c:url value="/bootstrap/css/bootstrap.min.css" />" rel="stylesheet" />
-<link href="<c:url value="/font-awesome/css/font-awesome.min.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/bootstrap/2.3.1/css/bootstrap.min.css" />" rel="stylesheet" />
+<link href="<c:url value="webjars/font-awesome/3.0.2/css/font-awesome.min.css" />" rel="stylesheet" />
 <style type="text/css">
 body {
 	padding-top: 60px;
