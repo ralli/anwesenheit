@@ -62,9 +62,6 @@
 		<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 		<div ng-view></div>
 	</div>
-	<script src="<c:url value="webjars/bootstrap/2.3.1/js/bootstrap.min.js" />"></script>
-	<script src="<c:url value="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js" />"></script>
-	<script src="<c:url value="webjars/bootstrap-timepicker/0.2.1/js/bootstrap-timepicker.min.js" />"></script>
 	<script src="<c:url value="webjars/jquery/2.0.0/jquery.min.js"/>"></script>
 	<script src="<c:url value="webjars/jquery-ui/1.10.2/ui/jquery-ui.js"/>"></script>
 	<script src="<c:url value="webjars/jquery-ui/1.10.2/themes/base/minified/jquery.ui.datepicker.min.css"/>"></script>
@@ -73,8 +70,15 @@
 	<script src="<c:url value="webjars/angularjs/1.1.4/angular-bootstrap.min.js"/>"></script>
 	<script src="<c:url value="webjars/angularjs/1.1.4/i18n/angular-locale_de.js"/>"></script>
 	<script src="<c:url value="webjars/angular-ui/0.4.0/angular-ui.min.js"/>"></script>
+	<script src="<c:url value="webjars/angular-ui/0.4.0/angular-ui-ieshiv.min.js"/>"></script>
+	<script src="<c:url value="webjars/bootstrap/2.3.1/js/bootstrap.min.js" />"></script>
+	<script src="<c:url value="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js" />"></script>
+	<script src="<c:url value="webjars/bootstrap-timepicker/0.2.1/js/bootstrap-timepicker.min.js" />"></script>
+	
+	<script src="<c:url value="resources/js/ui-bootstrap-tpls-0.2.0.min.js" />"></script>
+	
+	<script src="<c:url value="resources/js/antrag.js?reload=1"/>" charset="UTF-8"></script>
 	<script src="<c:url value="webjars/underscorejs/1.4.4/underscore.min.js"/>"></script>
 	<script src="<c:url value="resources/toastr/toastr.js" />"></script>
-	<script src="<c:url value="resources/js/antrag.js?reload=1"/>" charset="UTF-8"></script>
 </body>
 </html>
