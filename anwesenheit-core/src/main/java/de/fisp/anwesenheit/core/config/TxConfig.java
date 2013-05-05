@@ -19,7 +19,7 @@ public class TxConfig {
 
 	@Bean
 	public PlatformTransactionManager transactionManager() {
-		logger.info("Creating Transaction Manager...");
+		logger.info("Create Transaction Manager");
 		return new HibernateTransactionManager(sessionFactory);
 	}
 }
