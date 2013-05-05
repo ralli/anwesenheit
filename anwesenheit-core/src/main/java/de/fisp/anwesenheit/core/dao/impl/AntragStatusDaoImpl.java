@@ -26,7 +26,7 @@ public class AntragStatusDaoImpl implements AntragStatusDao {
 	private Session getCurrentSession() {
 		Session session = sessionFactory.getCurrentSession();
 		if (session == null) {
-			throw new RuntimeException("No current session found!");
+			throw new RuntimeException("no current session");
 		}
 		return session;
 	}
