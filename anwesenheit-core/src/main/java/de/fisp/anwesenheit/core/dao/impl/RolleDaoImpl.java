@@ -26,7 +26,7 @@ public class RolleDaoImpl implements RolleDao {
   private Session getCurrentSession() {
     Session session = sessionFactory.getCurrentSession();
     if (session == null) {
-      throw new RuntimeException("no current session");
+    	throw new RuntimeException("No current session found!");
     }
     return session;
   }
