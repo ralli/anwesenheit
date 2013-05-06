@@ -1,24 +1,24 @@
-<h1><i class="icon-folder-open">&nbsp;</i>&Uuml;bersicht</h1>
+<h1>Übersicht</h1>
 
 <table class="table table-bordered">
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Art</th>
-			<th>Status</th>
-			<th>Von</th>
-			<th>Bis</th>
-			<th>Anzahl Tage</th>
-		</tr>
-	</thead>
-	<tbody>
-	   <tr ng-repeat="antrag in antragListe.antraege" ng-class="rowClassFor(antrag)">
-	     <td>{{antrag.benutzer.vorname}} {{antrag.benutzer.nachname}}</td>
-	     <td>{{antrag.antragArt.bezeichnung}}</td>
-	     <td>{{antrag.antragStatus.bezeichnung}}</td>
-	     <td>{{antrag.von|date:'dd.MM.yyyy'}}</td>
-	     <td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
-	     <td>{{antrag.anzahlTage|number}}</td>
-	   </tr>
-	</tbody>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Art</th>
+        <th>Status</th>
+        <th>Von</th>
+        <th>Bis</th>
+        <th>Anzahl Tage</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="antrag in antragListe.antraege" ng-class="rowClassFor(antrag)">
+        <td>{{antrag.benutzer.vorname}} {{antrag.benutzer.nachname}}</td>
+        <td>{{antrag.antragArt.bezeichnung}}</td>
+        <td>{{antrag.antragStatus.bezeichnung}}</td>
+        <td>{{antrag.von|date:'dd.MM.yyyy'}}</td>
+        <td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
+        <td>{{antrag.anzahlTage|number}}</td>
+    </tr>
+    </tbody>
 </table>

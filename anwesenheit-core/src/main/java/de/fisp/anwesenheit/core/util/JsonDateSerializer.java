@@ -10,18 +10,15 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.springframework.stereotype.Component;
- 
+
 @Component
-public class JsonDateSerializer extends JsonSerializer<Date>{
- 
- 
-    @Override
-    public void serialize(Date date, JsonGenerator gen, SerializerProvider provider)
-            throws IOException, JsonProcessingException {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ"); 
-        String formattedDate = dateFormat.format(date);
- 
-        gen.writeString(formattedDate);
-    }
- 
+public class JsonDateSerializer extends JsonSerializer<Date> {
+  @Override
+  public void serialize(Date date, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+    String formattedDate = dateFormat.format(date);
+
+    gen.writeString(formattedDate);
+  }
+
 }

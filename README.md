@@ -59,8 +59,5 @@ Die notwendigen Eclipse-Plugins können über den Eclipse Marketplace direkt ins
 
 ## Deployment
 
-Die Anwendug wird als normales WAR auf dem Servlet-Container deployed.
-
-### Deployment auf glassfish
-TBD
+Die Anwendung wird als normales WAR auf dem Servlet-Container deployed.
 

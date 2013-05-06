@@ -16,9 +16,12 @@ import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.dao.BewilligungsStatusDao;
 import de.fisp.anwesenheit.core.domain.AddBewilligungCommand;
+import de.fisp.anwesenheit.core.domain.AntragListeEintrag;
+import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungListe;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
+import de.fisp.anwesenheit.core.domain.BewilligungsDetails;
 import de.fisp.anwesenheit.core.domain.BewilligungsFilter;
 import de.fisp.anwesenheit.core.domain.BewilligungsListeEintrag;
 import de.fisp.anwesenheit.core.domain.UpdateBewilligungCommand;
@@ -262,12 +265,11 @@ public class BewilligungServiceImpl implements BewilligungService {
       throw new NotFoundException(String.format("Bewilliger %s nicht gefunden", currentUserId));
     }
     List<Bewilligung> list;
-    if(berechtigungsService.hatSonderBerechtigungen(benutzer)) {
+    if (berechtigungsService.hatSonderBerechtigungen(benutzer)) {
       list = bewilligungDao.findByFilter(filter);
-    }
-    else {
+    } else {
       list = bewilligungDao.findByBewilligerAndFilter(currentUserId, filter);
-    }    
+    }
     BewilligungListe result = createBewilligungsListe(benutzer, list);
     return result;
   }
@@ -280,5 +282,58 @@ public class BewilligungServiceImpl implements BewilligungService {
     }
     BewilligungListe result = new BewilligungListe(benutzerDaten, eintraege);
     return result;
+  }
+
+  @Override
+  @Transactional
+  public BewilligungsDetails leseBewilligungsDetails(String benutzerId, long bewilligungId) {
+    Bewilligung bewilligung = bewilligungDao.findById(bewilligungId);
+
+    if (bewilligung == null) {
+      throw new NotFoundException("Bewilligung nicht gefunden");
+    }
+
+    if (!berechtigungsService.darfBewilligungAnsehen(benutzerId, bewilligung)) {
+      throw new NotAuthorizedException("Keine Ausreichenden Berechtigungen zum Anzeigen der Bewilligung");
+    }
+
+    Antrag antrag = bewilligung.getAntrag();
+
+    List<BewilligungsDaten> daten = new ArrayList<BewilligungsDaten>();
+    for (Bewilligung b : antrag.getBewilligungen()) {
+      daten.add(createBewilligungsDaten(b));
+    }
+
+    List<AntragListeEintrag> gleichzeitigeEintraege = new ArrayList<AntragListeEintrag>();
+    AntragsFilter filter = new AntragsFilter();
+    filter.setVon(antrag.getVon());
+    filter.setBis(antrag.getBis());
+    List<Antrag> antraege;
+    
+    if(berechtigungsService.hatSonderBerechtigungen(benutzerId)) {
+      antraege = antragDao.findByFilter(filter);
+    }
+    else {
+      antraege = antragDao.findByBewilligerAndFilter(benutzerId, filter);
+    }
+    
+    for (Antrag a : antraege) {
+      AntragListeEintrag eintrag = new AntragListeEintrag(a.getId(), createBenutzerDaten(a.getBenutzer()), a.getAntragArt(),
+          a.getAntragStatus(), a.getVon(), a.getBis(), a.getAnzahlTage());
+      if (isAktiverAntrag(a)) {
+        gleichzeitigeEintraege.add(eintrag);
+      }
+    }
+    
+    BewilligungsDetails result = new BewilligungsDetails(bewilligung.getId(), antrag.getId(), bewilligung.getPosition(),
+        createBenutzerDaten(antrag.getBenutzer()), createBenutzerDaten(bewilligung.getBenutzer()), antrag.getVon(),
+        antrag.getBis(), antrag.getAnzahlTage(), antrag.getAntragStatus(), antrag.getAntragArt(), antrag.getSonderUrlaubArt(),
+        bewilligung.getBewilligungsStatus(), daten, gleichzeitigeEintraege);
+    
+    return result;
+  }
+
+  private boolean isAktiverAntrag(Antrag a) {
+    return !("STORNIERT".equals(a.getAntragStatusId()) || "ABGELEHNT".equals(a.getAntragStatusId()));
   }
 }

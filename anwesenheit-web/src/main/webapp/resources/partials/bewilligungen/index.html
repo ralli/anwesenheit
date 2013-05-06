@@ -1,66 +1,73 @@
-<h1><i class="icon-refresh"></i>&nbsp;Bewilligungen</h1>
+<h1>Bewilligungen</h1>
 <p></p>
 <form class="form-inline" ng-submit="">
-	<input class="input-medium" 
-           type="text" 
-           ng-model="filter.benutzerName"
-		   placeholder="Antragsteller" />
-    <label class="radio"> 
-       <input type="radio" 
-              ng-model="filter.status" 
-              name="optionsRadios"
-		      id="optionsRadios1" 
-              value="" />
-		Alle Bewilligungen
-	</label> 
-    <label class="radio"> 
-       <input type="radio"
-		      ng-model="filter.status" 
-              name="optionsRadios" 
-              id="optionsRadios2"
-		      value="OFFEN" /> 
-        Offene Bewilligungen
-	</label> 
-    <label class="radio"> 
-       <input type="radio"
-		      ng-model="filter.status"
-              name="optionsRadios" 
-              id="optionsRadios3"
-		      value="BEWILLIGT" /> 
-        Bewilligte Bewilligungen
-	</label> 
-    <label class="radio"> 
-       <input type="radio"
-		      ng-model="filter.status"
-              name="optionsRadios" 
-              id="optionsRadios4"
-		      value="ABGELEHNT" />
-        Abgelehnte Bewilligungen
-	</label>
+    <div class="row">
+        <div class="span3">
+            <input class="input-medium"
+                   type="text"
+                   ng-model="filter.benutzerName"
+                   placeholder="Antragsteller" />
+        </div>
+        <div class="pull-right">
+            <label class="radio">
+                <input type="radio"
+                       ng-model="filter.status"
+                       name="optionsRadios"
+                       id="optionsRadios1"
+                       value="" />
+                Alle
+            </label>
+            <label class="radio">
+                <input type="radio"
+                       ng-model="filter.status"
+                       name="optionsRadios"
+                       id="optionsRadios2"
+                       value="OFFEN" />
+                Offen
+            </label>
+            <label class="radio">
+                <input type="radio"
+                       ng-model="filter.status"
+                       name="optionsRadios"
+                       id="optionsRadios3"
+                       value="BEWILLIGT" />
+                Bewilligt
+            </label>
+            <label class="radio">
+                <input type="radio"
+                       ng-model="filter.status"
+                       name="optionsRadios"
+                       id="optionsRadios4"
+                       value="ABGELEHNT" />
+                Abgelehnt
+            </label>
+        </div>
+    </div>
 </form>
 
 <table class="table table-bordered">
-	<thead>
-		<tr>
-			<th>Antragsteller</th>
-			<th>Art</th>
-			<th>Von</th>
-			<th>Bis</th>
-			<th>Status</th>
-			<th>Aktionen</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr ng-repeat="b in bewilligungsListe.bewilligungen | filter:filter" ng-class="rowClassFor(b)">
-			<td>{{b.benutzerName}}</td>
-			<td>{{b.antragArt.bezeichnung}}</td>
-			<td>{{b.von|date:"dd.MM.yyyy"}}</td>
-			<td>{{b.bis|date:"dd.MM.yyyy"}}</td>
-			<td>{{b.bewilligungsStatus.bezeichnung}}</td>
-			<td>
-			   <a href="" ng-click="bewilligeAntrag(b)" class="btn btn-small btn-success">Bewilligen</a> 
-			   <a href="" ng-click="lehneAntragAb(b)" class="btn btn-small btn-danger">Ablehnen</a>
-			</td>
-		</tr>
-	</tbody>
+    <thead>
+    <tr>
+        <th>Antragsteller</th>
+        <th>Art</th>
+        <th>Von</th>
+        <th>Bis</th>
+        <th>Status</th>
+        <th>Aktionen</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="b in bewilligungsListe.bewilligungen | filter:filter" ng-class="rowClassFor(b)">
+        <td>{{b.benutzerName}}</td>
+        <td>{{b.antragArt.bezeichnung}}</td>
+        <td>{{b.von|date:"dd.MM.yyyy"}}</td>
+        <td>{{b.bis|date:"dd.MM.yyyy"}}</td>
+        <td>{{b.bewilligungsStatus.bezeichnung}}</td>
+        <td>
+            <a href="" ng-click="bewilligeAntrag(b)" class="btn btn-small btn-success"><i class="icon-ok"></i> Bewilligen</a>
+            <a href="" ng-click="lehneAntragAb(b)" class="btn btn-small btn-danger"><i class="icon-remove"></i> Ablehnen</a>
+            <a ng-href="#!/bewilligungen/{{b.id}}" class="btn btn-small btn-info">Details</a>
+        </td>
+    </tr>
+    </tbody>
 </table>

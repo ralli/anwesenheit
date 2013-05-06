@@ -1,5 +1,9 @@
 package de.fisp.anwesenheit.core.util;
 
+/**
+ * Exception, die signalsiert, dass der Benutzer eine Aktion ausführt, für die
+ * er nicht authorisiert ist.
+ */
 public class NotAuthorizedException extends RuntimeException {
   private static final long serialVersionUID = 1L;
 
@@ -17,5 +21,5 @@ public class NotAuthorizedException extends RuntimeException {
 
   public NotAuthorizedException(Throwable cause) {
     super(cause);
-  } 
+  }
 }

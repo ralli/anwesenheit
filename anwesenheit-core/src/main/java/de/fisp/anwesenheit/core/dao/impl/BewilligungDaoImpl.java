@@ -135,6 +135,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
   public List<Bewilligung> findByBewilligerAndFilter(String bewilligerId, BewilligungsFilter filter) {
     Criteria criteria = createFilterCriteria(filter);
     criteria.add(Restrictions.eq("benutzerId", bewilligerId));
+    criteria.add(Restrictions.or(Restrictions.ne("position", 2), Restrictions.ne("antrag.antragStatusId", "NEU")));
     List<Bewilligung> list = criteria.list();
     log.debug("findByBewilligerAndFilter({}, {}): count = {}", new Object[] { bewilligerId, filter, list.size() });
     return list;

@@ -1,0 +1,105 @@
+<h1>Bewilligungsdetails</h1>
+
+<div class="form-horizontal">
+    <legend>Bewilligung</legend>
+    <div class="control-group">
+        <div class="control-label">Bewilliger</div>
+        <div class="controls">
+            <span class="uneditable-input">{{bewilligung.bewilliger.vorname}} {{bewilligung.bewilliger.nachname}} ({{rolleForBewilliger(bewilligung)}})</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">Antragsteller</div>
+        <div class="controls">
+            <span class="uneditable-input">{{bewilligung.antragsteller.vorname}} {{bewilligung.antragsteller.nachname}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">Antragstatus</div>
+        <div class="controls">
+            <span class="uneditable-input">{{bewilligung.antragStatus.bezeichnung}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">Antragart</div>
+        <div class="controls">
+            <span class="uneditable-input">{{bewilligung.antragArt.bezeichnung}}</span>
+        </div>
+    </div>
+    <div class="control-group" ng-show="sonderUrlaubVisible()">
+        <div class="control-label">Sonderurlaubart</div>
+        <div class="controls">
+            <span class="uneditable-input">{{bewilligung.sonderUrlaubArt.bezeichnung}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">Von</div>
+        <div class="controls">
+            <span class="uneditable-input">{{bewilligung.von|date}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">Bis</div>
+        <div class="controls">
+            <span class="uneditable-input">{{bewilligung.bis|date}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="control-label">Anzahl Tage</div>
+        <div class="controls">
+            <span class="uneditable-input">{{bewilligung.anzahlTage|number}}</span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <a href="" class="btn btn-success" ng-click="bewilligeAntrag(bewilligung)" ><i class="icon-ok"></i> Bewilligen</a>
+            <a href="" class="btn btn-danger" ng-click="lehneAntragAb(bewilligung)"><i class="icon-remove"></i> Ablehnen</a>
+            <a href="#!/bewilligungen" class="btn">Zurück</a>
+        </div>
+    </div>
+</div>
+
+<h2>Anträge im gleichen Zeitraum</h2>
+
+<p class="well" ng-show="!hatGleichzeitigeAntraege()"><i class="icon-info-sign"></i> Es sind keine Anträge im gleichen Zeitraum vorhanden.</p>
+
+<table class="table table-bordered" ng-show="hatGleichzeitigeAntraege()">
+    <thead>
+    <tr>
+        <th>Antragsteller</th>
+        <th>Status</th>
+        <th>Art</th>
+        <th>Von</th>
+        <th>Bis</th>
+        <th>Anzahl Tage</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="a in bewilligung.gleichzeitigeAntraege" ng-class="rowClassForAntrag(a)">
+        <td>{{a.benutzer.vorname}} {{a.benutzer.nachname}}</td>
+        <td>{{a.antragStatus.bezeichnung}}</td>
+        <td>{{a.antragArt.bezeichnung}}</td>
+        <td>{{a.von|date}}</td>
+        <td>{{a.bis|date}}</td>
+        <td>{{a.anzahlTage|number}}</td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Bewilligungen</h2>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Bewilliger</th>
+        <th>Rolle</th>
+        <th>Bewilligungsstatus</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="b in bewilligung.bewilligungen" ng-class="rowClassFor(b)">
+        <td>{{b.benutzer.vorname}} {{b.benutzer.nachname}}</td>
+        <td>{{rolleForBewilliger(b)}}</td>
+        <td>{{b.bewilligungsStatus.bezeichnung}}</td>
+    </tr>
+    </tbody>
+</table>

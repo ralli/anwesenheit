@@ -2,6 +2,8 @@
 
 'use strict';
 
+/* global angular: false, $: false, _: false, toastr: false */
+
 var app = angular.module("antrag", [ "ngResource", "ui", "ui.bootstrap" ]);
 
 function rowClassForAntrag(antrag) {
@@ -38,9 +40,21 @@ function rowClassForBewilligung(b) {
     return result;
 }
 
+function rolleForBewilliger(b) {
+    if(b.position === 1) {
+      return "1. Unterschrift";
+    } else if(b.position === 2) {
+      return "2. Unterschrift";
+    }
+    else {
+      return "Zur Info";
+    }
+ }
+
 app.config([ '$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(false);
     $locationProvider.hashPrefix("!");
+    
     $routeProvider.when('/', {
         templateUrl: '/anwesenheit-web/resources/partials/home.html',
         controller: 'HomeCtrl'
@@ -65,6 +79,9 @@ app.config([ '$routeProvider', '$locationProvider', function ($routeProvider, $l
     }).when("/bewilligungen", {
         templateUrl: '/anwesenheit-web/resources/partials/bewilligungen/index.html',
         controller: 'ListBewilligungCtrl'
+    }).when("/bewilligungen/:id", {
+        templateUrl: '/anwesenheit-web/resources/partials/bewilligungen/show.html',
+        controller: 'ShowBewilligungCtrl'
     });
 } ]);
 
@@ -93,7 +110,7 @@ app.factory("benutzerService", [ '$resource', function ($resource) {
 }]);
 
 app.factory("bewilligungService", [ '$resource', function ($resource) {
-    return $resource("/anwesenheit-web/api/bewilligung/:id", {
+    var result = $resource("/anwesenheit-web/api/bewilligung/:id", {
         "id": "@id"
     }, {
         "update": {
@@ -103,6 +120,33 @@ app.factory("bewilligungService", [ '$resource', function ($resource) {
             "method": "DELETE"
         }
     });
+    result.bewilligeAntrag = function (b, successCallback) {
+        var updateCommand = {
+            'id': b.id,
+            'bewilligungsStatus': 'BEWILLIGT'
+        };
+        result.update(updateCommand,
+            successCallback,
+            function(data) {
+                toastr.error(data.message);
+            }
+        );
+      };
+
+      result.lehneAntragAb = function (b, successCallback) {
+        var updateCommand = {
+            'id': b.id,
+            'bewilligungsStatus': 'ABGELEHNT'
+        };
+        result.update(updateCommand,
+          successCallback,
+          function(data) {
+            toastr.error(data.message);
+          }
+        );
+      };
+
+    return result;
 }]);
 
 app.factory("bewilligungStatusService", [ '$resource', function ($resource) {
@@ -164,7 +208,7 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'ant
         };
 
         $scope.doDelete = function (antrag) {
-          antragService.remove({ "id": antrag.id }, 
+          antragService.remove({ "id": antrag.id },
             function (data) {
               $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function (a) {
                 return a.id === antrag.id;
@@ -226,7 +270,7 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'ant
             return antrag.antragStatus.antragStatus === "NEU";
         };
         $scope.antragStornierbar = function (antrag) {
-            return !$scope.antragAenderbar(antrag) && !(antrag.antragStatus.antragStatus === "STORNIERT");
+            return !($scope.antragAenderbar(antrag) || (antrag.antragStatus.antragStatus === "STORNIERT"));
         };
         $scope.antragKopierbar = function (antrag) {
             return !$scope.antragAenderbar(antrag);
@@ -291,7 +335,7 @@ app.controller("NewAntragCtrl", [ '$scope',
                 });
                 data.bewilligungen = [];
             }, function (data) {
-                console.log(data);
+                toastr.error("Fehler beim Lesen der Daten");
             });
         } else {
             /*
@@ -405,17 +449,8 @@ app.controller("NewAntragCtrl", [ '$scope',
                 $scope.antrag.anzahlTage = $filter("number")(data.arbeitsTage);
             });
         };
-        
-        $scope.titleForBewilliger = function(b) {
-           if(b.position === 1) {
-             return "1. Unterschrift";
-           } else if(b.position === 2) {
-             return "2. Unterschrift";             
-           }
-           else {
-             return "Zur Info";
-           }
-        };
+
+        $scope.titleForBewilliger = rolleForBewilliger;
     }]);
 
 app.controller("EditAntragCtrl", [
@@ -480,8 +515,8 @@ app.controller("EditAntragCtrl", [
                 bis: $filter("date")($scope.antrag.bis, "yyyy-MM-dd"),
                 anzahlTage: parseNumber($scope.antrag.anzahlTage)
             };
-            
-            antragService.update(antragsDaten, 
+
+            antragService.update(antragsDaten,
               function (data) {
                 $location.path("/antraege");
                 toastr.success("Ihre Änderungen wurden gespeichert");
@@ -499,10 +534,9 @@ app.controller("EditAntragCtrl", [
                 "benutzerId": bewilligerKey
             };
             bewilligungService.save(angular.toJson(command), function (data) {
-                console.log(data);
                 $scope.antrag.bewilligungen.push(data);
                 $scope.bewilligerKey = "";
-            }, function (data) {                
+            }, function (data) {
                 $scope.bewilligungError = data.data.message;
             });
         };
@@ -565,44 +599,57 @@ app.controller("ListBewilligungCtrl", [ '$scope', 'bewilligungService', 'bewilli
             });
         };
 
-        $scope.bewilligeAntrag = function (b) {
-          var updateCommand = {
-              'id': b.id,
-              'bewilligungsStatus': 'BEWILLIGT'
-          };
-          bewilligungService.update(updateCommand, 
-            function (data) {
-              b.bewilligungsStatus = data.bewilligungsStatus;
-              toastr.success("Der Antrag wurde bewilligt");
-            },
-            function(data) {
-              toastr.error(data.message);
-            }
-          );
+        $scope.bewilligeAntrag = function(b) {
+            bewilligungService.bewilligeAntrag(b, function(data) {
+                b.bewilligungsStatus = data.bewilligungsStatus;
+                toastr.success("Der Antrag wurde bewilligt");
+            });
         };
 
-        $scope.lehneAntragAb = function (b) {
-          var updateCommand = {
-              'id': b.id,
-              'bewilligungsStatus': 'ABGELEHNT'
-          };
-          bewilligungService.update(updateCommand, 
-            function (data) {
-              b.bewilligungsStatus = data.bewilligungsStatus;
-              toastr.success("Der Antrag wurde abgelehnt");
-            },
-            function(data) {
-              toastr.error(data.message);
-            }
-          );
+        $scope.lehneAntragAb = function(b) {
+            bewilligungService.lehneAntragAb(b, function(data) {
+                    b.bewilligungsStatus = data.bewilligungsStatus;
+                    toastr.success("Der Antrag wurde abgelehnt");
+            });
         };
 
         $scope.rowClassFor = rowClassForBewilligung;
+
         $scope.filter = bewilligungsListeData.filter;
+
         $scope.antragAenderbar = function (antrag) {
-            antrag.antragStatus.antragStatus === "NEU";
+            return antrag.antragStatus.antragStatus === "NEU";
         };
-        
+
         $scope.fetchBewilligungsListe();
     }
 ]);
+
+app.controller("ShowBewilligungCtrl", ['$scope', '$routeParams', '$location', 'bewilligungService', function($scope, $routeParams, $location, bewilligungService) {
+	$scope.bewilligung = bewilligungService.get({'id': $routeParams.id });
+	$scope.sonderUrlaubVisible = function() {
+		return $scope.bewilligung !== null && $scope.bewilligung.antragArt !== null && $scope.bewilligung.antragArt.antragArt === 'SONDER';
+	};
+
+    $scope.bewilligeAntrag = function(b) {
+        bewilligungService.bewilligeAntrag(b, function(data) {
+            $location.path("/bewilligungen");
+            toastr.success("Der Antrag wurde bewilligt");
+        });
+    };
+
+    $scope.lehneAntragAb = function(b) {
+        bewilligungService.lehneAntragAb(b, function(data) {
+            $location.path("/bewilligungen");
+            toastr.success("Der Antrag wurde abgelehnt");
+        });
+    };
+
+    $scope.hatGleichzeitigeAntraege = function() {
+        return $scope.bewilligung.gleichzeitigeAntraege !== null && $scope.bewilligung.gleichzeitigeAntraege.length > 0;
+    };
+
+    $scope.rowClassForAntrag = rowClassForAntrag;
+    $scope.rowClassFor = rowClassForBewilligung;
+    $scope.rolleForBewilliger = rolleForBewilliger;
+}]);

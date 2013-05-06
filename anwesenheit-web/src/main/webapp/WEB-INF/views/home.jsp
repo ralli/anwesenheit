@@ -22,8 +22,8 @@
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
-		      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-		<![endif]-->
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
 
 <!-- Le fav and touch icons -->
 <link rel="shortcut icon" href="<c:url value="/bootstrap/ico/favicon.ico" />" />
@@ -33,7 +33,7 @@
 		<div class="navbar-inner">
 			<div class="container">
 				<div class="container nav-collapse">
-					<a class="brand" href="<c:url value="#!" />"><i class="icon-home">&nbsp;</i>Anwesenheit</a>
+					<a class="brand" href="<c:url value="#!" />">Anwesenheit</a>
 					<ul class="nav">
 						<li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i>&nbsp;Anträge</a></li>
 						<li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i>&nbsp;Bewilligungen</a></li>
@@ -53,7 +53,6 @@
 		</div>
 	</div>
 	<div class="container">
-		<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 		<div ng-view></div>
 	</div>
 	<script src="<c:url value="webjars/jquery/2.0.0/jquery.min.js"/>"></script>

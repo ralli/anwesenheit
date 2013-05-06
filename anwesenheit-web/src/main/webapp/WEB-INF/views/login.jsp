@@ -55,13 +55,14 @@ body {
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-				<a class="brand" href="<c:url value="/" />"><i class="icon-home">&nbsp;</i>Anwesenheit</a>
+				<a class="brand" href="<c:url value="/" />">Anwesenheit</a>
 			</div>
 		</div>
 	</div>
 	<form:form id="login-form" cssClass="form-signin" modelAttribute="loginCommand"
-		method="POST">
+		method="POST" action="/login" >
 		<form:errors  cssClass="fieldError"/>
+		<form:hidden path="redirectUrl"/>
 		<h2 class="form-signin-heading">Anmeldung</h2>
 		<form:input path="login" placeholder="Benutzername" />  <form:errors path="login" element="div" cssClass="fieldError"/>
 		<form:password path="password" placeholder="Passwort" /> <form:errors path="password" element="div" cssClass="fieldError"/>
