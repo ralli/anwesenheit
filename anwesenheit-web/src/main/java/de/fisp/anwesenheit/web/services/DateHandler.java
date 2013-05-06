@@ -5,10 +5,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import de.fisp.anwesenheit.web.config.WebConfig;
 
 @Service
 public class DateHandler {
+
+	private static final Logger log = LoggerFactory.getLogger(DateHandler.class);
+
     /**
      * Converts a String in ISO-format to Date
      * 
@@ -18,6 +25,7 @@ public class DateHandler {
      *         String is given or the input string is invalid
      */
     public Date stringToDate(String dateString) {
+		log.info("Parsing date [{}]...", dateString);
         Date result = null;
         if (dateString == null)
             return null;
@@ -41,6 +49,8 @@ public class DateHandler {
         if (date == null)
             return null;
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-        return fmt.format(date);
+		String dateString = fmt.format(date);
+		log.info("converting date [{}]...", dateString);
+		return dateString;
     }
 }
