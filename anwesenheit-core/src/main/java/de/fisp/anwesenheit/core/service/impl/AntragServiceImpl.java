@@ -50,8 +50,7 @@ public class AntragServiceImpl implements AntragService {
   private SonderUrlaubArtDao sonderUrlaubArtDao;
 
   @Autowired
-  public AntragServiceImpl(AntragDao antragDao, BewilligungDao bewilligungDao, BenutzerDao benutzerDao,
-      SonderUrlaubArtDao sonderUrlaubArtDao, AntragHistorieDao antragHistorieDao, BerechtigungsService berechtigungsService) {
+	public AntragServiceImpl(AntragDao antragDao, BewilligungDao bewilligungDao, BenutzerDao benutzerDao, SonderUrlaubArtDao sonderUrlaubArtDao, AntragHistorieDao antragHistorieDao, BerechtigungsService berechtigungsService) {
     this.antragDao = antragDao;
     this.bewilligungDao = bewilligungDao;
     this.benutzerDao = benutzerDao;
@@ -65,11 +64,11 @@ public class AntragServiceImpl implements AntragService {
   public AntragsDaten findAntragById(String benutzerId, long id) {
     Antrag antrag = antragDao.findById(id);
     if (antrag == null) {
-      throw new NotFoundException("Antrag mit nicht gefunden");
+			throw new NotFoundException("Antrag nicht gefunden!");
     }
 
     if (!berechtigungsService.darfAntragAnsehen(antrag, benutzerId)) {
-      throw new NotAuthorizedException("Keine Berechtigung zur Anzeige des Antrags");
+			throw new NotAuthorizedException("Keine Berechtigung zur Anzeige des Antrags!");
     }
 
     return createAntragsDatenFromAntrag(id, antrag);
@@ -77,23 +76,18 @@ public class AntragServiceImpl implements AntragService {
 
   private AntragsDaten createAntragsDatenFromAntrag(long id, Antrag antrag) {
     BenutzerDaten benutzerDaten = createBenutzerDaten(antrag.getBenutzer());
-    AntragsDaten result = new AntragsDaten(antrag.getId(), antrag.getAntragArt(), antrag.getAntragStatus(),
-        antrag.getSonderUrlaubArt(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage(), benutzerDaten,
-        loadBewilligungsDaten(id));
-
+		AntragsDaten result = new AntragsDaten(antrag.getId(), antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getSonderUrlaubArt(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage(), benutzerDaten, loadBewilligungsDaten(id));
     log.debug("findAntragById({}) = {}", id, result);
     return result;
   }
 
   private BenutzerDaten createBenutzerDaten(Benutzer benutzer) {
-    BenutzerDaten benutzerDaten = new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(),
-        benutzer.getEmail());
+		BenutzerDaten benutzerDaten = new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(), benutzer.getEmail());
     return benutzerDaten;
   }
 
   private BewilligungsDaten createBewilligungsDaten(Bewilligung bewilligung) {
-    BewilligungsDaten result = new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(),
-        bewilligung.getBewilligungsStatus(), createBenutzerDaten(bewilligung.getBenutzer()));
+		BewilligungsDaten result = new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(), bewilligung.getBewilligungsStatus(), createBenutzerDaten(bewilligung.getBenutzer()));
     return result;
   }
 
@@ -139,8 +133,7 @@ public class AntragServiceImpl implements AntragService {
   }
 
   private AntragListeEintrag createAntragListeEintrag(Antrag antrag) {
-    AntragListeEintrag eintrag = new AntragListeEintrag(antrag.getId(), createBenutzerDaten(antrag.getBenutzer()),
-        antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage());
+		AntragListeEintrag eintrag = new AntragListeEintrag(antrag.getId(), createBenutzerDaten(antrag.getBenutzer()), antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage());
     return eintrag;
   }
 
@@ -168,7 +161,6 @@ public class AntragServiceImpl implements AntragService {
     }
     
     Antrag antrag = new Antrag();
-
     antrag.setBenutzerId(command.getBenutzerId());
     antrag.setAntragArtId(command.getAntragArt());
     updateSonderUrlaubArt(antrag, command.getAntragArt(), command.getSonderUrlaubArt(), command.getAnzahlTage());
@@ -272,8 +264,7 @@ public class AntragServiceImpl implements AntragService {
     antrag.setBis(command.getBis());
     updateSonderUrlaubArt(antrag, command.getAntragArt(), command.getSonderUrlaubArt(), command.getAnzahlTage());
     antragDao.update(antrag);
-    String message = String.format("Antrag geändert: Art: %s, Von: %s, Bis: %s, Tage: %s", command.getAntragArt(),
-        dateToString(command.getVon()), dateToString(command.getBis()), tageToString(command.getAnzahlTage()));
+		String message = String.format("Antrag geändert: Art: %s, Von: %s, Bis: %s, Tage: %s", command.getAntragArt(), dateToString(command.getVon()), dateToString(command.getBis()), tageToString(command.getAnzahlTage()));
     insertAntragHistorie(benutzerId, antrag, message);
     return createAntragsDatenFromAntrag(antragId, antragDao.findById(antragId));
   }
@@ -291,7 +282,9 @@ public class AntragServiceImpl implements AntragService {
     }
     List<Antrag> antraege = antragDao.findByBenutzerAndFilter(benutzerId, filter);
     AntragListe liste = createAntragListe(benutzer, antraege);
-    log.debug("findEigeneByFilter({}, {}) = {}", new Object[] { benutzerId, filter, liste });
+		log.debug("findEigeneByFilter({}, {}) = {}", new Object[] {
+				benutzerId, filter, liste
+		});
     return liste;
   }
 
@@ -310,7 +303,9 @@ public class AntragServiceImpl implements AntragService {
       antraege = antragDao.findByBewilligerAndFilter(benutzerId, filter);
     }
     AntragListe liste = createAntragListe(benutzer, antraege);
-    log.debug("findSichtbareByFilter({}, {}) = {}", new Object[] { benutzerId, filter, liste });
+		log.debug("findSichtbareByFilter({}, {}) = {}", new Object[] {
+				benutzerId, filter, liste
+		});
     return liste;
   }
 
@@ -337,7 +332,6 @@ public class AntragServiceImpl implements AntragService {
   }
 
   private AntragHistorieDaten createAntragHistorieDaten(AntragHistorie antragHistorie) {
-    return new AntragHistorieDaten(antragHistorie.getId(), antragHistorie.getAntragId(), antragHistorie.getBenutzerId(),
-        antragHistorie.getZeitpunkt(), antragHistorie.getBeschreibung(), createBenutzerDaten(antragHistorie.getBenutzer()));
+		return new AntragHistorieDaten(antragHistorie.getId(), antragHistorie.getAntragId(), antragHistorie.getBenutzerId(), antragHistorie.getZeitpunkt(), antragHistorie.getBeschreibung(), createBenutzerDaten(antragHistorie.getBenutzer()));
   } 
 }
