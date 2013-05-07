@@ -201,27 +201,6 @@
 				<artifactId>logback-classic</artifactId>
 				<version>0.9.18</version>
 			</dependency>
-
-			<!-- <dependency> -->
-			<!-- <groupId>org.slf4j</groupId> -->
-			<!-- <artifactId>jcl-over-slf4j</artifactId> -->
-			<!-- <version>1.6.4</version> -->
-			<!-- </dependency> -->
-			<!-- <dependency> -->
-			<!-- <groupId>org.slf4j</groupId> -->
-			<!-- <artifactId>slf4j-api</artifactId> -->
-			<!-- <version>1.7.2</version> -->
-			<!-- </dependency> -->
-			<!-- <dependency> -->
-			<!-- <groupId>org.slf4j</groupId> -->
-			<!-- <artifactId>slf4j-log4j12</artifactId> -->
-			<!-- <version>1.7.2</version> -->
-			<!-- </dependency> -->
-			<!-- <dependency> -->
-			<!-- <groupId>log4j</groupId> -->
-			<!-- <artifactId>log4j</artifactId> -->
-			<!-- <version>1.2.17</version> -->
-			<!-- </dependency> -->
 			<dependency>
 				<groupId>commons-lang</groupId>
 				<artifactId>commons-lang</artifactId>
@@ -275,7 +254,44 @@
 				<artifactId>velocity-tools</artifactId>
 				<version>2.0</version>
 			</dependency>
-		</dependencies>
+
+            <!-- Webjars -->
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>jquery</artifactId>
+                <version>2.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>jquery-ui</artifactId>
+                <version>1.10.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>2.3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>angularjs</artifactId>
+                <version>1.1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>angular-ui</artifactId>
+                <version>0.4.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>underscorejs</artifactId>
+                <version>1.4.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>font-awesome</artifactId>
+                <version>3.0.2</version>
+            </dependency>
+        </dependencies>
 	</dependencyManagement>
 	<modules>
 		<module>anwesenheit-core</module>

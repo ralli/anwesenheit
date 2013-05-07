@@ -81,7 +81,6 @@ public class LoginController {
 
   @RequestMapping(value = "/logoff", method = RequestMethod.GET)
   public String logoff() {
-
     RequestContextHolder.currentRequestAttributes().removeAttribute("benutzerId", RequestAttributes.SCOPE_SESSION);
     return "redirect:/login";
   }
