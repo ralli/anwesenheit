@@ -7,7 +7,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class AntragsFilter {
   private Date von;
   private Date bis;
-  private String antragsStatusFilter; // OFFEN, BEWILLIGT, ABGELEHNT (Default:
+  private String antragsStatusFilter; // OFFEN, BEWILLIGT, ABGELEHNT, STORNIERT (Default:
                                       // ALLE)
 
   public Date getVon() {

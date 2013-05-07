@@ -124,6 +124,8 @@ public class AntragDaoImpl implements AntragDao {
       criteria.add(Restrictions.eq("antragStatusId", "BEWILLIGT"));
     } else if ("ABGELEHNT".equals(filter.getAntragsStatusFilter())) {
       criteria.add(Restrictions.eq("antragStatusId", "ABGELEHNT"));
+    } else if("STORNIERT".equals(filter.getAntragsStatusFilter())) {
+        criteria.add(Restrictions.eq("antragStatusId", "STORNIERT"));
     }
 
     criteria.setFetchMode("benutzer", FetchMode.JOIN);

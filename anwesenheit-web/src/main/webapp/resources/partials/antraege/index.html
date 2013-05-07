@@ -53,6 +53,15 @@
                        ng-change="fetchAntragListe()" />
                 Abgelehnt
             </label>
+            <label class="radio inline">
+                <input type="radio"
+                       ng-model="filter.status"
+                       name="optionsRadios"
+                       id="optionsRadios5"
+                       value="STORNIERT"
+                       ng-change="fetchAntragListe()" />
+                Storniert
+            </label>
         </div>
     </div>
 </form>
