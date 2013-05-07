@@ -2,6 +2,7 @@ package de.fisp.anwesenheit.core.dao.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Query;
@@ -40,7 +41,7 @@ public class AntragDaoImpl implements AntragDao {
   public List<Antrag> findByBenutzerId(String benutzerId) {
     Query query = getCurrentSession()
         .createQuery(
-            "from Antrag a join fetch a.benutzer join fetch a.antragArt join fetch a.antragStatus where a.benutzerId=:benutzerId order by a.von");
+            "from Antrag a join fetch a.benutzer join fetch a.antragArt join fetch a.antragStatus where a.benutzerId=:benutzerId order by a.von asc");
     query.setString("benutzerId", benutzerId);
     @SuppressWarnings("unchecked")
     List<Antrag> list = query.list();
@@ -62,13 +63,18 @@ public class AntragDaoImpl implements AntragDao {
 
   @Override
   public List<Antrag> findByBenutzerIdAndBewilliger(String benutzerId, String bewilligerBenutzerId) {
-    final String hql = "select b.antrag from Bewilligung b join fetch b.antrag.benutzer join fetch b.antrag.antragArt join fetch b.antrag.antragStatus where b.antrag.benutzerId=:benutzerId and b.benutzerId=:bewilligerBenutzerId order by b.antrag.von";
+    final String hql = "select b.antrag from Bewilligung b " +
+            "join fetch b.antrag.benutzer " +
+            "join fetch b.antrag.antragArt " +
+            "join fetch b.antrag.antragStatus " +
+            "where b.antrag.benutzerId=:benutzerId and b.benutzerId=:bewilligerBenutzerId " +
+            "order by b.antrag.von asc";
     Query query = getCurrentSession().createQuery(hql);
     query.setString("benutzerId", benutzerId);
     query.setString("bewilligerBenutzerId", bewilligerBenutzerId);
     @SuppressWarnings("unchecked")
     List<Antrag> list = query.list();
-    log.debug("findByBenutzerIdAndBewilliger({},{}) = {}", new Object[] { benutzerId, bewilligerBenutzerId, list });
+    log.debug("findByBenutzerIdAndBewilliger({},{}) = {}", benutzerId, bewilligerBenutzerId, list);
     return list;
   }
 
@@ -101,13 +107,20 @@ public class AntragDaoImpl implements AntragDao {
     @SuppressWarnings("unchecked")
     List<Antrag> list = criteria.list();
 
-    log.debug("findByBenutzerAndFilter({}, {}): count = {}", new Object[] { benutzerId, filter, list.size() });
+    log.debug("findByBenutzerAndFilter({}, {}): count = {}", benutzerId, filter, list.size());
 
     return list;
   }
 
   private Criteria createFilterCriteria(AntragsFilter filter) {
     Criteria criteria = getCurrentSession().createCriteria(Antrag.class);
+
+    if (StringUtils.isNotBlank(filter.getBenutzerPattern())) {
+      String pattern = filteredBenutzerPattern(filter);
+      criteria.createAlias("benutzer", "ben");
+
+      criteria.add(Restrictions.or(Restrictions.ilike("ben.nachname", pattern), Restrictions.ilike("ben.vorname", pattern)));
+    }
 
     if (filter.getVon() != null) {
       criteria.add(Restrictions.ge("bis", filter.getVon()));
@@ -124,8 +137,8 @@ public class AntragDaoImpl implements AntragDao {
       criteria.add(Restrictions.eq("antragStatusId", "BEWILLIGT"));
     } else if ("ABGELEHNT".equals(filter.getAntragsStatusFilter())) {
       criteria.add(Restrictions.eq("antragStatusId", "ABGELEHNT"));
-    } else if("STORNIERT".equals(filter.getAntragsStatusFilter())) {
-        criteria.add(Restrictions.eq("antragStatusId", "STORNIERT"));
+    } else if ("STORNIERT".equals(filter.getAntragsStatusFilter())) {
+      criteria.add(Restrictions.eq("antragStatusId", "STORNIERT"));
     }
 
     criteria.setFetchMode("benutzer", FetchMode.JOIN);
@@ -133,6 +146,15 @@ public class AntragDaoImpl implements AntragDao {
     criteria.setFetchMode("antragStatus", FetchMode.JOIN);
 
     return criteria;
+  }
+
+  private String filteredBenutzerPattern(AntragsFilter filter) {
+    String pattern = StringUtils.remove(filter.getBenutzerPattern(), '?');
+    pattern = StringUtils.remove(pattern, '%');
+    pattern = StringUtils.lowerCase(pattern);
+    pattern = StringUtils.strip(pattern);
+    pattern = "%" + pattern + "%";
+    return pattern;
   }
 
   @Override
@@ -145,7 +167,7 @@ public class AntragDaoImpl implements AntragDao {
     List<Antrag> list = findByBenutzerAndFilter(bewilligerId, filter);
     list.addAll(criteria.list());
     
-    log.debug("findByBewilligerAndFilter({}, {}): count = {}", new Object[] { bewilligerId, filter, list.size() });
+    log.debug("findByBewilligerAndFilter({}, {}): count = {}", bewilligerId, filter, list.size());
     return list;
   }
 
@@ -155,7 +177,7 @@ public class AntragDaoImpl implements AntragDao {
     criteria.addOrder(Order.asc("von"));
     @SuppressWarnings("unchecked")
     List<Antrag> list = criteria.list();
-    log.debug("findByFilter({}): count = {}", new Object[] { filter, list.size() });
+    log.debug("findByFilter({}): count = {}", filter, list.size());
     return list;
   }
 }
