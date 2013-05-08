@@ -1,5 +1,6 @@
 package de.fisp.anwesenheit.core.dao.impl;
 
+import de.fisp.anwesenheit.core.domain.AntragUebersichtFilter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,9 @@ import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -89,6 +93,21 @@ public class AntragDaoTest {
     filter.setBis(testDataFactory.createDate(13, 11, 1969));
     filter.setAntragsStatusFilter("OFFEN");
     antragDao.findByFilter(filter);
+  }
+
+  @Test
+  public void testAntragUebersicht() {
+    AntragUebersichtFilter filter = new AntragUebersichtFilter();
+    List<String> statusFilter = new ArrayList<String>();
+    statusFilter.add("OFFEN");
+    statusFilter.add("BEWILLIGT");
+    statusFilter.add("ABGELEHNT");
+    statusFilter.add("STORNIERT");
+    filter.setStatusList(statusFilter);
+    filter.setAntragsteller("Ju");
+    filter.setVon(testDataFactory.createDate(13, 11, 1969));
+    filter.setBis(testDataFactory.createDate(13, 11, 1969));
+    antragDao.findByBewilligerAndUebersichtFilter("bewilliger", filter);
   }
 }
 

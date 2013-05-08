@@ -2,6 +2,7 @@ package de.fisp.anwesenheit.core.dao;
 
 import java.util.List;
 
+import de.fisp.anwesenheit.core.domain.AntragUebersichtFilter;
 import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.entities.Antrag;
 
@@ -76,6 +77,24 @@ public interface AntragDao {
    * @return Die Liste der gefundenen Anträge
    */
   List<Antrag> findByBenutzerIdAndBewilliger(String benutzerId, String bewilligerBenutzerId);
+
+  /**
+   * Liefert alle Antraege der Antragsübersicht, die einem Filterkriterium entsprechen
+   *
+   * @param filter das Filterkriterium
+   * @return Die Liste der gefundenen Anträge
+   */
+  List<Antrag> findByUebersichtFilter(AntragUebersichtFilter filter);
+
+  /**
+   * Liefert alle Anträge der Antragsübersicht, die einem Filterkriterium entsprechen und
+   * für den angegebenen Bewilliger sichtbar sind.
+   *
+   * @param bewilligerBenutzerId Die Benutzerkennung des Bewilligers
+   * @param filter Das Filterkriterium
+   * @return Die Liste der gefundenen Anträge
+   */
+  List<Antrag> findByBewilligerAndUebersichtFilter(String bewilligerBenutzerId, AntragUebersichtFilter filter);
 
   /**
    * Speichert einen neuen Antrag in der Datenbank.

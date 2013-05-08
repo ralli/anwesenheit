@@ -110,16 +110,12 @@ app.factory("benutzerService", [ '$resource', function ($resource) {
 }]);
 
 app.factory("bewilligungService", [ '$resource', function ($resource) {
-    var result = $resource("/anwesenheit-web/api/bewilligung/:id", {
-        "id": "@id"
-    }, {
-        "update": {
-            "method": "PUT"
-        },
-        "remove": {
-            "method": "DELETE"
-        }
-    });
+    var result = $resource("/anwesenheit-web/api/bewilligung/:id",
+        { "id": "@id" },
+        {
+            "update": { "method": "PUT" },
+            "remove": { "method": "DELETE" }
+        });
     result.bewilligeAntrag = function (b, successCallback) {
         var updateCommand = {
             'id': b.id,
@@ -189,6 +185,18 @@ app.factory("bewilligungsListeData", function () {
     };
 });
 
+app.factory("antragUebersichtData", function() {
+    return {
+        "filter": {
+            "zeitFilter": "AKTUELL",
+            "statusOffen": true,
+            "statusBewilligt": true,
+            "statusAbgelehnt": true,
+            "statusStorniert": true
+        }
+    };
+});
+
 app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'antragService', 'antragListeData',
     function ($scope, $filter, $dialog, $http, antragService, antragListeData) {
         $scope.fetchAntragListe = function () {
@@ -208,27 +216,29 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'ant
         };
 
         $scope.doDelete = function (antrag) {
-          antragService.remove({ "id": antrag.id },
-            function (data) {
-              $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function (a) {
-                return a.id === antrag.id;
-              });
-              toastr.success("Ihr Antrag wurde gelöscht");
-            },
-            function(data) {
-              toastr.error(data.message);
-            }
-          );
+            antragService.remove({ "id": antrag.id },
+                function (/* data */) {
+                    $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function (a) {
+                        return a.id === antrag.id;
+                    });
+                    toastr.success("Ihr Antrag wurde gelöscht");
+                },
+                function (data) {
+                    toastr.error(data.message);
+                }
+            );
         };
 
         $scope.doStorno = function (antrag) {
             $http.put('/anwesenheit-web/api/antraege/' + antrag.id + "/storno").success(function (data) {
+                //noinspection JSPrimitiveTypeWrapperUsage
                 antrag.antragStatus.antragStatus = "STORNIERT";
+                //noinspection JSPrimitiveTypeWrapperUsage
                 antrag.antragStatus.bezeichnung = "Storniert";
                 toastr.success("Ihr Antrag wurde storniert");
-            }).error(function(data) {
-              toastr.error(data.message);
-            });
+            }).error(function (data) {
+                    toastr.error(data.message);
+                });
         };
 
         $scope.deleteAntrag = function (antrag) {
@@ -302,9 +312,31 @@ function parseNumber(s) {
     return parseFloat(x);
 }
 
-app.controller("AntragUebersichtCtrl", [ '$scope', '$resource', 'antragUebersicht', function ($scope, $resource, antragUebersicht) {
-    $scope.antragListe = antragUebersicht.get({});
+app.controller("AntragUebersichtCtrl", [ '$scope', '$resource', '$filter', 'antragUebersicht', "antragUebersichtData", function ($scope, $resource, $filter, antragUebersicht, antragUebersichtData) {
     $scope.rowClassFor = rowClassForAntrag;
+    $scope.fetchUebersicht = function() {
+        var params = {};
+        if("AKTUELL" === $scope.filter.zeitFilter) {
+            params.von = $filter("date")(new Date(), "yyyy-MM-dd");
+            params.bis = params.von;
+        } else if("ZWOELF_MONATE" === $scope.filter.zeitFilter) {
+            var von = new Date();
+            von.setMonth(von.getMonth() - 12);
+            params.von = $filter("date")(von, "yyyy-MM-dd");
+        }
+        else {
+            /* alle anzeigen */
+        }
+        params.statusOffen = $scope.filter.statusOffen;
+        params.statusBewilligt = $scope.filter.statusBewilligt;
+        params.statusAbgelehnt = $scope.filter.statusAbgelehnt;
+        params.statusStorniert = $scope.filter.statusStorniert;
+        antragUebersicht.get(params, function(data) {
+            $scope.antragListe = data;
+        });
+    };
+    $scope.filter = antragUebersichtData.filter;
+    $scope.fetchUebersicht();
 } ]);
 
 app.controller("NewAntragCtrl", [ '$scope',

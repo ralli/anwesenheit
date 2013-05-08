@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.fisp.anwesenheit.core.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,6 @@ import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.dao.BewilligungDao;
 import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
-import de.fisp.anwesenheit.core.domain.AntragHistorieDaten;
-import de.fisp.anwesenheit.core.domain.AntragListe;
-import de.fisp.anwesenheit.core.domain.AntragListeEintrag;
-import de.fisp.anwesenheit.core.domain.AntragsDaten;
-import de.fisp.anwesenheit.core.domain.AntragsFilter;
-import de.fisp.anwesenheit.core.domain.BenutzerDaten;
-import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
-import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
-import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.AntragHistorie;
 import de.fisp.anwesenheit.core.entities.Benutzer;
@@ -288,7 +280,7 @@ public class AntragServiceImpl implements AntragService {
 
     @Override
     @Transactional
-    public AntragListe findSichtbareByFilter(String benutzerId, AntragsFilter filter) {
+    public AntragListe findSichtbareByFilter(String benutzerId, AntragUebersichtFilter filter) {
         Benutzer benutzer = benutzerDao.findById(benutzerId);
         if (benutzer == null) {
             throw new NotFoundException(String.format("Benutzer %s nicht gefunden", benutzerId));
@@ -296,9 +288,9 @@ public class AntragServiceImpl implements AntragService {
         boolean sonderberechtigungen = berechtigungsService.hatSonderBerechtigungen(benutzer);
         List<Antrag> antraege;
         if (sonderberechtigungen) {
-            antraege = antragDao.findByFilter(filter);
+            antraege = antragDao.findByUebersichtFilter(filter);
         } else {
-            antraege = antragDao.findByBewilligerAndFilter(benutzerId, filter);
+            antraege = antragDao.findByBewilligerAndUebersichtFilter(benutzerId, filter);
         }
         AntragListe liste = createAntragListe(benutzer, antraege);
         log.debug("findSichtbareByFilter({}, {}) = {}", benutzerId, filter, liste);

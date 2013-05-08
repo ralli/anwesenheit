@@ -2,12 +2,7 @@ package de.fisp.anwesenheit.core.service;
 
 import java.util.List;
 
-import de.fisp.anwesenheit.core.domain.AntragHistorieDaten;
-import de.fisp.anwesenheit.core.domain.AntragListe;
-import de.fisp.anwesenheit.core.domain.AntragsDaten;
-import de.fisp.anwesenheit.core.domain.AntragsFilter;
-import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
-import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
+import de.fisp.anwesenheit.core.domain.*;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
 
@@ -85,7 +80,7 @@ public interface AntragService {
    * @throws NotFoundException
    *           Wenn der Benutzer nicht gefunden wurde
    */
-  AntragListe findSichtbareByFilter(String benutzerId, AntragsFilter filter);
+  AntragListe findSichtbareByFilter(String benutzerId, AntragUebersichtFilter filter);
 
   /**
    * Legt einen neuen Antrag in der Datenbank an.
