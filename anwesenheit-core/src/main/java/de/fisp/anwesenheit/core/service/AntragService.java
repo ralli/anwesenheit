@@ -94,7 +94,7 @@ public interface AntragService {
    * 
    * @throws NotFoundException
    *           wenn ein Eintrag nicht gefunden wurde
-   * @throws NotValidException
+   * @throws de.fisp.anwesenheit.core.util.NotValidException
    *           wenn der Antrag inkonsistente oder falsche Daten enthält
    * @throws NotAuthorizedException
    *           wenn der aktuelle Benutzer den Antrag nicht anlegen darf
@@ -115,7 +115,7 @@ public interface AntragService {
    * 
    * @throws NotFoundException
    * @throws NotAuthorizedException
-   * @throws NotValidException
+   * @throws de.fisp.anwesenheit.core.util.NotValidException
    */
   AntragsDaten updateAntrag(String benutzerId, long antragId, UpdateAntragCommand command);
 
@@ -143,12 +143,12 @@ public interface AntragService {
    *          Der Antrag, der gelöscht werden soll
    * @throws NotFoundException
    *           wenn ein Eintrag nicht gefunden wurde
-   * @throws NotValidException
+   * @throws de.fisp.anwesenheit.core.util.NotValidException
    *           wenn der Antrag nicht gelöscht werden darf
    * @throws NotAuthorizedException
    *           wenn der aktuelle Benutzer den Antrag nicht löschen darf
    */
-  boolean deleteAntrag(String benutzerId, long antragId);
+  void deleteAntrag(String benutzerId, long antragId);
 
   /**
    * Storniert einen Antrag

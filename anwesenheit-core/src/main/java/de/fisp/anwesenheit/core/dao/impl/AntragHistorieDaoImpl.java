@@ -15,7 +15,7 @@ import de.fisp.anwesenheit.core.entities.AntragHistorie;
 
 @Service
 public class AntragHistorieDaoImpl implements AntragHistorieDao {
-  private Logger logger = LoggerFactory.getLogger(AntragHistorieDaoImpl.class);
+  private static final Logger logger = LoggerFactory.getLogger(AntragHistorieDaoImpl.class);
   @Autowired
   private SessionFactory sessionFactory;
 

@@ -23,7 +23,8 @@ import de.fisp.anwesenheit.core.entities.Antrag;
 
 @Service
 public class AntragDaoImpl implements AntragDao {
-  private Logger log = LoggerFactory.getLogger(AntragDaoImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(AntragDaoImpl.class);
+
   @Autowired
   private SessionFactory sessionFactory;
 

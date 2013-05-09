@@ -15,9 +15,9 @@ import de.fisp.anwesenheit.core.entities.FeiertagDefinition;
 
 @Service
 public class FeiertagDefinitionDaoImpl implements FeiertagDefinitionDao {
+  private static final Logger log = LoggerFactory.getLogger(FeiertagDaoImpl.class);
   @Autowired
   private SessionFactory sessionFactory;
-  private Logger log = LoggerFactory.getLogger(FeiertagDaoImpl.class);
 
   public void setSessionFactory(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;

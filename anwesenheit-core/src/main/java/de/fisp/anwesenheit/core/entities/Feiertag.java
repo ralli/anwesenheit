@@ -87,48 +87,37 @@ public class Feiertag implements Serializable {
 		this.anteilArbeitszeit = anteilArbeitszeit;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((datum == null) ? 0 : datum.hashCode());
-		result = prime * result
-				+ ((definitionId == null) ? 0 : definitionId.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Feiertag other = (Feiertag) obj;
-		if (datum == null) {
-			if (other.datum != null)
-				return false;
-		} else if (!datum.equals(other.datum))
-			return false;
-		if (definitionId == null) {
-			if (other.definitionId != null)
-				return false;
-		} else if (!definitionId.equals(other.definitionId))
-			return false;
-		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
+    Feiertag feiertag = (Feiertag) o;
 
-	@Override
+    if (Double.compare(feiertag.anteilArbeitszeit, anteilArbeitszeit) != 0) return false;
+    if (id != feiertag.id) return false;
+    if (datum != null ? !datum.equals(feiertag.datum) : feiertag.datum != null) return false;
+    if (definitionId != null ? !definitionId.equals(feiertag.definitionId) : feiertag.definitionId != null)
+      return false;
+    if (name != null ? !name.equals(feiertag.name) : feiertag.name != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result;
+    long temp;
+    result = id;
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    result = 31 * result + (definitionId != null ? definitionId.hashCode() : 0);
+    result = 31 * result + (datum != null ? datum.hashCode() : 0);
+    temp = Double.doubleToLongBits(anteilArbeitszeit);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    return result;
+  }
+
+  @Override
 	public String toString() {
 		return new ToStringBuilder(this).append(id).append(name).append(datum)
 				.toString();

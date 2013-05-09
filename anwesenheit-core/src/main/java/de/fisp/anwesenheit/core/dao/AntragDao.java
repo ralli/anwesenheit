@@ -71,8 +71,8 @@ public interface AntragDao {
    * Liefert alle Anträge zu einem bestimmten Benutzer, bei dem der aktuelle
    * Benutzer ein Bewilliger ist.
    * 
-   * @param benutzerId
-   * @param bewilligerBenutzerId
+   * @param benutzerId Die Benutzerkennung des Benutzers, zu dem die Anträge geliefert werden sollen
+   * @param bewilligerBenutzerId Die Benutzerkennung des Bewilligers
    * 
    * @return Die Liste der gefundenen Anträge
    */

@@ -92,15 +92,13 @@ public class BewilligungServiceImpl implements BewilligungService {
   }
 
   private BenutzerDaten createBenutzerDaten(Benutzer benutzer) {
-    BenutzerDaten benutzerDaten = new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(),
+    return new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(),
         benutzer.getEmail());
-    return benutzerDaten;
   }
 
   private BewilligungsDaten createBewilligungsDaten(Bewilligung bewilligung) {
-    BewilligungsDaten result = new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(),
+    return new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(),
         bewilligung.getBewilligungsStatus(), createBenutzerDaten(bewilligung.getBenutzer()));
-    return result;
   }
 
   @Override
@@ -157,10 +155,9 @@ public class BewilligungServiceImpl implements BewilligungService {
 
   private BewilligungsListeEintrag createBewilligungsListeEintrag(Bewilligung bewilligung) {
     Antrag antrag = bewilligung.getAntrag();
-    BewilligungsListeEintrag eintrag = new BewilligungsListeEintrag(bewilligung.getId(), bewilligung.getBewilligungsStatus(),
+    return new BewilligungsListeEintrag(bewilligung.getId(), bewilligung.getBewilligungsStatus(),
         bewilligung.getAntragId(), antrag.getAntragArt(), antrag.getAntragStatus(), createBenutzerDaten(antrag.getBenutzer()),
         antrag.getVon(), antrag.getBis());
-    return eintrag;
   }
 
   @Override
@@ -175,8 +172,7 @@ public class BewilligungServiceImpl implements BewilligungService {
       throw new NotAuthorizedException("Keine Ausreichenden Berechtigungen zum Anzeigen der Bewilligungen");
     }
     List<Bewilligung> list = bewilligungDao.findByBewilliger(benutzerId);
-    BewilligungListe result = createBewilligungsListe(benutzer, list);
-    return result;
+    return createBewilligungsListe(benutzer, list);
   }
 
   private void insertAntragHistorie(String benutzerId, long antragId, String message) {
@@ -252,9 +248,8 @@ public class BewilligungServiceImpl implements BewilligungService {
     aktualisiereAntragStatus(bewilligung.getAntrag());
 
     bewilligung.setBewilligungsStatus(bewilligungsStatus);
-    BewilligungsDaten daten = createBewilligungsDaten(bewilligung);
 
-    return daten;
+    return createBewilligungsDaten(bewilligung);
   }
 
   @Override
@@ -270,8 +265,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     } else {
       list = bewilligungDao.findByBewilligerAndFilter(currentUserId, filter);
     }
-    BewilligungListe result = createBewilligungsListe(benutzer, list);
-    return result;
+    return createBewilligungsListe(benutzer, list);
   }
 
   private BewilligungListe createBewilligungsListe(Benutzer benutzer, List<Bewilligung> list) {
@@ -280,8 +274,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     for (Bewilligung b : list) {
       eintraege.add(createBewilligungsListeEintrag(b));
     }
-    BewilligungListe result = new BewilligungListe(benutzerDaten, eintraege);
-    return result;
+    return new BewilligungListe(benutzerDaten, eintraege);
   }
 
   @Override
@@ -324,13 +317,11 @@ public class BewilligungServiceImpl implements BewilligungService {
         gleichzeitigeEintraege.add(eintrag);
       }
     }
-    
-    BewilligungsDetails result = new BewilligungsDetails(bewilligung.getId(), antrag.getId(), bewilligung.getPosition(),
-        createBenutzerDaten(antrag.getBenutzer()), createBenutzerDaten(bewilligung.getBenutzer()), antrag.getVon(),
-        antrag.getBis(), antrag.getAnzahlTage(), antrag.getAntragStatus(), antrag.getAntragArt(), antrag.getSonderUrlaubArt(),
-        bewilligung.getBewilligungsStatus(), daten, gleichzeitigeEintraege);
-    
-    return result;
+
+    return new BewilligungsDetails(bewilligung.getId(), antrag.getId(), bewilligung.getPosition(),
+            createBenutzerDaten(antrag.getBenutzer()), createBenutzerDaten(bewilligung.getBenutzer()), antrag.getVon(),
+            antrag.getBis(), antrag.getAnzahlTage(), antrag.getAntragStatus(), antrag.getAntragArt(), antrag.getSonderUrlaubArt(),
+            bewilligung.getBewilligungsStatus(), daten, gleichzeitigeEintraege);
   }
 
   private boolean isAktiverAntrag(Antrag a) {

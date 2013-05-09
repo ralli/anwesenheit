@@ -21,7 +21,7 @@ import de.fisp.anwesenheit.core.service.MailService;
 
 @Service
 public class MailServiceImpl implements MailService {
-  private static Logger log = LoggerFactory.getLogger(MailServiceImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(MailServiceImpl.class);
   private String host;
 
   public String getHost() {

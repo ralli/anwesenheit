@@ -15,7 +15,7 @@ import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 
 @Service
 public class BewilligungsStatusDaoImpl implements BewilligungsStatusDao {
-  private Logger log = LoggerFactory.getLogger(AntragStatusDaoImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(AntragStatusDaoImpl.class);
   @Autowired
   private SessionFactory sessionFactory;
 

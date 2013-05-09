@@ -24,9 +24,9 @@ import de.fisp.anwesenheit.core.util.NotFoundException;
 
 @Service
 public class LoginServiceImpl implements LoginService {
+  private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
   private BenutzerDao benutzerDao;
   private PasswordService passwordService;
-  private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
   // private static final Logger logger =
   // LoggerFactory.getLogger(LoginServiceImpl.class);
@@ -44,26 +44,18 @@ public class LoginServiceImpl implements LoginService {
     return String.format("%s\\%s", domain, user);
   }
 
-  public boolean loginViaLDAP(LoginCommand loginData) {
+  private boolean loginViaLDAP(LoginCommand loginData) {
     try {
-      // Set up the environment for creating the initial context
       Hashtable<String, String> env = new Hashtable<String, String>();
       env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
       env.put(Context.PROVIDER_URL, PROVIDER_URL);
-      //
+
       env.put(Context.SECURITY_AUTHENTICATION, "simple");
       env.put(Context.SECURITY_PRINCIPAL, getPrincipal(DOMAIN, loginData.getLogin()));
       env.put(Context.SECURITY_CREDENTIALS, loginData.getPassword());
 
-      // Create the initial context
-
       DirContext ctx = new InitialDirContext(env);
-      // boolean result = ctx != null;
-      System.out.println(ctx.toString());
-
-      if (ctx != null)
-        ctx.close();
-
+      ctx.close();
       return true;
     } catch (Exception ex) {
       logger.error("loginViaLDAP", ex);

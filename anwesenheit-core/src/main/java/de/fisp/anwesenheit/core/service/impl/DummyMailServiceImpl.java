@@ -10,7 +10,7 @@ public class DummyMailServiceImpl implements MailService {
 
   @Override
   public void sendeMail(String subject, String text, String from, String adressen) {
-    logger.debug("sendeMail(subject={}, from={}, adressen={}, text={})", new Object[] { subject, from, adressen, text });
+    logger.debug("sendeMail(subject={}, from={}, adressen={}, text={})", subject, from, adressen, text);
   }
 
 }

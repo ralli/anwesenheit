@@ -74,13 +74,11 @@ public class AntragServiceImpl implements AntragService {
     }
 
     private BenutzerDaten createBenutzerDaten(Benutzer benutzer) {
-        BenutzerDaten benutzerDaten = new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(), benutzer.getEmail());
-        return benutzerDaten;
+      return new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(), benutzer.getEmail());
     }
 
     private BewilligungsDaten createBewilligungsDaten(Bewilligung bewilligung) {
-        BewilligungsDaten result = new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(), bewilligung.getBewilligungsStatus(), createBenutzerDaten(bewilligung.getBenutzer()));
-        return result;
+      return new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(), bewilligung.getBewilligungsStatus(), createBenutzerDaten(bewilligung.getBenutzer()));
     }
 
     private List<BewilligungsDaten> loadBewilligungsDaten(long antragId) {
@@ -119,14 +117,12 @@ public class AntragServiceImpl implements AntragService {
             eintraege.add(eintrag);
         }
         BenutzerDaten benutzerDaten = createBenutzerDaten(benutzer);
-        AntragListe liste = new AntragListe(benutzerDaten, eintraege);
 
-        return liste;
+      return new AntragListe(benutzerDaten, eintraege);
     }
 
     private AntragListeEintrag createAntragListeEintrag(Antrag antrag) {
-        AntragListeEintrag eintrag = new AntragListeEintrag(antrag.getId(), createBenutzerDaten(antrag.getBenutzer()), antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage());
-        return eintrag;
+      return new AntragListeEintrag(antrag.getId(), createBenutzerDaten(antrag.getBenutzer()), antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage());
     }
 
     private void updateSonderUrlaubArt(Antrag antrag, String antragArtId, String sonderUrlaubArtId, double anzahlTage) {
@@ -194,7 +190,7 @@ public class AntragServiceImpl implements AntragService {
 
     @Override
     @Transactional
-    public boolean deleteAntrag(String benutzerId, long antragId) {
+    public void deleteAntrag(String benutzerId, long antragId) {
         Antrag antrag = antragDao.findById(antragId);
         if (antrag == null) {
             throw new NotFoundException("Antrag nicht gefunden");
@@ -209,7 +205,6 @@ public class AntragServiceImpl implements AntragService {
         }
 
         antragDao.delete(antrag);
-        return true;
     }
 
     @Override

@@ -43,25 +43,23 @@ public class BenutzerRolle implements Serializable {
   }
 
   @Override
-  public int hashCode() {
-    int result = 0;
-    if (benutzerId != null)
-      result += benutzerId.hashCode();
-    if (rolle != null)
-      result ^= rolle.hashCode();
-    return result;
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    BenutzerRolle that = (BenutzerRolle) o;
+
+    if (!benutzerId.equals(that.benutzerId)) return false;
+    if (!rolle.equals(that.rolle)) return false;
+
+    return true;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof BenutzerRolle))
-      return false;
-    BenutzerRolle other = (BenutzerRolle) obj;
-    if (benutzerId == null && other.benutzerId != null)
-      return false;
-    if (rolle == null && other.rolle != null)
-      return false;
-    return benutzerId.equals(other.benutzerId) && rolle.equals(other.rolle);
+  public int hashCode() {
+    int result = benutzerId.hashCode();
+    result = 31 * result + rolle.hashCode();
+    return result;
   }
 
   public Benutzer getBenutzer() {

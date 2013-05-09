@@ -15,7 +15,7 @@ import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 
 @Service
 public class SonderUrlaubArtDaoImpl implements SonderUrlaubArtDao {
-  private Logger log = LoggerFactory.getLogger(SonderUrlaubArtDaoImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(SonderUrlaubArtDaoImpl.class);
   @Autowired
   private SessionFactory sessionFactory;
 
