@@ -34,7 +34,14 @@
           <li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i> Bewilligungen</a></li>
           <li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i> Übersicht</a></li>
         </ul>
-        <b:currentUserName id="current-user-name">Username</b:currentUserName>
+        <ul class="nav pull-right">
+          <li class="navbar-text">
+            <b:currentUserName id="current-user-name">Username</b:currentUserName>
+          </li>
+          <li>
+            <a href="<c:url value="/logoff" />"><i class="icon-off"></i> Abmelden</a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
