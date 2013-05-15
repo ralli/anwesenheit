@@ -25,7 +25,6 @@ import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 
 @Configuration
 public class HibernateConfig {
-
 	@Bean
 	public FactoryBean<SessionFactory> sessionFactory(DataSource dataSource) {
 		LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();

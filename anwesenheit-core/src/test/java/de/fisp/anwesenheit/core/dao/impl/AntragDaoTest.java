@@ -1,7 +1,7 @@
 package de.fisp.anwesenheit.core.dao.impl;
 
-import junit.framework.Assert;
-
+import de.fisp.anwesenheit.core.domain.AntragUebersichtFilter;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,11 @@ import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
@@ -42,16 +47,16 @@ public class AntragDaoTest {
     Antrag antrag = testDataFactory.createAntrag(antragArt, benutzerId);
     antragDao.insert(antrag);
     long id = antrag.getId();
-    Assert.assertNotSame(0L, id);
+    assertNotSame(0L, id);
     antrag = antragDao.findById(id);
-    Assert.assertNotNull(antrag);
+    assertNotNull(antrag);
     antrag.setBis(testDataFactory.createDate(13, 11, 2013));
     antragDao.update(antrag);
     antrag = antragDao.findById(id);
-    Assert.assertNotNull(antrag);
+    assertNotNull(antrag);
     antragDao.delete(antrag);
     antrag = antragDao.findById(id);
-    Assert.assertNull(antrag);
+    assertNull(antrag);
   }
 
   @Test
@@ -73,6 +78,7 @@ public class AntragDaoTest {
   public void testFindByBewilligerAndFilter() {
     AntragsFilter filter = new AntragsFilter();
     final String benutzerId = "test";
+    filter.setBenutzerPattern("ju");
     filter.setVon(testDataFactory.createDate(13, 11, 1969));
     filter.setBis(testDataFactory.createDate(13, 11, 1969));
     filter.setAntragsStatusFilter("OFFEN");
@@ -82,10 +88,26 @@ public class AntragDaoTest {
   @Test
   public void testFindByFilter() {
     AntragsFilter filter = new AntragsFilter();
+    filter.setBenutzerPattern("ju");
     filter.setVon(testDataFactory.createDate(13, 11, 1969));
     filter.setBis(testDataFactory.createDate(13, 11, 1969));
     filter.setAntragsStatusFilter("OFFEN");
     antragDao.findByFilter(filter);
+  }
+
+  @Test
+  public void testAntragUebersicht() {
+    AntragUebersichtFilter filter = new AntragUebersichtFilter();
+    List<String> statusFilter = new ArrayList<String>();
+    statusFilter.add("OFFEN");
+    statusFilter.add("BEWILLIGT");
+    statusFilter.add("ABGELEHNT");
+    statusFilter.add("STORNIERT");
+    filter.setStatusList(statusFilter);
+    filter.setAntragsteller("Ju");
+    filter.setVon(testDataFactory.createDate(13, 11, 1969));
+    filter.setBis(testDataFactory.createDate(13, 11, 1969));
+    antragDao.findByBewilligerAndUebersichtFilter("bewilliger", filter);
   }
 }
 

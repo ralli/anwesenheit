@@ -18,7 +18,7 @@ public class Feiertagsberechnung {
   private Date getOstersonntag(int year) {
     /* ............................ 1. Ostersonntag */
     Calendar cal = Calendar.getInstance();
-    cal.set(year, 2, 22, 0, 0, 0);
+    cal.set(year, Calendar.MARCH, 22, 0, 0, 0);
 
     int val1 = (19 * (year % 19) + 24) % 30;
     int val2 = (2 * (year % 4) + 4 * (year % 7) + 6 * val1 + 5) % 7;
@@ -28,7 +28,7 @@ public class Feiertagsberechnung {
 
   private Date getZweiterSonntagImMai(int year) {
     Calendar cal = Calendar.getInstance();
-    cal.set(year, 4, 8, 0, 0, 0);
+    cal.set(year, Calendar.MAY, 8, 0, 0, 0);
     while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY)
       cal.add(Calendar.DATE, 1);
     return cal.getTime();
@@ -36,7 +36,7 @@ public class Feiertagsberechnung {
 
   private Date getDritterDienstagImNovember(int year) {
     Calendar cal = Calendar.getInstance();
-    cal.set(year, 10, 15, 0, 0, 0);
+    cal.set(year, Calendar.NOVEMBER, 15, 0, 0, 0);
     while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.TUESDAY)
       cal.add(Calendar.DATE, 1);
     return cal.getTime();
@@ -44,7 +44,7 @@ public class Feiertagsberechnung {
 
   private Date getErsterMontagImJuli(int year) {
     Calendar cal = Calendar.getInstance();
-    cal.set(year, 6, 1, 0, 0, 0);
+    cal.set(year, Calendar.JULY, 1, 0, 0, 0);
     while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY)
       cal.add(Calendar.DATE, 1);
     return cal.getTime();

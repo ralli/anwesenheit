@@ -15,7 +15,7 @@ import de.fisp.anwesenheit.core.entities.Rolle;
 
 @Service
 public class RolleDaoImpl implements RolleDao {
-  private Logger log = LoggerFactory.getLogger(RolleDaoImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(RolleDaoImpl.class);
   @Autowired
   private SessionFactory sessionFactory;
 
@@ -26,18 +26,17 @@ public class RolleDaoImpl implements RolleDao {
   private Session getCurrentSession() {
     Session session = sessionFactory.getCurrentSession();
     if (session == null) {
-    	throw new RuntimeException("No current session found!");
+      throw new RuntimeException("No current session found!");
     }
     return session;
   }
 
-	@Override
-	public List<Rolle> findAll() {
-		Query query = getCurrentSession().createQuery(
-				"from Rolle r order by r.position");
-		@SuppressWarnings("unchecked")
-		List<Rolle> list = query.list();
-		log.debug("findAll: count = {}", list);
-		return list;
-	}
+  @Override
+  public List<Rolle> findAll() {
+    Query query = getCurrentSession().createQuery("from Rolle r order by r.position");
+    @SuppressWarnings("unchecked")
+    List<Rolle> list = query.list();
+    log.debug("findAll: count = {}", list);
+    return list;
+  }
 }

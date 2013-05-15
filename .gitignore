@@ -10,3 +10,5 @@ target/
 /anwesenheit-core.lck
 /anwesenheit-core.log
 /anwesenheit-core.properties
+mysql*.jar
+

@@ -1,13 +1,11 @@
 package de.fisp.anwesenheit.web.controllers;
 
 import java.io.StringWriter;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.validation.Valid;
 
+import de.fisp.anwesenheit.core.domain.*;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import de.fisp.anwesenheit.core.domain.AntragHistorieDaten;
-import de.fisp.anwesenheit.core.domain.AntragListe;
-import de.fisp.anwesenheit.core.domain.AntragsDaten;
-import de.fisp.anwesenheit.core.domain.AntragsFilter;
-import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
-import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 import de.fisp.anwesenheit.core.service.AntragService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
@@ -81,11 +73,29 @@ public class AntragApiController {
 
   @RequestMapping(value = "/uebersicht", method = RequestMethod.GET)
   public @ResponseBody
-  ResponseEntity<String> uebersicht() {
+  ResponseEntity<String> uebersicht(@RequestParam(value="von", required=false) @DateTimeFormat(iso=ISO.DATE) Date von,
+                                    @RequestParam(value="bis", required=false) @DateTimeFormat(iso=ISO.DATE) Date bis,
+                                    @RequestParam(value="statusOffen", required=false) Boolean statusOffen,
+                                    @RequestParam(value="statusBewilligt", required=false) Boolean statusBewilligt,
+                                    @RequestParam(value="statusAbgelehnt", required=false) Boolean statusAbgelehnt,
+                                    @RequestParam(value="statusStorniert", required=false) Boolean statusStorniert) {
     HttpHeaders headers = createJsonHeaders();
     try {
       final String benutzerId = getCurrentUser();
-      AntragListe liste = antragService.findSichtbareByFilter(benutzerId, new AntragsFilter());
+      AntragUebersichtFilter filter = new AntragUebersichtFilter();
+      List<String> statusFilter = new ArrayList<String>();
+      if(Boolean.TRUE.equals(statusOffen))
+        statusFilter.add("OFFEN");
+      if(Boolean.TRUE.equals(statusBewilligt))
+        statusFilter.add("BEWILLIGT");
+      if(Boolean.TRUE.equals(statusAbgelehnt))
+        statusFilter.add("ABGELEHNT");
+      if(Boolean.TRUE.equals(statusStorniert))
+        statusFilter.add("STORNIERT");
+      filter.setStatusList(statusFilter);
+      filter.setVon(von);
+      filter.setBis(bis);
+      AntragListe liste = antragService.findSichtbareByFilter(benutzerId, filter);
       return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);

@@ -15,7 +15,8 @@ import de.fisp.anwesenheit.core.entities.AntragArt;
 
 @Service
 public class AntragArtDaoImpl implements AntragArtDao {
-  private Logger log = LoggerFactory.getLogger(AntragArtDaoImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(AntragArtDaoImpl.class);
+
   @Autowired
   private SessionFactory sessionFactory;
 

@@ -21,8 +21,7 @@ public class VelocityConfig {
     properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
     properties.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, "org.apache.velocity.runtime.log.Log4JLogChute");
     properties.setProperty("runtime.log.logsystem.log4j.logger", "de.fisp.velocity");
-    VelocityEngine bean = new VelocityEngine(properties);
-    return bean;
+    return new VelocityEngine(properties);
   }
 
   @Bean

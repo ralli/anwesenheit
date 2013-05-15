@@ -15,29 +15,29 @@ import de.fisp.anwesenheit.core.entities.AntragStatus;
 
 @Service
 public class AntragStatusDaoImpl implements AntragStatusDao {
-	private Logger log = LoggerFactory.getLogger(AntragStatusDaoImpl.class);
-	@Autowired
-	private SessionFactory sessionFactory;
+  private static final Logger log = LoggerFactory.getLogger(AntragStatusDaoImpl.class);
+  @Autowired
+  private SessionFactory sessionFactory;
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
 
-	private Session getCurrentSession() {
-		Session session = sessionFactory.getCurrentSession();
-		if (session == null) {
-			throw new RuntimeException("No current session found!");
-		}
-		return session;
-	}
+  private Session getCurrentSession() {
+    Session session = sessionFactory.getCurrentSession();
+    if (session == null) {
+      throw new RuntimeException("No current session found!");
+    }
+    return session;
+  }
 
-	@Override
-	public List<AntragStatus> findAll() {
-		Query query = getCurrentSession().createQuery(
-				"from AntragStatus a order by a.position");
-		@SuppressWarnings("unchecked")
-		List<AntragStatus> list = query.list();
-		log.debug("findAll: count = {}", list.size());
-		return list;
-	}
+  @Override
+  public List<AntragStatus> findAll() {
+    Query query = getCurrentSession().createQuery(
+            "from AntragStatus a order by a.position");
+    @SuppressWarnings("unchecked")
+    List<AntragStatus> list = query.list();
+    log.debug("findAll: count = {}", list.size());
+    return list;
+  }
 }

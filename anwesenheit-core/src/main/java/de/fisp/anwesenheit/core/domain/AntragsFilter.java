@@ -5,10 +5,20 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class AntragsFilter {
+  private String benutzerPattern;
   private Date von;
   private Date bis;
-  private String antragsStatusFilter; // OFFEN, BEWILLIGT, ABGELEHNT (Default:
+  private String antragsStatusFilter; // OFFEN, BEWILLIGT, ABGELEHNT, STORNIERT (Default:
                                       // ALLE)
+
+
+  public String getBenutzerPattern() {
+    return benutzerPattern;
+  }
+
+  public void setBenutzerPattern(String benutzerPattern) {
+    this.benutzerPattern = benutzerPattern;
+  }
 
   public Date getVon() {
     return von;
@@ -38,4 +48,5 @@ public class AntragsFilter {
   public String toString() {
     return ToStringBuilder.reflectionToString(this);
   }
+
 }

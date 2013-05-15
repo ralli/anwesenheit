@@ -27,11 +27,11 @@ import de.fisp.anwesenheit.core.service.MailService;
 
 @Service
 public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsService {
+  private static final Logger log = LoggerFactory.getLogger(MailBenachrichtigungsServiceImpl.class);
   private AntragService antragService;
   private MailService mailService;
   private VelocityEngine velocityEngine;
   private ToolManager toolManager;
-  private static final Logger log = LoggerFactory.getLogger(MailBenachrichtigungsServiceImpl.class);
 
   @Autowired
   public MailBenachrichtigungsServiceImpl(AntragService antragService, MailService mailService, VelocityEngine velocityEngine, ToolManager toolManager) {
@@ -48,22 +48,21 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
       if(b.getPosition() == 2) {
         BenutzerDaten bewilliger = b.getBenutzer();
         String email = bewilliger.getEmail();
-        String betreff = getBetreff(antrag, b);
+        String betreff = getBetreff(antrag);
         String text = getAntragsText(antrag, b);
         mailService.sendeMail(betreff, text, "noreply@f-i-solutions-plus.de", email);
       }
     }
   }
 
-  public String getBetreff(AntragsDaten antrag, BewilligungsDaten bewilligungsDaten) {
+  private String getBetreff(AntragsDaten antrag) {
     BenutzerDaten antragSteller = antrag.getBenutzer();
 
-    String betreff = String.format("Urlaubsantrag für %s vom %s bis %s (%s Tage)", getBenutzerName(antragSteller),
+    return String.format("Urlaubsantrag für %s vom %s bis %s (%s Tage)", getBenutzerName(antragSteller),
         formatDate(antrag.getVon()), formatDate(antrag.getBis()), formatTage(antrag.getAnzahlTage()));
-    return betreff;
   }
 
-  public String getAntragsText(AntragsDaten antrag, BewilligungsDaten bewilligungsDaten) {  
+  private String getAntragsText(AntragsDaten antrag, BewilligungsDaten bewilligungsDaten) {
     Context context = toolManager.createContext();
     context.put("antrag", antrag);
     context.put("bewilligungsUrl", getUrlForBewilligung(bewilligungsDaten.getId()));

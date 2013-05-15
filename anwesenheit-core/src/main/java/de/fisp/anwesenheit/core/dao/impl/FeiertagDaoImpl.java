@@ -19,7 +19,7 @@ import de.fisp.anwesenheit.core.entities.Feiertag;
 public class FeiertagDaoImpl implements FeiertagDao {
   @Autowired
   private SessionFactory sessionFactory;
-  private Logger log = LoggerFactory.getLogger(FeiertagDaoImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(FeiertagDaoImpl.class);
 
   public void setSessionFactory(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
@@ -45,14 +45,14 @@ public class FeiertagDaoImpl implements FeiertagDao {
   private Date getStartDate(int year) {
     Calendar cal = Calendar.getInstance();
     cal.clear();
-    cal.set(year, 0, 1, 0, 0, 0);
+    cal.set(year, Calendar.JANUARY, 1, 0, 0, 0);
     return cal.getTime();
   }
 
   private Date getEndDate(int year) {
     Calendar cal = Calendar.getInstance();
     cal.clear();
-    cal.set(year, 11, 31, 23, 59, 59);
+    cal.set(year, Calendar.DECEMBER, 31, 23, 59, 59);
     return cal.getTime();
   }
 
@@ -102,7 +102,7 @@ public class FeiertagDaoImpl implements FeiertagDao {
     q.setParameter("end", bis);
     @SuppressWarnings("unchecked")
     List<Feiertag> list = q.list();
-    log.info("findByZeitraum({}, {}): count={} Feiertage gelöscht", new Object[] { von, bis, list.size() });
+    log.info("findByZeitraum({}, {}): count={} Feiertage gelöscht", von, bis, list.size());
     return list;
   }
 }

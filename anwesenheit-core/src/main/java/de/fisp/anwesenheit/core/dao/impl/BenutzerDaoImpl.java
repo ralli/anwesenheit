@@ -18,7 +18,7 @@ import de.fisp.anwesenheit.core.entities.Benutzer;
 
 @Service
 public class BenutzerDaoImpl implements BenutzerDao {
-	private Logger log = LoggerFactory.getLogger(BenutzerDaoImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(BenutzerDaoImpl.class);
 	@Autowired
 	private SessionFactory sessionFactory;
 

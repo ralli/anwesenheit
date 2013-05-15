@@ -87,28 +87,28 @@ public class BewilligungServiceImpl implements BewilligungService {
     String message = String.format("Bewilligung Bewilliger: %s, Status: %s gelöscht", bewilligung.getBenutzerId(),
         bewilligung.getBewilligungsStatusId());
     aktualisiereAntragStatus(bewilligung.getAntrag());
+
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
+
     bewilligungDao.delete(bewilligung);
   }
 
   private BenutzerDaten createBenutzerDaten(Benutzer benutzer) {
-    BenutzerDaten benutzerDaten = new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(),
+    return new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(),
         benutzer.getEmail());
-    return benutzerDaten;
   }
 
   private BewilligungsDaten createBewilligungsDaten(Bewilligung bewilligung) {
-    BewilligungsDaten result = new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(),
+    return new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(),
         bewilligung.getBewilligungsStatus(), createBenutzerDaten(bewilligung.getBenutzer()));
-    return result;
   }
 
   @Override
   @Transactional
   public BewilligungsDaten addBewilligung(String benutzerId, AddBewilligungCommand command) {
     logger.debug("addBewilligung({}, {})", benutzerId, command);
-    Benutzer bewilliger = benutzerDao.findById(command.getBenutzerId());
 
+    Benutzer bewilliger = benutzerDao.findById(command.getBenutzerId());
     if (bewilliger == null) {
       throw new NotFoundException(String.format("Bewilliger %s nicht gefunden", command.getBenutzerId()));
     }
@@ -119,7 +119,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     }
 
     if (benutzerId.equals(command.getBenutzerId())) {
-      throw new NotValidException("Anträge dürfen nicht durch sich selbst bewilligt werden");
+      throw new NotValidException("Antragsteller dürfen Ihren Antrag nicht selbst bewilligen");
     }
 
     Bewilligung bewilligung = bewilligungDao.findByAntragIdAndBewilliger(command.getAntragId(), command.getBenutzerId());
@@ -150,17 +150,17 @@ public class BewilligungServiceImpl implements BewilligungService {
         bewilligung.getBewilligungsStatusId());
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
     aktualisiereAntragStatus(antrag);
-    logger.debug("addBewilligung({}) = {}", command, daten);
+
+    logger.debug("addBewilligung({}, {}) = {}", benutzerId, command, daten);
 
     return daten;
   }
 
   private BewilligungsListeEintrag createBewilligungsListeEintrag(Bewilligung bewilligung) {
     Antrag antrag = bewilligung.getAntrag();
-    BewilligungsListeEintrag eintrag = new BewilligungsListeEintrag(bewilligung.getId(), bewilligung.getBewilligungsStatus(),
+    return new BewilligungsListeEintrag(bewilligung.getId(), bewilligung.getBewilligungsStatus(),
         bewilligung.getAntragId(), antrag.getAntragArt(), antrag.getAntragStatus(), createBenutzerDaten(antrag.getBenutzer()),
         antrag.getVon(), antrag.getBis());
-    return eintrag;
   }
 
   @Override
@@ -175,8 +175,7 @@ public class BewilligungServiceImpl implements BewilligungService {
       throw new NotAuthorizedException("Keine Ausreichenden Berechtigungen zum Anzeigen der Bewilligungen");
     }
     List<Bewilligung> list = bewilligungDao.findByBewilliger(benutzerId);
-    BewilligungListe result = createBewilligungsListe(benutzer, list);
-    return result;
+    return createBewilligungsListe(benutzer, list);
   }
 
   private void insertAntragHistorie(String benutzerId, long antragId, String message) {
@@ -200,25 +199,39 @@ public class BewilligungServiceImpl implements BewilligungService {
     boolean existOffen = false;
     boolean existBewilligt = false;
     boolean existAbgelehnt = false;
+
     for (Bewilligung b : bewilligungen) {
+      /*
+       * Die Bewilligungen, mit Position in [1,2] sind die Bewilligungen, die Unterschreiben müssen.
+       * Positionen > 2 sind nur "zur Info" und für die Ermittlung des Antragstatus nicht relevant.
+       */
+      if(b.getPosition() > 2)
+        break;
+
       if ("OFFEN".equals(b.getBewilligungsStatusId()))
         existOffen = true;
+
       if ("BEWILLIGT".equals(b.getBewilligungsStatusId()))
         existBewilligt = true;
+
       if ("ABGELEHNT".equals(b.getBewilligungsStatusId()))
         existAbgelehnt = true;
     }
+
     if (existAbgelehnt) {
       antragStatus = "ABGELEHNT";
-    } else if (existBewilligt) {
+    }
+    else if (existBewilligt) {
       if (existOffen) {
         antragStatus = "IN_ARBEIT";
       } else {
         antragStatus = "BEWILLIGT";
       }
-    } else {
+    }
+    else {
       antragStatus = "NEU";
     }
+
     return antragStatus;
   }
 
@@ -252,36 +265,38 @@ public class BewilligungServiceImpl implements BewilligungService {
     aktualisiereAntragStatus(bewilligung.getAntrag());
 
     bewilligung.setBewilligungsStatus(bewilligungsStatus);
-    BewilligungsDaten daten = createBewilligungsDaten(bewilligung);
 
-    return daten;
+    return createBewilligungsDaten(bewilligung);
   }
 
   @Override
   public BewilligungListe findByBenutzerAndFilter(String currentUserId, BewilligungsFilter filter) {
     logger.debug("findByBenutzerAndFilter({}, {})", currentUserId, filter);
+
     Benutzer benutzer = benutzerDao.findById(currentUserId);
     if (benutzer == null) {
       throw new NotFoundException(String.format("Bewilliger %s nicht gefunden", currentUserId));
     }
+
     List<Bewilligung> list;
     if (berechtigungsService.hatSonderBerechtigungen(benutzer)) {
       list = bewilligungDao.findByFilter(filter);
     } else {
       list = bewilligungDao.findByBewilligerAndFilter(currentUserId, filter);
     }
-    BewilligungListe result = createBewilligungsListe(benutzer, list);
-    return result;
+
+    return createBewilligungsListe(benutzer, list);
   }
 
   private BewilligungListe createBewilligungsListe(Benutzer benutzer, List<Bewilligung> list) {
-    List<BewilligungsListeEintrag> eintraege = new ArrayList<BewilligungsListeEintrag>();
     BenutzerDaten benutzerDaten = createBenutzerDaten(benutzer);
+
+    List<BewilligungsListeEintrag> eintraege = new ArrayList<BewilligungsListeEintrag>();
     for (Bewilligung b : list) {
       eintraege.add(createBewilligungsListeEintrag(b));
     }
-    BewilligungListe result = new BewilligungListe(benutzerDaten, eintraege);
-    return result;
+
+    return new BewilligungListe(benutzerDaten, eintraege);
   }
 
   @Override
@@ -324,13 +339,11 @@ public class BewilligungServiceImpl implements BewilligungService {
         gleichzeitigeEintraege.add(eintrag);
       }
     }
-    
-    BewilligungsDetails result = new BewilligungsDetails(bewilligung.getId(), antrag.getId(), bewilligung.getPosition(),
-        createBenutzerDaten(antrag.getBenutzer()), createBenutzerDaten(bewilligung.getBenutzer()), antrag.getVon(),
-        antrag.getBis(), antrag.getAnzahlTage(), antrag.getAntragStatus(), antrag.getAntragArt(), antrag.getSonderUrlaubArt(),
-        bewilligung.getBewilligungsStatus(), daten, gleichzeitigeEintraege);
-    
-    return result;
+
+    return new BewilligungsDetails(bewilligung.getId(), antrag.getId(), bewilligung.getPosition(),
+            createBenutzerDaten(antrag.getBenutzer()), createBenutzerDaten(bewilligung.getBenutzer()), antrag.getVon(),
+            antrag.getBis(), antrag.getAnzahlTage(), antrag.getAntragStatus(), antrag.getAntragArt(), antrag.getSonderUrlaubArt(),
+            bewilligung.getBewilligungsStatus(), daten, gleichzeitigeEintraege);
   }
 
   private boolean isAktiverAntrag(Antrag a) {

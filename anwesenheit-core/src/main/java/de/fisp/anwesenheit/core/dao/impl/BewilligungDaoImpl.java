@@ -20,7 +20,7 @@ import de.fisp.anwesenheit.core.entities.Bewilligung;
 
 @Service
 public class BewilligungDaoImpl implements BewilligungDao {
-  private Logger log = LoggerFactory.getLogger(BewilligungDaoImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(BewilligungDaoImpl.class);
   @Autowired
   private SessionFactory sessionFactory;
 
@@ -84,7 +84,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
     @SuppressWarnings("unchecked")
     List<Integer> list = query.list();
     Integer maxPosition = list.get(0);
-    int result = maxPosition == null ? 0 : maxPosition.intValue();
+    int result = maxPosition == null ? 0 : maxPosition;
     log.debug("getMaxPosition(antragId={}) = {}", antragId, result);
     return result;
   }
@@ -97,7 +97,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
     @SuppressWarnings("unchecked")
     List<Bewilligung> list = query.list();
     Bewilligung result = list.isEmpty() ? null : list.get(0);
-    log.debug("findByAntragIdAndBewilliger({}, {}) = {}", new Object[] { antragId, benutzerId, result });
+    log.debug("findByAntragIdAndBewilliger({}, {}) = {}", antragId, benutzerId, result);
     return result;
   }
 
@@ -108,7 +108,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
     query.setString("benutzerId", benutzerId);
     @SuppressWarnings("unchecked")
     List<Bewilligung> list = query.list();
-    log.debug("findByBewilliger({}): count = {}", new Object[] { benutzerId, list.size() });
+    log.debug("findByBewilliger({}): count = {}", benutzerId, list.size());
     return list;
   }
 
@@ -137,7 +137,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
     criteria.add(Restrictions.eq("benutzerId", bewilligerId));
     criteria.add(Restrictions.or(Restrictions.ne("position", 2), Restrictions.ne("antrag.antragStatusId", "NEU")));
     List<Bewilligung> list = criteria.list();
-    log.debug("findByBewilligerAndFilter({}, {}): count = {}", new Object[] { bewilligerId, filter, list.size() });
+    log.debug("findByBewilligerAndFilter({}, {}): count = {}", bewilligerId, filter, list.size());
     return list;
   }
 
@@ -146,7 +146,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
   public List<Bewilligung> findByFilter(BewilligungsFilter filter) {
     Criteria criteria = createFilterCriteria(filter);
     List<Bewilligung> list = criteria.list();
-    log.debug("findByFilter({}): count = {}", new Object[] { filter, list.size() });
+    log.debug("findByFilter({}): count = {}", filter, list.size());
     return list;
   }
 }

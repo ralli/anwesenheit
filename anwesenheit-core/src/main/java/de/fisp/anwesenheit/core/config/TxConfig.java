@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 public class TxConfig {
-	@Autowired
-	private SessionFactory sessionFactory;
-	private static final Logger logger = LoggerFactory.getLogger(TxConfig.class); 
+  @Autowired
+  private SessionFactory sessionFactory;
+  private static final Logger logger = LoggerFactory.getLogger(TxConfig.class);
 
-	@Bean
-	public PlatformTransactionManager transactionManager() {
-		logger.info("Creating Transaction Manager...");
-		return new HibernateTransactionManager(sessionFactory);
-	}
+  @Bean
+  public PlatformTransactionManager transactionManager() {
+    logger.info("Creating Transaction Manager...");
+    return new HibernateTransactionManager(sessionFactory);
+  }
 }

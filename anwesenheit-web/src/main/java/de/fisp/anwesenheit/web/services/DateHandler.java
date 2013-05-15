@@ -25,7 +25,7 @@ public class DateHandler {
      *         String is given or the input string is invalid
      */
     public Date stringToDate(String dateString) {
-		log.info("Parsing date [{}]...", dateString);
+		log.debug("Parsing date [{}]...", dateString);
         Date result = null;
         if (dateString == null)
             return null;
@@ -50,7 +50,7 @@ public class DateHandler {
             return null;
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 		String dateString = fmt.format(date);
-		log.info("converting date [{}]...", dateString);
+		log.debug("converting date [{}]...", dateString);
 		return dateString;
     }
 }

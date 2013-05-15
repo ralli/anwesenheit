@@ -1,7 +1,60 @@
 <h1>&Uuml;bersicht</h1>
-
+<form class="form-inline" ng-submit="">
+    <div class="row">
+        <div class="span6">
+            <div class="radio inline">
+                <label class="radio" for="radioAktuell">
+                    <input type="radio" name="radioAktuell" id="radioAktuell" ng-model="filter.zeitFilter" value="AKTUELL" ng-change="fetchUebersicht()" />
+                    Aktuell
+                </label>
+                <label class="radio" for="radioZwoelfMonate">
+                    <input type="radio" name="radioZwoelfMonate" id="radioZwoelfMonate" ng-model="filter.zeitFilter" value="ZWOELF_MONATE" ng-change="fetchUebersicht()" />
+                    Zwölf Monate
+                </label>
+                <label class="radio" for="radioAlle">
+                    <input type="radio" name="radioAlle" id="radioAlle" ng-model="filter.zeitFilter" value="ALLE" ng-change="fetchUebersicht()" />
+                    Alle
+                </label>
+            </div>
+        </div>
+        <div class="pull-right">
+            <label class="checkbox inline" for="checkStatusOffen">
+                <input type="checkbox"
+                       name="checkRadios"
+                       id="checkStatusOffen"
+                       ng-model="filter.statusOffen"
+                       ng-change="fetchUebersicht()"/>
+                Offen
+            </label>
+            <label class="checkbox inline" for="checkStatusBewilligt">
+                <input type="checkbox"
+                       name="checkRadios"
+                       id="checkStatusBewilligt"
+                       ng-model="filter.statusBewilligt"
+                       ng-change="fetchUebersicht()"/>
+                Bewilligt
+            </label>
+            <label class="checkbox inline" for="checkStatusAbgelehnt">
+                <input type="checkbox"
+                       name="checkRadios"
+                       id="checkStatusAbgelehnt"
+                       ng-model="filter.statusAbgelehnt"
+                       ng-change="fetchUebersicht()"/>
+                Abgelehnt
+            </label>
+            <label class="checkbox inline" for="checkStatusStorniert">
+                <input type="checkbox"
+                       name="checkRadios"
+                       id="checkStatusStorniert"
+                       ng-model="filter.statusStorniert"
+                       ng-change="fetchUebersicht()"/>
+                Storniert
+            </label>
+        </div>
+    </div>
+</form>
 <table class="table table-bordered table-hover">
-    <thead>
+  <thead>
     <tr>
         <th>Name</th>
         <th>Art</th>
@@ -10,8 +63,8 @@
         <th>Bis</th>
         <th>Anzahl Tage</th>
     </tr>
-    </thead>
-    <tbody>
+  </thead>
+  <tbody>
     <tr ng-repeat="antrag in antragListe.antraege" ng-class="rowClassFor(antrag)">
         <td>{{antrag.benutzer.vorname}} {{antrag.benutzer.nachname}}</td>
         <td>{{antrag.antragArt.bezeichnung}}</td>
@@ -20,5 +73,5 @@
         <td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
         <td>{{antrag.anzahlTage|number}}</td>
     </tr>
-    </tbody>
+  </tbody>
 </table>

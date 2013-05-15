@@ -110,16 +110,12 @@ app.factory("benutzerService", [ '$resource', function ($resource) {
 }]);
 
 app.factory("bewilligungService", [ '$resource', function ($resource) {
-    var result = $resource("/anwesenheit-web/api/bewilligung/:id", {
-        "id": "@id"
-    }, {
-        "update": {
-            "method": "PUT"
-        },
-        "remove": {
-            "method": "DELETE"
-        }
-    });
+    var result = $resource("/anwesenheit-web/api/bewilligung/:id",
+        { "id": "@id" },
+        {
+            "update": { "method": "PUT" },
+            "remove": { "method": "DELETE" }
+        });
     result.bewilligeAntrag = function (b, successCallback) {
         var updateCommand = {
             'id': b.id,
@@ -189,6 +185,19 @@ app.factory("bewilligungsListeData", function () {
     };
 });
 
+app.factory("antragUebersichtData", function() {
+    return {
+        "filter": {
+            "antragsteller": "",
+            "zeitFilter": "AKTUELL",
+            "statusOffen": true,
+            "statusBewilligt": true,
+            "statusAbgelehnt": true,
+            "statusStorniert": true
+        }
+    };
+});
+
 app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'antragService', 'antragListeData',
     function ($scope, $filter, $dialog, $http, antragService, antragListeData) {
         $scope.fetchAntragListe = function () {
@@ -208,27 +217,29 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'ant
         };
 
         $scope.doDelete = function (antrag) {
-          antragService.remove({ "id": antrag.id },
-            function (data) {
-              $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function (a) {
-                return a.id === antrag.id;
-              });
-              toastr.success("Ihr Antrag wurde gelöscht");
-            },
-            function(data) {
-              toastr.error(data.message);
-            }
-          );
+            antragService.remove({ "id": antrag.id },
+                function (/* data */) {
+                    $scope.antragListe.antraege = _.reject($scope.antragListe.antraege, function (a) {
+                        return a.id === antrag.id;
+                    });
+                    toastr.success("Ihr Antrag wurde gelöscht");
+                },
+                function (data) {
+                    toastr.error(data.message);
+                }
+            );
         };
 
         $scope.doStorno = function (antrag) {
-            $http.put('/anwesenheit-web/api/antraege/' + antrag.id + "/storno").success(function (data) {
+            $http.put('/anwesenheit-web/api/antraege/' + antrag.id + "/storno").success(function (/* data */) {
+                //noinspection JSPrimitiveTypeWrapperUsage
                 antrag.antragStatus.antragStatus = "STORNIERT";
+                //noinspection JSPrimitiveTypeWrapperUsage
                 antrag.antragStatus.bezeichnung = "Storniert";
                 toastr.success("Ihr Antrag wurde storniert");
-            }).error(function(data) {
-              toastr.error(data.message);
-            });
+            }).error(function (data) {
+                    toastr.error(data.message);
+                });
         };
 
         $scope.deleteAntrag = function (antrag) {
@@ -279,33 +290,59 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'ant
         $scope.fetchAntragListe();
     }]);
 
-app.controller("AntragDetailsCtrl", [ '$scope', '$routeParams', 'antragService', 'antragHistorieService', function ($scope, $routeParams, antragService, antragHistorieService) {
-    $scope.antrag = antragService.get({
-        "id": $routeParams.id
-    });
-
-    $scope.sonderUrlaubArtVisible = function () {
-        return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
-    };
-
-    $scope.leseHistorie = function () {
-        antragHistorieService.query({'antragId': $scope.antrag.id }, function (data) {
-            $scope.historie = data;
+app.controller("AntragDetailsCtrl", [ '$scope', '$routeParams', 'antragService', 'antragHistorieService',
+    function ($scope, $routeParams, antragService, antragHistorieService) {
+        $scope.antrag = antragService.get({
+            "id": $routeParams.id
         });
-    };
 
-    $scope.rowClassFor = rowClassForBewilligung;
-}]);
+        $scope.sonderUrlaubArtVisible = function () {
+            return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
+        };
+
+        $scope.leseHistorie = function () {
+            antragHistorieService.query({'antragId': $scope.antrag.id }, function (data) {
+                $scope.historie = data;
+            });
+        };
+
+        $scope.rowClassFor = rowClassForBewilligung;
+    }
+]);
 
 function parseNumber(s) {
     var x = s.replace(/,/g, '.');
     return parseFloat(x);
 }
 
-app.controller("AntragUebersichtCtrl", [ '$scope', '$resource', 'antragUebersicht', function ($scope, $resource, antragUebersicht) {
-    $scope.antragListe = antragUebersicht.get({});
-    $scope.rowClassFor = rowClassForAntrag;
-} ]);
+app.controller("AntragUebersichtCtrl", [ '$scope', '$resource', '$filter', 'antragUebersicht', "antragUebersichtData",
+    function ($scope, $resource, $filter, antragUebersicht, antragUebersichtData) {
+        $scope.rowClassFor = rowClassForAntrag;
+        $scope.fetchUebersicht = function () {
+            var params = {};
+            if ("AKTUELL" === $scope.filter.zeitFilter) {
+                params.von = $filter("date")(new Date(), "yyyy-MM-dd");
+                params.bis = params.von;
+            } else if ("ZWOELF_MONATE" === $scope.filter.zeitFilter) {
+                var von = new Date();
+                von.setMonth(von.getMonth() - 12);
+                params.von = $filter("date")(von, "yyyy-MM-dd");
+            }
+            else {
+                /* alle anzeigen */
+            }
+            params.statusOffen = $scope.filter.statusOffen;
+            params.statusBewilligt = $scope.filter.statusBewilligt;
+            params.statusAbgelehnt = $scope.filter.statusAbgelehnt;
+            params.statusStorniert = $scope.filter.statusStorniert;
+            antragUebersicht.get(params, function (data) {
+                $scope.antragListe = data;
+            });
+        };
+        $scope.filter = antragUebersichtData.filter;
+        $scope.fetchUebersicht();
+    }
+]);
 
 app.controller("NewAntragCtrl", [ '$scope',
     '$location',
@@ -334,7 +371,7 @@ app.controller("NewAntragCtrl", [ '$scope',
                     return x.benutzer;
                 });
                 data.bewilligungen = [];
-            }, function (data) {
+            }, function (/* data */) {
                 toastr.error("Fehler beim Lesen der Daten");
             });
         } else {
@@ -369,7 +406,7 @@ app.controller("NewAntragCtrl", [ '$scope',
                     })
                 };
 
-                antragService.save(angular.toJson(antragsDaten), function (data) {
+                antragService.save(angular.toJson(antragsDaten), function (/*data*/) {
                     $location.path("/antraege");
                     toastr.success("Ihr Antrag wurde gespeichert");
                 }, function (response) {
@@ -379,7 +416,9 @@ app.controller("NewAntragCtrl", [ '$scope',
         };
 
         $scope.sonderUrlaubArtVisible = function () {
-            return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
+            return $scope.antrag
+                && $scope.antrag.antragArt
+                && $scope.antrag.antragArt.antragArt === "SONDER";
         };
 
         $scope.anzahlTageVisible = function () {
@@ -389,45 +428,54 @@ app.controller("NewAntragCtrl", [ '$scope',
         $scope.getAnzahlTage = function () {
             if (!$scope.sonderUrlaubArtVisible())
                 return 0;
+
             var x = _.find($scope.sonderUrlaubArtListe, function (a) {
                 return _.isEqual(a.sonderUrlaubArt, $scope.antrag.sonderUrlaubArt);
             });
+
             return x.anzahlTage;
         };
 
         $scope.controlClassFor = function (flag) {
             var result;
+
             if (flag) {
                 result = "control-group";
             } else {
                 result = "control-group error";
             }
+
             return result;
         };
 
         $scope._addBewilliger = function (benutzerId) {
-            $scope.bewilligungError = "";
-            if (_.find($scope.antrag.bewilliger, function (b) {
+            var equalsBenutzerId = function (b) {
                 return _.isEqual(b.benutzerId, benutzerId);
-            })) {
+            };
+
+            $scope.bewilligungError = "";
+
+            if (_.find($scope.antrag.bewilliger, equalsBenutzerId)) {
                 $scope.bewilligungError = "Die Bewilligung kann nicht mehrfach hinzugefügt werden";
                 return;
             }
-            benutzerService.get({
-                "id": benutzerId
-            }, function (benutzerDaten) {
+
+            var successCallback = function (benutzerDaten) {
                 benutzerDaten.position = $scope.antrag.bewilliger.length + 1;
                 $scope.antrag.bewilliger.push(benutzerDaten);
                 $scope.bewilligerKey = "";
-            }, function (data) {
+            };
+            var errorCallback = function (data) {
                 $scope.bewilligungError = data.data.message;
-            });
+            };
+
+            benutzerService.get({ "id": benutzerId }, successCallback, errorCallback);
         };
 
         $scope.addBewilliger = function () {
             if ($scope.bewilligungForm.$valid) {
                 var benutzerId = $scope.bewilligerKey;
-                return $scope._addBewilliger(benutzerId);
+                $scope._addBewilliger(benutzerId);
             }
         };
 
@@ -490,7 +538,9 @@ app.controller("EditAntragCtrl", [
         };
 
         $scope.sonderUrlaubArtVisible = function () {
-            return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
+            return $scope.antrag
+                && $scope.antrag.antragArt
+                && $scope.antrag.antragArt.antragArt === "SONDER";
         };
 
         $scope.anzahlTageVisible = function () {
@@ -517,7 +567,7 @@ app.controller("EditAntragCtrl", [
             };
 
             antragService.update(antragsDaten,
-              function (data) {
+              function (/* data */) {
                 $location.path("/antraege");
                 toastr.success("Ihre Änderungen wurden gespeichert");
               },
@@ -548,7 +598,7 @@ app.controller("EditAntragCtrl", [
         $scope.deleteBewilligung = function (b) {
             bewilligungService.remove({
                 "id": b.id
-            }, function (data) {
+            }, function (/* data */) {
                 $scope.antrag.bewilligungen = _.reject($scope.antrag.bewilligungen, function (x) {
                     return _.isEqual(x, b);
                 });
@@ -561,7 +611,7 @@ app.controller("EditAntragCtrl", [
             var params = {};
             params.von = $filter("date")($scope.antrag.von, "yyyy-MM-dd");
             params.bis = $filter("date")($scope.antrag.bis, "yyyy-MM-dd");
-            arbeitstageService.get(params, function (data) {
+            arbeitstageService.get(params, function (/* data */) {
                 $scope.antrag.anzahlTage = $filter("number")(data.arbeitsTage);
             });
         };
@@ -571,15 +621,15 @@ app.controller("EditAntragCtrl", [
 app.directive("benutzerAutocomplete", function () {
     return {
         restrict: 'A',
-        link: function (scope, iElement, attr, ctrl) {
+        link: function (scope, iElement /*, attr, ctrl */) {
             iElement.autocomplete({
-                source: "/anwesenheit-web/api/benutzer/search",
-                select: function (event, ui) {
+                'source': "/anwesenheit-web/api/benutzer/search",
+                'select': function (event, ui) {
                     scope.bewilligerKey = ui.item.value;
                     scope.$digest();
                     scope._addBewilliger(ui.item.value);
                 },
-                minLength: 2
+                'minLength': 2
             });
         }
     };
@@ -625,31 +675,37 @@ app.controller("ListBewilligungCtrl", [ '$scope', 'bewilligungService', 'bewilli
     }
 ]);
 
-app.controller("ShowBewilligungCtrl", ['$scope', '$routeParams', '$location', 'bewilligungService', function($scope, $routeParams, $location, bewilligungService) {
-	$scope.bewilligung = bewilligungService.get({'id': $routeParams.id });
-	$scope.sonderUrlaubVisible = function() {
-		return $scope.bewilligung !== null && $scope.bewilligung.antragArt !== null && $scope.bewilligung.antragArt.antragArt === 'SONDER';
-	};
+app.controller("ShowBewilligungCtrl", ['$scope', '$routeParams', '$location', 'bewilligungService',
+    function ($scope, $routeParams, $location, bewilligungService) {
+        $scope.bewilligung = bewilligungService.get({'id': $routeParams.id });
 
-    $scope.bewilligeAntrag = function(b) {
-        bewilligungService.bewilligeAntrag(b, function(data) {
-            $location.path("/bewilligungen");
-            toastr.success("Der Antrag wurde bewilligt");
-        });
-    };
+        $scope.sonderUrlaubVisible = function () {
+            return $scope.bewilligung !== null
+                && $scope.bewilligung.antragArt !== null
+                && $scope.bewilligung.antragArt.antragArt === 'SONDER';
+        };
 
-    $scope.lehneAntragAb = function(b) {
-        bewilligungService.lehneAntragAb(b, function(data) {
-            $location.path("/bewilligungen");
-            toastr.success("Der Antrag wurde abgelehnt");
-        });
-    };
+        $scope.bewilligeAntrag = function (b) {
+            bewilligungService.bewilligeAntrag(b, function (/* data */) {
+                $location.path("/bewilligungen");
+                toastr.success("Der Antrag wurde bewilligt");
+            });
+        };
 
-    $scope.hatGleichzeitigeAntraege = function() {
-        return $scope.bewilligung.gleichzeitigeAntraege !== null && $scope.bewilligung.gleichzeitigeAntraege.length > 0;
-    };
+        $scope.lehneAntragAb = function (b) {
+            bewilligungService.lehneAntragAb(b, function (/* data */) {
+                $location.path("/bewilligungen");
+                toastr.success("Der Antrag wurde abgelehnt");
+            });
+        };
 
-    $scope.rowClassForAntrag = rowClassForAntrag;
-    $scope.rowClassFor = rowClassForBewilligung;
-    $scope.rolleForBewilliger = rolleForBewilliger;
-}]);
+        $scope.hatGleichzeitigeAntraege = function () {
+            return $scope.bewilligung.gleichzeitigeAntraege !== null
+                && $scope.bewilligung.gleichzeitigeAntraege.length > 0;
+        };
+
+        $scope.rowClassForAntrag = rowClassForAntrag;
+        $scope.rowClassFor = rowClassForBewilligung;
+        $scope.rolleForBewilliger = rolleForBewilliger;
+    }
+]);

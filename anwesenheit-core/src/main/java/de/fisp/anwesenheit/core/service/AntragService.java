@@ -2,12 +2,7 @@ package de.fisp.anwesenheit.core.service;
 
 import java.util.List;
 
-import de.fisp.anwesenheit.core.domain.AntragHistorieDaten;
-import de.fisp.anwesenheit.core.domain.AntragListe;
-import de.fisp.anwesenheit.core.domain.AntragsDaten;
-import de.fisp.anwesenheit.core.domain.AntragsFilter;
-import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
-import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
+import de.fisp.anwesenheit.core.domain.*;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
 
@@ -85,7 +80,7 @@ public interface AntragService {
    * @throws NotFoundException
    *           Wenn der Benutzer nicht gefunden wurde
    */
-  AntragListe findSichtbareByFilter(String benutzerId, AntragsFilter filter);
+  AntragListe findSichtbareByFilter(String benutzerId, AntragUebersichtFilter filter);
 
   /**
    * Legt einen neuen Antrag in der Datenbank an.
@@ -99,7 +94,7 @@ public interface AntragService {
    * 
    * @throws NotFoundException
    *           wenn ein Eintrag nicht gefunden wurde
-   * @throws NotValidException
+   * @throws de.fisp.anwesenheit.core.util.NotValidException
    *           wenn der Antrag inkonsistente oder falsche Daten enthält
    * @throws NotAuthorizedException
    *           wenn der aktuelle Benutzer den Antrag nicht anlegen darf
@@ -120,7 +115,7 @@ public interface AntragService {
    * 
    * @throws NotFoundException
    * @throws NotAuthorizedException
-   * @throws NotValidException
+   * @throws de.fisp.anwesenheit.core.util.NotValidException
    */
   AntragsDaten updateAntrag(String benutzerId, long antragId, UpdateAntragCommand command);
 
@@ -148,12 +143,12 @@ public interface AntragService {
    *          Der Antrag, der gelöscht werden soll
    * @throws NotFoundException
    *           wenn ein Eintrag nicht gefunden wurde
-   * @throws NotValidException
+   * @throws de.fisp.anwesenheit.core.util.NotValidException
    *           wenn der Antrag nicht gelöscht werden darf
    * @throws NotAuthorizedException
    *           wenn der aktuelle Benutzer den Antrag nicht löschen darf
    */
-  boolean deleteAntrag(String benutzerId, long antragId);
+  void deleteAntrag(String benutzerId, long antragId);
 
   /**
    * Storniert einen Antrag

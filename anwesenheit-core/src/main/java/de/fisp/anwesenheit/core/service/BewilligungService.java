@@ -18,7 +18,7 @@ public interface BewilligungService {
    *          Die Bewilligung, die gelöscht werden soll
    * @throws NotFoundException
    *           wenn der Benutzer nicht gefunden wurde
-   * @throws NotAuthorized
+   * @throws de.fisp.anwesenheit.core.util.NotAuthorizedException
    *           wenn der Benutzer die Bewilligung nicht löschen darf
    */
   void deleteBewilligung(String benutzerId, long bewilligungId);
@@ -44,7 +44,7 @@ public interface BewilligungService {
    * @return Die Liste der gefundenen Bewilligungen
    * @throws NotFoundException
    *           wenn der Benutzer nicht gefunden wurde
-   * @throws NotAuthorized
+   * @throws de.fisp.anwesenheit.core.util.NotAuthorizedException
    *           wenn der Benutzer die Bewilligungen nicht anzeigen darf
    */
   public BewilligungListe findByBenutzer(String currentUserId, String benutzerId);
@@ -56,8 +56,7 @@ public interface BewilligungService {
    * 
    * @param currentUserId
    *          Die ID des aktuellen Benutzers
-   * @param Die
-   *          zusätzlichen Filterkriterien
+   * @param filter Die zusätzlichen Filterkriterien
    * @return Die Liste der gefundenen Bewilligungen
    * @throws NotFoundException
    *           wenn der Benutzer nicht gefunden wurde
@@ -69,12 +68,12 @@ public interface BewilligungService {
    * 
    * @param benutzerId
    *          Die Benutzer-ID des Bewilligers
-   * @param bewilligungId
-   *          Die ID der Bewillugungsanfrage
+   * @param command
+   *          Die Angaben die Statusänderung
    * @throws NotFoundException
    *           wenn der Benutzer oder die Bewilligungsanfrage nicht gefunden
    *           wurde
-   * @throws NotAuthorized
+   * @throws de.fisp.anwesenheit.core.util.NotAuthorizedException
    *           wenn der Benutzer die Bewilligung nicht bewilligen darf
    * 
    */
@@ -91,7 +90,7 @@ public interface BewilligungService {
    * @throws NotFoundException
    *           wenn keine passende Bewillung oder kein passender Benutzer
    *           gefunden wurde
-   * @throws NotAuthorizedException
+   * @throws de.fisp.anwesenheit.core.util.NotAuthorizedException
    *           wenn der Benutzer nicht über ausreichende Berechtigungen verfügt
    * 
    */
