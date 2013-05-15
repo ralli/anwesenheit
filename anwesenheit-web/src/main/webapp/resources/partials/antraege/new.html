@@ -1,5 +1,4 @@
 <h1>{{title}}</h1>
-
 <form name="createForm" class="form-horizontal" ng-submit="createAntrag()">
     <fieldset>
         <legend>Antrag</legend>
@@ -13,7 +12,7 @@
             </div>
         </div>
         <div class="control-group" ng-show="sonderUrlaubArtVisible()">
-            <label class="control-label" for="sonderurlaub_art">Grund für Sonderurlaub</label>
+            <label class="control-label" for="sonderurlaub_art">Grund f&uuml;r Sonderurlaub</label>
             <div class="controls">
                 <select id="sonderurlaub_art" name="sonderUrlaubArt"
                         ng-model="antrag.sonderUrlaubArt"
@@ -54,17 +53,16 @@
         <div class="control-group">
             <div class="controls">
                 <input type="submit" class="btn btn-primary" value="Speichern" />
-                <a ng-href="#!/antraege" class="btn">Zurück</a>
+                <a ng-href="#!/antraege" class="btn">Zur&uuml;ck</a>
             </div>
         </div>
     </fieldset>
 </form>
-
 <div>
     <h2 style="float:left">Bewilligungen</h2>
     <a style="float:left"
        tooltip-placement="right"
-       tooltip="Für Ihren Urlaubsantrag benötigen Sie zwei Unterschriften: Die erste Unterschrift wird durch Ihren Projektleiter geleistet. Die zweite Unterschrift erfolgt durch Ihren Projektmanager.">
+       tooltip="F&uuml;r Ihren Urlaubsantrag ben&ouml;tigen Sie zwei Unterschriften: Die erste Unterschrift wird durch Ihren Projektleiter geleistet. Die zweite Unterschrift erfolgt durch Ihren Projektmanager.">
         <span class="icon-info-sign"></span>
     </a>
 </div >
@@ -75,7 +73,7 @@
            name="bewilliger" ng-model="bewilligerKey"
            benutzer-autocomplete="true"
            select="benutzerSelected()" required />
-    <input type="submit" class="btn btn-primary" value="Hinzufügen" />
+    <input type="submit" class="btn btn-primary" value="Hinzuf&uuml;gen" />
     <span class="error">{{bewilligungError}}</span>
 </form>
 <table class="table table-bordered" ng-show="antrag.bewilliger.length > 0">
@@ -91,7 +89,7 @@
         <td>{{b.vorname}} {{b.nachname}}</td>
         <td>{{titleForBewilliger(b)}}</td>
         <td>
-            <a ng-href="" ng-click="removeBewilliger(b)">Löschen</a>
+            <a ng-href="" ng-click="removeBewilliger(b)">L&ouml;schen</a>
         </td>
     </tr>
     </tbody>
