@@ -1,5 +1,4 @@
-<h1>Übersicht</h1>
-
+<h1>&Uuml;bersicht</h1>
 <form class="form-inline" ng-submit="">
     <div class="row">
         <div class="span6">
@@ -54,8 +53,8 @@
         </div>
     </div>
 </form>
-<table class="table table-bordered">
-    <thead>
+<table class="table table-bordered table-hover">
+  <thead>
     <tr>
         <th>Name</th>
         <th>Art</th>
@@ -64,8 +63,8 @@
         <th>Bis</th>
         <th>Anzahl Tage</th>
     </tr>
-    </thead>
-    <tbody>
+  </thead>
+  <tbody>
     <tr ng-repeat="antrag in antragListe.antraege" ng-class="rowClassFor(antrag)">
         <td>{{antrag.benutzer.vorname}} {{antrag.benutzer.nachname}}</td>
         <td>{{antrag.antragArt.bezeichnung}}</td>
@@ -74,5 +73,5 @@
         <td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
         <td>{{antrag.anzahlTage|number}}</td>
     </tr>
-    </tbody>
+  </tbody>
 </table>
