@@ -59,7 +59,7 @@
 <script src="<c:url value="/webjars/angular-ui/0.4.0/angular-ui.min.js"/>"></script>
 <script src="<c:url value="/webjars/angular-ui/0.4.0/angular-ui-ieshiv.min.js"/>"></script>
 <script src="<c:url value="/webjars/bootstrap/2.3.1/js/bootstrap.min.js" />"></script>
-<script src="<c:url value="/resources/lib/ui-bootstrap/ui-bootstrap-tpls-0.3.0.min.js" />"></script>
+<script src="<c:url value="/webjars/angular-ui-bootstrap/0.3.0/ui-bootstrap-tpls.min.js" />"></script>
 <script src="<c:url value="/resources/js/antrag.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/webjars/underscorejs/1.4.4/underscore.min.js"/>"></script>
 <script src="<c:url value="/resources/lib/toastr/toastr.js" />"></script>
