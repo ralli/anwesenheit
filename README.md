@@ -40,6 +40,14 @@ Es gibt vier Testbenutzer (alle mit Passwort "test"):
 Der Benutzer "demo" hat Sonderberechtigungen, d.h. dieser Benutzer kann sich die Urlaubsanträge aller anderen 
 Benutzer anzeigen lassen.
 
+Laden von Feiertagen
+
+Die für die korrekte Berechnung des Urlaubszeitraums benötigten Daten lassen sich zur Zeit über einen Unit-Test
+(CreateFeiertageTest) ausführen. Der Test schreibt die Feiertage der nächsten 10 Jahre in die Tabelle "feiertag".
+am einfachsten geht das über das Kommando:
+
+mvn test
+
 ## Build
 
 Die Anwendung wird als Maven-Anwendung gebaut. 
