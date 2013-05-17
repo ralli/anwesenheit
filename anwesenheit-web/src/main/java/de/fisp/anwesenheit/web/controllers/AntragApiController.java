@@ -100,7 +100,7 @@ public class AntragApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }
@@ -119,7 +119,7 @@ public class AntragApiController {
       AntragListe liste = antragService.findEigeneByFilter(benutzerId, filter);
       return new ResponseEntity<String>(toJson(liste), headers, HttpStatus.OK);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     }
@@ -136,7 +136,7 @@ public class AntragApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     }
   }
 
@@ -150,7 +150,7 @@ public class AntragApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     }
   }
 
@@ -164,7 +164,7 @@ public class AntragApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     }
   }
 
@@ -181,7 +181,7 @@ public class AntragApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }
@@ -197,7 +197,7 @@ public class AntragApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }  
@@ -213,7 +213,7 @@ public class AntragApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }

@@ -83,7 +83,7 @@ public class BenutzerApiController {
     try {
       return findByBenutzerId(getCurrentUser());
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     }
   }
 

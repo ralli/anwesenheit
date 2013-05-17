@@ -45,8 +45,7 @@ public class BewilligungApiController {
   }
 
   private String getCurrentUser() {
-    String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId",
-        RequestAttributes.SCOPE_SESSION);
+    String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId", RequestAttributes.SCOPE_SESSION);
     if (result == null) {
       throw new NotAuthorizedException("Nicht angemeldet");
     }
@@ -81,7 +80,7 @@ public class BewilligungApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     }
   }
 
@@ -95,7 +94,7 @@ public class BewilligungApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }
@@ -111,7 +110,7 @@ public class BewilligungApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }
@@ -127,7 +126,7 @@ public class BewilligungApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }
@@ -146,7 +145,7 @@ public class BewilligungApiController {
     } catch (NotFoundException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.NOT_FOUND);
     } catch (NotAuthorizedException ex) {
-      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.FORBIDDEN);
+      return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }
