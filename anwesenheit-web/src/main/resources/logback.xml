@@ -1,40 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
-	<!-- Appenders -->
-	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-		</encoder>
-	</appender>
+    <!-- Appenders -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-	<!-- Application Loggers -->
-	<logger name="de.fisp">
-		<level value="debug" />
-	</logger>
-	<logger name="org.hibernate.SQL">
-		<level value="debug" />
-	</logger>
+    <!-- Application Loggers -->
+    <logger name="de.fisp">
+        <level value="info"/>
+    </logger>
 
-	<!-- 3rdparty Loggers -->
-	<logger name="org.springframework.core">
-		<level value="info" />
-	</logger>
+    <!-- 3rdparty Loggers -->
+    <logger name="org.springframework.core">
+        <level value="info"/>
+    </logger>
 
-	<logger name="org.springframework.beans">
-		<level value="info" />
-	</logger>
+    <logger name="org.springframework.beans">
+        <level value="info"/>
+    </logger>
 
-	<logger name="org.springframework.context">
-		<level value="info" />
-	</logger>
+    <logger name="org.springframework.context">
+        <level value="info"/>
+    </logger>
 
-	<logger name="org.springframework.web">
-		<level value="info" />
-	</logger>
+    <logger name="org.springframework.web">
+        <level value="info"/>
+    </logger>
 
-	<!-- Root Logger -->
-	<root>
-		<level value="info" />
-		<appender-ref ref="console" />
-	</root>
+    <!-- Root Logger -->
+    <root>
+        <level value="info"/>
+        <appender-ref ref="console"/>
+    </root>
 </configuration>
