@@ -56,31 +56,31 @@ app.config([ '$routeProvider', '$locationProvider', '$httpProvider', function ($
     $locationProvider.hashPrefix("!");
     
     $routeProvider.when('/', {
-        templateUrl: '/anwesenheit-web/resources/partials/home.html',
+        templateUrl: './resources/partials/home.html',
         controller: 'HomeCtrl'
     }).when('/antraege', {
-        templateUrl: '/anwesenheit-web/resources/partials/antraege/index.html',
+        templateUrl: './resources/partials/antraege/index.html',
         controller: 'ListAntragCtrl'
     }).when("/antraege/new", {
-        templateUrl: '/anwesenheit-web/resources/partials/antraege/new.html',
+        templateUrl: './resources/partials/antraege/new.html',
         controller: 'NewAntragCtrl'
     }).when("/uebersicht", {
-        templateUrl: '/anwesenheit-web/resources/partials/antraege/uebersicht.html',
+        templateUrl: './resources/partials/antraege/uebersicht.html',
         controller: 'AntragUebersichtCtrl'
     }).when("/antraege/:id/edit", {
-        templateUrl: '/anwesenheit-web/resources/partials/antraege/edit.html',
+        templateUrl: './resources/partials/antraege/edit.html',
         controller: 'EditAntragCtrl'
     }).when("/antraege/:id/copy", {
-        templateUrl: '/anwesenheit-web/resources/partials/antraege/new.html',
+        templateUrl: './resources/partials/antraege/new.html',
         controller: 'NewAntragCtrl'
     }).when("/antraege/:id", {
-        templateUrl: '/anwesenheit-web/resources/partials/antraege/details.html',
+        templateUrl: './resources/partials/antraege/details.html',
         controller: 'AntragDetailsCtrl'
     }).when("/bewilligungen", {
-        templateUrl: '/anwesenheit-web/resources/partials/bewilligungen/index.html',
+        templateUrl: './resources/partials/bewilligungen/index.html',
         controller: 'ListBewilligungCtrl'
     }).when("/bewilligungen/:id", {
-        templateUrl: '/anwesenheit-web/resources/partials/bewilligungen/show.html',
+        templateUrl: './resources/partials/bewilligungen/show.html',
         controller: 'ShowBewilligungCtrl'
     });
 
@@ -113,7 +113,7 @@ app.config([ '$routeProvider', '$locationProvider', '$httpProvider', function ($
 } ]);
 
 app.factory("antragService", [ '$resource', function ($resource) {
-    return $resource("/anwesenheit-web/api/antraege/:id", { "id": "@id" },
+    return $resource("./api/antraege/:id", { "id": "@id" },
         {
             "update": { "method": "PUT" },
             "remove": { "method": "DELETE" }
@@ -121,23 +121,23 @@ app.factory("antragService", [ '$resource', function ($resource) {
 }]);
 
 app.factory("antragHistorieService", [ "$resource", function ($resource) {
-    return $resource("/anwesenheit-web/api/antraege/:antragId/historie", { "antragId": "@antragId" });
+    return $resource("./api/antraege/:antragId/historie", { "antragId": "@antragId" });
 }]);
 
 app.factory("antragArtService", [ '$resource', function ($resource) {
-    return $resource("/anwesenheit-web/api/antragsarten/:id");
+    return $resource("./api/antragsarten/:id");
 }]);
 
 app.factory("sonderUrlaubArtService", [ '$resource', function ($resource) {
-    return $resource("/anwesenheit-web/api/sonderurlaubarten/:id");
+    return $resource("./api/sonderurlaubarten/:id");
 }]);
 
 app.factory("benutzerService", [ '$resource', function ($resource) {
-    return $resource("/anwesenheit-web/api/benutzer/:id");
+    return $resource("./api/benutzer/:id");
 }]);
 
 app.factory("bewilligungService", [ '$resource', function ($resource) {
-    var result = $resource("/anwesenheit-web/api/bewilligung/:id",
+    var result = $resource("./api/bewilligung/:id",
         { "id": "@id" },
         {
             "update": { "method": "PUT" },
@@ -173,15 +173,15 @@ app.factory("bewilligungService", [ '$resource', function ($resource) {
 }]);
 
 app.factory("bewilligungStatusService", [ '$resource', function ($resource) {
-    return $resource("/anwesenheit-web/api/bewilligungsstatus/:id");
+    return $resource("./api/bewilligungsstatus/:id");
 }]);
 
 app.factory("antragUebersicht", [ '$resource', function ($resource) {
-    return $resource("/anwesenheit-web/api/antraege/uebersicht");
+    return $resource("./api/antraege/uebersicht");
 }]);
 
 app.factory("arbeitstageService", [ '$resource', function ($resource) {
-    return $resource("/anwesenheit-web/api/arbeitstage/:id");
+    return $resource("./api/arbeitstage/:id");
 }]);
 
 app.controller("AppCtrl", [ '$rootScope', function ($rootScope) {
@@ -258,7 +258,7 @@ app.controller("ListAntragCtrl", [ '$scope', '$filter', '$dialog', '$http', 'ant
         };
 
         $scope.doStorno = function (antrag) {
-            $http.put('/anwesenheit-web/api/antraege/' + antrag.id + "/storno").success(function (/* data */) {
+            $http.put('./api/antraege/' + antrag.id + "/storno").success(function (/* data */) {
                 //noinspection JSPrimitiveTypeWrapperUsage
                 antrag.antragStatus.antragStatus = "STORNIERT";
                 //noinspection JSPrimitiveTypeWrapperUsage
@@ -650,7 +650,7 @@ app.directive("benutzerAutocomplete", function () {
         restrict: 'A',
         link: function (scope, iElement /*, attr, ctrl */) {
             iElement.autocomplete({
-                'source': "/anwesenheit-web/api/benutzer/search",
+                'source': "./api/benutzer/search",
                 'select': function (event, ui) {
                     scope.bewilligerKey = ui.item.value;
                     scope.$digest();
@@ -707,8 +707,8 @@ app.controller("ShowBewilligungCtrl", ['$scope', '$routeParams', '$location', 'b
         $scope.bewilligung = bewilligungService.get({'id': $routeParams.id });
 
         $scope.sonderUrlaubVisible = function () {
-            return $scope.bewilligung !== null
-                && $scope.bewilligung.antragArt !== null
+            return $scope.bewilligung
+                && $scope.bewilligung.antragArt
                 && $scope.bewilligung.antragArt.antragArt === 'SONDER';
         };
 
@@ -727,7 +727,8 @@ app.controller("ShowBewilligungCtrl", ['$scope', '$routeParams', '$location', 'b
         };
 
         $scope.hatGleichzeitigeAntraege = function () {
-            return $scope.bewilligung.gleichzeitigeAntraege !== null
+            return $scope.bewilligung
+                && _.isArray($scope.bewilligung.gleichzeitigeAntraege)
                 && $scope.bewilligung.gleichzeitigeAntraege.length > 0;
         };
 
