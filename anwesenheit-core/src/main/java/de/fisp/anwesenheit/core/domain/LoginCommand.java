@@ -33,11 +33,11 @@ public class LoginCommand {
   public String getRedirectUrl() {
     return redirectUrl;
   }
-  
+
   public void setRedirectUrl(String redirectUrl) {
     this.redirectUrl = redirectUrl;
   }
-  
+
   @Override
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);

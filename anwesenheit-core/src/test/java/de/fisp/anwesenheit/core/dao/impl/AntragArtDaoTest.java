@@ -11,14 +11,14 @@ import de.fisp.anwesenheit.core.TestConfig;
 import de.fisp.anwesenheit.core.dao.AntragArtDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { TestConfig.class })
+@ContextConfiguration(classes = {TestConfig.class})
 @Transactional
 public class AntragArtDaoTest {
-	@Autowired
-	private AntragArtDao antragArtDao;
+  @Autowired
+  private AntragArtDao antragArtDao;
 
-	@Test
-	public void testFindAll() {
-		antragArtDao.findAll();
-	}
+  @Test
+  public void testFindAll() {
+    antragArtDao.findAll();
+  }
 }

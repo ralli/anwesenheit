@@ -21,71 +21,71 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Entity
 @Table(name = "feiertag")
 public class Feiertag implements Serializable {
-	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	@NotNull
-	@Size(min = 1, max = 40)
-	private String name;
-	@Column(name = "definition_id", nullable = true)
-	private Long definitionId;
-	@ManyToOne(optional = true)
-	@JoinColumn(name = "definition_id", insertable = false, updatable = false, nullable = true)
-	private FeiertagDefinition definition;
-	@Temporal(TemporalType.DATE)
-	@NotNull
-	private Date datum;
-	@Column(name = "anteil_arbeitszeit")
-	private double anteilArbeitszeit;
+  private static final long serialVersionUID = 1L;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
+  @NotNull
+  @Size(min = 1, max = 40)
+  private String name;
+  @Column(name = "definition_id", nullable = true)
+  private Long definitionId;
+  @ManyToOne(optional = true)
+  @JoinColumn(name = "definition_id", insertable = false, updatable = false, nullable = true)
+  private FeiertagDefinition definition;
+  @Temporal(TemporalType.DATE)
+  @NotNull
+  private Date datum;
+  @Column(name = "anteil_arbeitszeit")
+  private double anteilArbeitszeit;
 
-	public int getId() {
-		return id;
-	}
+  public int getId() {
+    return id;
+  }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public Long getDefinitionId() {
-		return definitionId;
-	}
+  public Long getDefinitionId() {
+    return definitionId;
+  }
 
-	public void setDefinitionId(Long definitionId) {
-		this.definitionId = definitionId;
-	}
+  public void setDefinitionId(Long definitionId) {
+    this.definitionId = definitionId;
+  }
 
-	public FeiertagDefinition getDefinition() {
-		return definition;
-	}
+  public FeiertagDefinition getDefinition() {
+    return definition;
+  }
 
-	public void setDefinition(FeiertagDefinition definition) {
-		this.definition = definition;
-	}
+  public void setDefinition(FeiertagDefinition definition) {
+    this.definition = definition;
+  }
 
-	public Date getDatum() {
-		return datum;
-	}
+  public Date getDatum() {
+    return datum;
+  }
 
-	public void setDatum(Date datum) {
-		this.datum = datum;
-	}
+  public void setDatum(Date datum) {
+    this.datum = datum;
+  }
 
-	public double getAnteilArbeitszeit() {
-		return anteilArbeitszeit;
-	}
+  public double getAnteilArbeitszeit() {
+    return anteilArbeitszeit;
+  }
 
-	public void setAnteilArbeitszeit(double anteilArbeitszeit) {
-		this.anteilArbeitszeit = anteilArbeitszeit;
-	}
+  public void setAnteilArbeitszeit(double anteilArbeitszeit) {
+    this.anteilArbeitszeit = anteilArbeitszeit;
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -118,8 +118,8 @@ public class Feiertag implements Serializable {
   }
 
   @Override
-	public String toString() {
-		return new ToStringBuilder(this).append(id).append(name).append(datum)
-				.toString();
-	}
+  public String toString() {
+    return new ToStringBuilder(this).append(id).append(name).append(datum)
+            .toString();
+  }
 }

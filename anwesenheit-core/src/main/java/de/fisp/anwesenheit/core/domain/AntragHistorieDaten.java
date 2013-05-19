@@ -3,15 +3,15 @@ package de.fisp.anwesenheit.core.domain;
 import java.util.Date;
 
 public class AntragHistorieDaten {
-  private long id;
-  private long antragId;
-  private String benutzerId;
-  private Date zeitpunkt;
-  private String beschreibung;
-  private BenutzerDaten benutzer;
+  private final long id;
+  private final long antragId;
+  private final String benutzerId;
+  private final Date zeitpunkt;
+  private final String beschreibung;
+  private final BenutzerDaten benutzer;
 
   public AntragHistorieDaten(long id, long antragId, String benutzerId, Date zeitpunkt, String beschreibung,
-      BenutzerDaten benutzerDaten) {
+                             BenutzerDaten benutzerDaten) {
     super();
     this.id = id;
     this.antragId = antragId;

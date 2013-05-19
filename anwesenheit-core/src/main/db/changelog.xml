@@ -1,599 +1,599 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
-	<changeSet id="createTableAntragStatus" author="raljuhn">
-		<createTable tableName="antrag_status">
-			<column name="antrag_status" type="varchar(10)">
-				<constraints primaryKey="true" primaryKeyName="pk_antrag_status"
-					nullable="false" />
-			</column>
-			<column name="position" type="integer">
-				<constraints nullable="false" />
-			</column>
-			<column name="bezeichnung" type="varchar(30)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableAntragStatus" author="raljuhn">
+        <createTable tableName="antrag_status">
+            <column name="antrag_status" type="varchar(10)">
+                <constraints primaryKey="true" primaryKeyName="pk_antrag_status"
+                             nullable="false"/>
+            </column>
+            <column name="position" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bezeichnung" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="createTableAntragArt" author="raljuhn">
-		<createTable tableName="antrag_art">
-			<column name="antrag_art" type="varchar(10)">
-				<constraints primaryKey="true" primaryKeyName="pk_antrag_art"
-					nullable="false" />
-			</column>
-			<column name="position" type="integer">
-				<constraints nullable="false" />
-			</column>
-			<column name="bezeichnung" type="varchar(80)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableAntragArt" author="raljuhn">
+        <createTable tableName="antrag_art">
+            <column name="antrag_art" type="varchar(10)">
+                <constraints primaryKey="true" primaryKeyName="pk_antrag_art"
+                             nullable="false"/>
+            </column>
+            <column name="position" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bezeichnung" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="createTableSonderUrlaubArt" author="raljuhn">
-		<createTable tableName="sonderurlaub_art">
-			<column name="sonderurlaub_art" type="varchar(10)">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="position" type="int">
-				<constraints nullable="false" />
-			</column>
-			<column name="anzahl_tage" type="decimal(5,1)">
-				<constraints nullable="false" />
-			</column>
-			<column name="bezeichnung" type="varchar(30)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableSonderUrlaubArt" author="raljuhn">
+        <createTable tableName="sonderurlaub_art">
+            <column name="sonderurlaub_art" type="varchar(10)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="position" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="anzahl_tage" type="decimal(5,1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bezeichnung" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="createTableBenutzer" author="raljuhn">
-		<createTable tableName="benutzer">
-			<column name="benutzer_id" type="varchar(30)">
-				<constraints primaryKey="true" primaryKeyName="pk_benutzer"
-					nullable="false" />
-			</column>
-			<column name="benutzertyp" type="varchar(10)">
-				<constraints nullable="false" />
-			</column>
-			<column name="vorname" type="varchar(50)" />
-			<column name="nachname" type="varchar(50)" />
-			<column name="email" type="varchar(80)" />
-			<column name="salt" type="varchar(50)" />
-			<column name="password_hash" type="varchar(50)" />
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableBenutzer" author="raljuhn">
+        <createTable tableName="benutzer">
+            <column name="benutzer_id" type="varchar(30)">
+                <constraints primaryKey="true" primaryKeyName="pk_benutzer"
+                             nullable="false"/>
+            </column>
+            <column name="benutzertyp" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vorname" type="varchar(50)"/>
+            <column name="nachname" type="varchar(50)"/>
+            <column name="email" type="varchar(80)"/>
+            <column name="salt" type="varchar(50)"/>
+            <column name="password_hash" type="varchar(50)"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="createTableBenutzerTyp" author="raljuhn">
-		<createTable tableName="benutzertyp">
-			<column name="benutzertyp" type="varchar(10)">
-				<constraints primaryKey="true" nullable="false" />
-			</column>
-			<column name="position" type="int">
-				<constraints nullable="false" />
-			</column>
-			<column name="bezeichnung" type="varchar(30)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
-	<changeSet id="addFKToBenutzerTyp" author="raljuhn">
-		<addForeignKeyConstraint constraintName="fk_benutzer_1"
-			referencedTableName="benutzertyp" baseColumnNames="benutzertyp"
-			baseTableName="benutzer" referencedColumnNames="benutzertyp" />
-	</changeSet>
+    <changeSet id="createTableBenutzerTyp" author="raljuhn">
+        <createTable tableName="benutzertyp">
+            <column name="benutzertyp" type="varchar(10)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="position" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bezeichnung" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
+    <changeSet id="addFKToBenutzerTyp" author="raljuhn">
+        <addForeignKeyConstraint constraintName="fk_benutzer_1"
+                                 referencedTableName="benutzertyp" baseColumnNames="benutzertyp"
+                                 baseTableName="benutzer" referencedColumnNames="benutzertyp"/>
+    </changeSet>
 
-	<changeSet id="createTableAntrag" author="raljuhn">
-		<createTable tableName="antrag">
-			<column name="id" type="BIGINT" autoIncrement="true">
-				<constraints primaryKey="true" primaryKeyName="pk_antrag"
-					nullable="false" />
-			</column>
-			<column name="benutzer_id" type="varchar(30)">
-				<constraints nullable="false" references="benutzer(benutzer_id)"
-					foreignKeyName="fk_antrag_benutzer" deleteCascade="true" />
-			</column>
-			<column name="antrag_art" type="varchar(10)">
-				<constraints nullable="false" references="antrag_art(antrag_art)"
-					foreignKeyName="fk_antrag_art" deleteCascade="false" />
-			</column>
-			<column name="antrag_status" type="varchar(10)">
-				<constraints nullable="false" references="antrag_status(antrag_status)"
-					foreignKeyName="fk_antrag_status" deleteCascade="false" />
-			</column>
-			<column name="sonderurlaub_art" type="varchar(10)">
-				<constraints nullable="true"
-					references="sonderurlaub_art(sonderurlaub_art)" foreignKeyName="fk_antrag_sonderurlaub"
-					deleteCascade="false" />
-			</column>
-			<column name="von" type="date">
-				<constraints nullable="false" />
-			</column>
-			<column name="bis" type="date">
-				<constraints nullable="false" />
-			</column>
-			<column name="anzahl_tage" type="decimal(5,1)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableAntrag" author="raljuhn">
+        <createTable tableName="antrag">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_antrag"
+                             nullable="false"/>
+            </column>
+            <column name="benutzer_id" type="varchar(30)">
+                <constraints nullable="false" references="benutzer(benutzer_id)"
+                             foreignKeyName="fk_antrag_benutzer" deleteCascade="true"/>
+            </column>
+            <column name="antrag_art" type="varchar(10)">
+                <constraints nullable="false" references="antrag_art(antrag_art)"
+                             foreignKeyName="fk_antrag_art" deleteCascade="false"/>
+            </column>
+            <column name="antrag_status" type="varchar(10)">
+                <constraints nullable="false" references="antrag_status(antrag_status)"
+                             foreignKeyName="fk_antrag_status" deleteCascade="false"/>
+            </column>
+            <column name="sonderurlaub_art" type="varchar(10)">
+                <constraints nullable="true"
+                             references="sonderurlaub_art(sonderurlaub_art)" foreignKeyName="fk_antrag_sonderurlaub"
+                             deleteCascade="false"/>
+            </column>
+            <column name="von" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bis" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="anzahl_tage" type="decimal(5,1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="addIndexesToAntrag" author="ralli">
-		<createIndex tableName="antrag" indexName="ix_antrag_von">
-			<column name="von" />
-		</createIndex>
-		<createIndex tableName="antrag" indexName="ix_antrag_bis">
-			<column name="bis" />
-		</createIndex>
-	</changeSet>
+    <changeSet id="addIndexesToAntrag" author="ralli">
+        <createIndex tableName="antrag" indexName="ix_antrag_von">
+            <column name="von"/>
+        </createIndex>
+        <createIndex tableName="antrag" indexName="ix_antrag_bis">
+            <column name="bis"/>
+        </createIndex>
+    </changeSet>
 
-	<changeSet id="createTableAntragHistorie" author="raljuhn">
-		<createTable tableName="antrag_historie">
-			<column name="id" type="BIGINT" autoIncrement="true">
-				<constraints primaryKey="true" primaryKeyName="pk_antrag_historie"
-					nullable="false" />
-			</column>
-			<column name="antrag_id" type="BIGINT">
-				<constraints nullable="false" references="antrag(id)"
-					foreignKeyName="fk_historie_antrag" deleteCascade="true" />
-			</column>
-			<column name="benutzer_id" type="varchar(30)">
-				<constraints nullable="false" references="benutzer(benutzer_id)"
-					foreignKeyName="fk_historie_benutzer" deleteCascade="true" />
-			</column>
-			<column name="zeitpunkt" type="datetime">
-				<constraints nullable="false" />
-			</column>
-			<column name="beschreibung" type="varchar(512)" />
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableAntragHistorie" author="raljuhn">
+        <createTable tableName="antrag_historie">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_antrag_historie"
+                             nullable="false"/>
+            </column>
+            <column name="antrag_id" type="BIGINT">
+                <constraints nullable="false" references="antrag(id)"
+                             foreignKeyName="fk_historie_antrag" deleteCascade="true"/>
+            </column>
+            <column name="benutzer_id" type="varchar(30)">
+                <constraints nullable="false" references="benutzer(benutzer_id)"
+                             foreignKeyName="fk_historie_benutzer" deleteCascade="true"/>
+            </column>
+            <column name="zeitpunkt" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="beschreibung" type="varchar(512)"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="createTableRolle" author="raljuhn">
-		<createTable tableName="rolle">
-			<column name="rolle" type="varchar(10)">
-				<constraints primaryKey="true" primaryKeyName="pk_rolle"
-					nullable="false" />
-			</column>
-			<column name="position" type="integer">
-				<constraints nullable="false" />
-			</column>
-			<column name="bezeichnung" type="varchar(80)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableRolle" author="raljuhn">
+        <createTable tableName="rolle">
+            <column name="rolle" type="varchar(10)">
+                <constraints primaryKey="true" primaryKeyName="pk_rolle"
+                             nullable="false"/>
+            </column>
+            <column name="position" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bezeichnung" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="createTableBenutzerRolle" author="raljuhn">
-		<createTable tableName="benutzer_rolle">
-			<column name="benutzer_id" type="varchar(30)">
-				<constraints nullable="false" />
-			</column>
-			<column name="rolle" type="varchar(10)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableBenutzerRolle" author="raljuhn">
+        <createTable tableName="benutzer_rolle">
+            <column name="benutzer_id" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rolle" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="addPKToBenutzerRolle" author="raljuhn">
-		<addPrimaryKey tableName="benutzer_rolle" columnNames="benutzer_id,rolle" />
-		<addForeignKeyConstraint constraintName="fk_benutzer_rolle_1"
-			referencedTableName="benutzer" baseColumnNames="benutzer_id"
-			baseTableName="benutzer_rolle" referencedColumnNames="benutzer_id"
-			deleteCascade="true" />
-		<addForeignKeyConstraint constraintName="fk_benutzer_rolle_2"
-			referencedTableName="rolle" baseColumnNames="rolle" baseTableName="benutzer_rolle"
-			referencedColumnNames="rolle" deleteCascade="true" />
-	</changeSet>
+    <changeSet id="addPKToBenutzerRolle" author="raljuhn">
+        <addPrimaryKey tableName="benutzer_rolle" columnNames="benutzer_id,rolle"/>
+        <addForeignKeyConstraint constraintName="fk_benutzer_rolle_1"
+                                 referencedTableName="benutzer" baseColumnNames="benutzer_id"
+                                 baseTableName="benutzer_rolle" referencedColumnNames="benutzer_id"
+                                 deleteCascade="true"/>
+        <addForeignKeyConstraint constraintName="fk_benutzer_rolle_2"
+                                 referencedTableName="rolle" baseColumnNames="rolle" baseTableName="benutzer_rolle"
+                                 referencedColumnNames="rolle" deleteCascade="true"/>
+    </changeSet>
 
-	<changeSet id="createTableBewilligungStatus" author="raljuhn">
-		<createTable tableName="bewilligungs_status">
-			<column name="bewilligungs_status" type="varchar(10)">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="position" type="int">
-				<constraints nullable="false" />
-			</column>
-			<column name="bezeichnung" type="varchar(80)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableBewilligungStatus" author="raljuhn">
+        <createTable tableName="bewilligungs_status">
+            <column name="bewilligungs_status" type="varchar(10)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="position" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bezeichnung" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="createTableBewilligung" author="raljuhn">
-		<createTable tableName="bewilligung">
-			<column name="id" type="BIGINT" autoIncrement="true">
-				<constraints nullable="false" primaryKey="true" />
-			</column>
-			<column name="antrag_id" type="BIGINT">
-				<constraints nullable="false" />
-			</column>
-			<column name="position" type="int">
-				<constraints nullable="false" />
-			</column>
-			<column name="bewilligungs_status" type="varchar(10)">
-				<constraints nullable="false" />
-			</column>
-			<column name="benutzer_id" type="varchar(30)">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
+    <changeSet id="createTableBewilligung" author="raljuhn">
+        <createTable tableName="bewilligung">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="antrag_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="position" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bewilligungs_status" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="benutzer_id" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 
-	<changeSet id="addFKToBewilligung" author="raljuhn">
-		<addForeignKeyConstraint constraintName="fk_bewilligung_1"
-			referencedTableName="benutzer" baseColumnNames="benutzer_id"
-			baseTableName="bewilligung" referencedColumnNames="benutzer_id"
-			deleteCascade="true" />
-		<addForeignKeyConstraint constraintName="fk_bewilligung_3"
-			referencedTableName="antrag" baseColumnNames="antrag_id"
-			baseTableName="bewilligung" referencedColumnNames="id" deleteCascade="true" />
-		<addForeignKeyConstraint constraintName="fk_bewilligung_2"
-			referencedTableName="bewilligungs_status" baseColumnNames="bewilligungs_status"
-			baseTableName="bewilligung" referencedColumnNames="bewilligungs_status"
-			deleteCascade="false" />
-	</changeSet>
+    <changeSet id="addFKToBewilligung" author="raljuhn">
+        <addForeignKeyConstraint constraintName="fk_bewilligung_1"
+                                 referencedTableName="benutzer" baseColumnNames="benutzer_id"
+                                 baseTableName="bewilligung" referencedColumnNames="benutzer_id"
+                                 deleteCascade="true"/>
+        <addForeignKeyConstraint constraintName="fk_bewilligung_3"
+                                 referencedTableName="antrag" baseColumnNames="antrag_id"
+                                 baseTableName="bewilligung" referencedColumnNames="id" deleteCascade="true"/>
+        <addForeignKeyConstraint constraintName="fk_bewilligung_2"
+                                 referencedTableName="bewilligungs_status" baseColumnNames="bewilligungs_status"
+                                 baseTableName="bewilligung" referencedColumnNames="bewilligungs_status"
+                                 deleteCascade="false"/>
+    </changeSet>
 
-	<changeSet id="create_table_feiertagdefinition" author="ralli">
-		<createTable tableName="feiertagdefinition">
-			<column name="id" autoIncrement="true" type="integer">
-				<constraints primaryKey="true" />
-			</column>
-			<column name="typ" type="integer">
-				<constraints nullable="false" />
-			</column>
-			<column name="name" type="varchar(40)">
-				<constraints nullable="false" />
-			</column>
-			<column name="anteil_arbeitszeit" type="double(5,2)">
-				<constraints nullable="false" />
-			</column>
-			<column name="referenz_tag" type="integer">
-				<constraints nullable="false" />
-			</column>
-			<column name="referenz_monat" type="integer">
-				<constraints nullable="false" />
-			</column>
-			<column name="offset" type="integer">
-				<constraints nullable="false" />
-			</column>
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
-	<changeSet id="create_table_feiertag" author="ralli">
-		<createTable tableName="feiertag">
-			<column name="id" autoIncrement="true" type="integer">
-				<constraints primaryKey="true" />
-			</column>
-			<column name="name" type="varchar(40)">
-				<constraints nullable="false" />
-			</column>
-			<column name="anteil_arbeitszeit" type="double(5,2)">
-				<constraints nullable="false" />
-			</column>
-			<column name="datum" type="date">
-				<constraints nullable="false" />
-			</column>
-			<column name="definition_id" type="integer" />
-		</createTable>
-		<modifySql dbms="mysql">
-			<append value=" engine innodb" />
-		</modifySql>
-	</changeSet>
-	<changeSet id="feiertag_indexes" author="ralli">
-		<addForeignKeyConstraint constraintName="fk_feiertag_def"
-			referencedTableName="feiertagdefinition" baseColumnNames="definition_id"
-			baseTableName="feiertag" referencedColumnNames="id" deleteCascade="true" />
-		<createIndex tableName="feiertag" indexName="ix_feiertag_1">
-			<column name="datum" />
-		</createIndex>
-	</changeSet>
+    <changeSet id="create_table_feiertagdefinition" author="ralli">
+        <createTable tableName="feiertagdefinition">
+            <column name="id" autoIncrement="true" type="integer">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="typ" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="anteil_arbeitszeit" type="double(5,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="referenz_tag" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="referenz_monat" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="offset" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
+    <changeSet id="create_table_feiertag" author="ralli">
+        <createTable tableName="feiertag">
+            <column name="id" autoIncrement="true" type="integer">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="anteil_arbeitszeit" type="double(5,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="datum" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="definition_id" type="integer"/>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
+    <changeSet id="feiertag_indexes" author="ralli">
+        <addForeignKeyConstraint constraintName="fk_feiertag_def"
+                                 referencedTableName="feiertagdefinition" baseColumnNames="definition_id"
+                                 baseTableName="feiertag" referencedColumnNames="id" deleteCascade="true"/>
+        <createIndex tableName="feiertag" indexName="ix_feiertag_1">
+            <column name="datum"/>
+        </createIndex>
+    </changeSet>
 
-	<changeSet id="insertAntragArt" author="raljuhn">
-		<insert tableName="antrag_art">
-			<column name="antrag_art" value="URLAUB" />
-			<column name="position" valueNumeric="1" />
-			<column name="bezeichnung" value="Urlaub" />
-		</insert>
-		<insert tableName="antrag_art">
-			<column name="antrag_art" value="GLEITZEIT" />
-			<column name="position" valueNumeric="2" />
-			<column name="bezeichnung" value="Gleitzeit" />
-		</insert>
-		<insert tableName="antrag_art">
-			<column name="antrag_art" value="SONDER" />
-			<column name="position" valueNumeric="3" />
-			<column name="bezeichnung" value="Sonderurlaub" />
-		</insert>
-	</changeSet>
+    <changeSet id="insertAntragArt" author="raljuhn">
+        <insert tableName="antrag_art">
+            <column name="antrag_art" value="URLAUB"/>
+            <column name="position" valueNumeric="1"/>
+            <column name="bezeichnung" value="Urlaub"/>
+        </insert>
+        <insert tableName="antrag_art">
+            <column name="antrag_art" value="GLEITZEIT"/>
+            <column name="position" valueNumeric="2"/>
+            <column name="bezeichnung" value="Gleitzeit"/>
+        </insert>
+        <insert tableName="antrag_art">
+            <column name="antrag_art" value="SONDER"/>
+            <column name="position" valueNumeric="3"/>
+            <column name="bezeichnung" value="Sonderurlaub"/>
+        </insert>
+    </changeSet>
 
-	<changeSet id="insertAntragStatus" author="raljuhn">
-		<insert tableName="antrag_status">
-			<column name="antrag_status" value="NEU" />
-			<column name="position" valueNumeric="1" />
-			<column name="bezeichnung" value="Neu" />
-		</insert>
-		<insert tableName="antrag_status">
-			<column name="antrag_status" value="IN_ARBEIT" />
-			<column name="position" valueNumeric="2" />
-			<column name="bezeichnung" value="In Arbeit" />
-		</insert>
-		<insert tableName="antrag_status">
-			<column name="antrag_status" value="BEWILLIGT" />
-			<column name="position" valueNumeric="3" />
-			<column name="bezeichnung" value="Bewilligt" />
-		</insert>
-		<insert tableName="antrag_status">
-			<column name="antrag_status" value="ABGELEHNT" />
-			<column name="position" valueNumeric="4" />
-			<column name="bezeichnung" value="Abgelehnt" />
-		</insert>
-		<insert tableName="antrag_status">
-			<column name="antrag_status" value="STORNIERT" />
-			<column name="position" valueNumeric="5" />
-			<column name="bezeichnung" value="Storniert" />
-		</insert>
-	</changeSet>
+    <changeSet id="insertAntragStatus" author="raljuhn">
+        <insert tableName="antrag_status">
+            <column name="antrag_status" value="NEU"/>
+            <column name="position" valueNumeric="1"/>
+            <column name="bezeichnung" value="Neu"/>
+        </insert>
+        <insert tableName="antrag_status">
+            <column name="antrag_status" value="IN_ARBEIT"/>
+            <column name="position" valueNumeric="2"/>
+            <column name="bezeichnung" value="In Arbeit"/>
+        </insert>
+        <insert tableName="antrag_status">
+            <column name="antrag_status" value="BEWILLIGT"/>
+            <column name="position" valueNumeric="3"/>
+            <column name="bezeichnung" value="Bewilligt"/>
+        </insert>
+        <insert tableName="antrag_status">
+            <column name="antrag_status" value="ABGELEHNT"/>
+            <column name="position" valueNumeric="4"/>
+            <column name="bezeichnung" value="Abgelehnt"/>
+        </insert>
+        <insert tableName="antrag_status">
+            <column name="antrag_status" value="STORNIERT"/>
+            <column name="position" valueNumeric="5"/>
+            <column name="bezeichnung" value="Storniert"/>
+        </insert>
+    </changeSet>
 
-	<changeSet id="insertSonderUrlaubArt" author="raljuhn">
-		<insert tableName="sonderurlaub_art">
-			<column name="sonderurlaub_art" value="HEIRAT" />
-			<column name="position" valueNumeric="1" />
-			<column name="anzahl_tage" valueNumeric="2" />
-			<column name="bezeichnung" value="Heirat" />
-		</insert>
-		<insert tableName="sonderurlaub_art">
-			<column name="sonderurlaub_art" value="GEBURT" />
-			<column name="position" valueNumeric="2" />
-			<column name="anzahl_tage" valueNumeric="1" />
-			<column name="bezeichnung" value="Geburt" />
-		</insert>
-		<insert tableName="sonderurlaub_art">
-			<column name="sonderurlaub_art" value="TOD" />
-			<column name="position" valueNumeric="3" />
-			<column name="anzahl_tage" valueNumeric="1" />
-			<column name="bezeichnung" value="Todesfall" />
-		</insert>
-		<insert tableName="sonderurlaub_art">
-			<column name="sonderurlaub_art" value="UMZUG" />
-			<column name="position" valueNumeric="4" />
-			<column name="anzahl_tage" valueNumeric="1" />
-			<column name="bezeichnung" value="Umzug" />
-		</insert>
-	</changeSet>
+    <changeSet id="insertSonderUrlaubArt" author="raljuhn">
+        <insert tableName="sonderurlaub_art">
+            <column name="sonderurlaub_art" value="HEIRAT"/>
+            <column name="position" valueNumeric="1"/>
+            <column name="anzahl_tage" valueNumeric="2"/>
+            <column name="bezeichnung" value="Heirat"/>
+        </insert>
+        <insert tableName="sonderurlaub_art">
+            <column name="sonderurlaub_art" value="GEBURT"/>
+            <column name="position" valueNumeric="2"/>
+            <column name="anzahl_tage" valueNumeric="1"/>
+            <column name="bezeichnung" value="Geburt"/>
+        </insert>
+        <insert tableName="sonderurlaub_art">
+            <column name="sonderurlaub_art" value="TOD"/>
+            <column name="position" valueNumeric="3"/>
+            <column name="anzahl_tage" valueNumeric="1"/>
+            <column name="bezeichnung" value="Todesfall"/>
+        </insert>
+        <insert tableName="sonderurlaub_art">
+            <column name="sonderurlaub_art" value="UMZUG"/>
+            <column name="position" valueNumeric="4"/>
+            <column name="anzahl_tage" valueNumeric="1"/>
+            <column name="bezeichnung" value="Umzug"/>
+        </insert>
+    </changeSet>
 
-	<changeSet id="insertRolle" author="raljuhn">
-		<insert tableName="rolle">
-			<column name="rolle" value="ADMIN" />
-			<column name="position" valueNumeric="1" />
-			<column name="bezeichnung" value="Administrator" />
-		</insert>
-		<insert tableName="rolle">
-			<column name="rolle" value="ERFASSER" />
-			<column name="position" valueNumeric="2" />
-			<column name="bezeichnung" value="Erfasser" />
-		</insert>
-	</changeSet>
-	<changeSet id="insertBewilligungsStatus" author="raljuhn">
-		<insert tableName="bewilligungs_status">
-			<column name="bewilligungs_status" value="OFFEN" />
-			<column name="position" valueNumeric="1" />
-			<column name="bezeichnung" value="Offen" />
-		</insert>
-		<insert tableName="bewilligungs_status">
-			<column name="bewilligungs_status" value="BEWILLIGT" />
-			<column name="position" valueNumeric="2" />
-			<column name="bezeichnung" value="Bewilligt" />
-		</insert>
-		<insert tableName="bewilligungs_status">
-			<column name="bewilligungs_status" value="ABGELEHNT" />
-			<column name="position" valueNumeric="3" />
-			<column name="bezeichnung" value="Abgelehnt" />
-		</insert>
-	</changeSet>
+    <changeSet id="insertRolle" author="raljuhn">
+        <insert tableName="rolle">
+            <column name="rolle" value="ADMIN"/>
+            <column name="position" valueNumeric="1"/>
+            <column name="bezeichnung" value="Administrator"/>
+        </insert>
+        <insert tableName="rolle">
+            <column name="rolle" value="ERFASSER"/>
+            <column name="position" valueNumeric="2"/>
+            <column name="bezeichnung" value="Erfasser"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insertBewilligungsStatus" author="raljuhn">
+        <insert tableName="bewilligungs_status">
+            <column name="bewilligungs_status" value="OFFEN"/>
+            <column name="position" valueNumeric="1"/>
+            <column name="bezeichnung" value="Offen"/>
+        </insert>
+        <insert tableName="bewilligungs_status">
+            <column name="bewilligungs_status" value="BEWILLIGT"/>
+            <column name="position" valueNumeric="2"/>
+            <column name="bezeichnung" value="Bewilligt"/>
+        </insert>
+        <insert tableName="bewilligungs_status">
+            <column name="bewilligungs_status" value="ABGELEHNT"/>
+            <column name="position" valueNumeric="3"/>
+            <column name="bezeichnung" value="Abgelehnt"/>
+        </insert>
+    </changeSet>
 
-	<changeSet id="insertBenutzerTyp" author="raljuhn">
-		<insert tableName="benutzertyp">
-			<column name="benutzertyp" value="native" />
-			<column name="position" valueNumeric="1" />
-			<column name="bezeichnung" value="Intern" />
-		</insert>
-		<insert tableName="benutzertyp">
-			<column name="benutzertyp" value="ldap" />
-			<column name="position" valueNumeric="2" />
-			<column name="bezeichnung" value="LDAP" />
-		</insert>
-	</changeSet>
-	<changeSet author="raljuhn" id="insert_feiertagdefinition">
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="1" />
-			<column name="referenz_monat" valueNumeric="1" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="1" />
-			<column name="offset" valueNumeric="0" />
-			<column name="name" value="Neujahr" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="1" />
-			<column name="referenz_monat" valueNumeric="5" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="1" />
-			<column name="offset" valueNumeric="0" />
-			<column name="name" value="Maifeiertag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="3" />
-			<column name="referenz_monat" valueNumeric="10" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="1" />
-			<column name="offset" valueNumeric="0" />
-			<column name="name" value="gesetzlicher Feiertag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="25" />
-			<column name="referenz_monat" valueNumeric="12" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="1" />
-			<column name="offset" valueNumeric="0" />
-			<column name="name" value="1. Weihnachtsfeiertag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="26" />
-			<column name="referenz_monat" valueNumeric="12" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="1" />
-			<column name="offset" valueNumeric="0" />
-			<column name="name" value="2. Weihnachtsfeiertag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="2" />
-			<column name="offset" valueNumeric="-2" />
-			<column name="name" value="Karfreitag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="2" />
-			<column name="offset" valueNumeric="0" />
-			<column name="name" value="Ostersonntag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="2" />
-			<column name="offset" valueNumeric="1" />
-			<column name="name" value="Ostermontag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="2" />
-			<column name="offset" valueNumeric="39" />
-			<column name="name" value="Himmelfahrt" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="2" />
-			<column name="offset" valueNumeric="49" />
-			<column name="name" value="Pfingstsonntag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="2" />
-			<column name="offset" valueNumeric="50" />
-			<column name="name" value="Pfingstmontag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="2" />
-			<column name="offset" valueNumeric="60" />
-			<column name="name" value="Fronleichnam" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="3" />
-			<column name="offset" valueNumeric="0" />
-			<column name="name" value="Muttertag" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="4" />
-			<column name="offset" valueNumeric="12" />
-			<column name="name" value="1. Advent" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="4" />
-			<column name="offset" valueNumeric="19" />
-			<column name="name" value="2. Advent" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="4" />
-			<column name="offset" valueNumeric="26" />
-			<column name="name" value="3. Advent" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="0" />
-			<column name="referenz_monat" valueNumeric="0" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="4" />
-			<column name="offset" valueNumeric="33" />
-			<column name="name" value="4. Advent" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="24" />
-			<column name="referenz_monat" valueNumeric="12" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="1" />
-			<column name="offset" valueNumeric="0" />
-			<column name="name" value="Heiligabend" />
-		</insert>
-		<insert tableName="feiertagdefinition">
-			<column name="referenz_tag" valueNumeric="31" />
-			<column name="referenz_monat" valueNumeric="12" />
-			<column name="anteil_arbeitszeit" valueNumeric="1.0" />
-			<column name="typ" valueNumeric="1" />
-			<column name="offset" valueNumeric="0" />
-			<column name="name" value="Silvester" />
-		</insert>
-	</changeSet>
+    <changeSet id="insertBenutzerTyp" author="raljuhn">
+        <insert tableName="benutzertyp">
+            <column name="benutzertyp" value="native"/>
+            <column name="position" valueNumeric="1"/>
+            <column name="bezeichnung" value="Intern"/>
+        </insert>
+        <insert tableName="benutzertyp">
+            <column name="benutzertyp" value="ldap"/>
+            <column name="position" valueNumeric="2"/>
+            <column name="bezeichnung" value="LDAP"/>
+        </insert>
+    </changeSet>
+    <changeSet author="raljuhn" id="insert_feiertagdefinition">
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="1"/>
+            <column name="referenz_monat" valueNumeric="1"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="1"/>
+            <column name="offset" valueNumeric="0"/>
+            <column name="name" value="Neujahr"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="1"/>
+            <column name="referenz_monat" valueNumeric="5"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="1"/>
+            <column name="offset" valueNumeric="0"/>
+            <column name="name" value="Maifeiertag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="3"/>
+            <column name="referenz_monat" valueNumeric="10"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="1"/>
+            <column name="offset" valueNumeric="0"/>
+            <column name="name" value="gesetzlicher Feiertag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="25"/>
+            <column name="referenz_monat" valueNumeric="12"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="1"/>
+            <column name="offset" valueNumeric="0"/>
+            <column name="name" value="1. Weihnachtsfeiertag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="26"/>
+            <column name="referenz_monat" valueNumeric="12"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="1"/>
+            <column name="offset" valueNumeric="0"/>
+            <column name="name" value="2. Weihnachtsfeiertag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="2"/>
+            <column name="offset" valueNumeric="-2"/>
+            <column name="name" value="Karfreitag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="2"/>
+            <column name="offset" valueNumeric="0"/>
+            <column name="name" value="Ostersonntag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="2"/>
+            <column name="offset" valueNumeric="1"/>
+            <column name="name" value="Ostermontag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="2"/>
+            <column name="offset" valueNumeric="39"/>
+            <column name="name" value="Himmelfahrt"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="2"/>
+            <column name="offset" valueNumeric="49"/>
+            <column name="name" value="Pfingstsonntag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="2"/>
+            <column name="offset" valueNumeric="50"/>
+            <column name="name" value="Pfingstmontag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="2"/>
+            <column name="offset" valueNumeric="60"/>
+            <column name="name" value="Fronleichnam"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="3"/>
+            <column name="offset" valueNumeric="0"/>
+            <column name="name" value="Muttertag"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="4"/>
+            <column name="offset" valueNumeric="12"/>
+            <column name="name" value="1. Advent"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="4"/>
+            <column name="offset" valueNumeric="19"/>
+            <column name="name" value="2. Advent"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="4"/>
+            <column name="offset" valueNumeric="26"/>
+            <column name="name" value="3. Advent"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="0"/>
+            <column name="referenz_monat" valueNumeric="0"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="4"/>
+            <column name="offset" valueNumeric="33"/>
+            <column name="name" value="4. Advent"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="24"/>
+            <column name="referenz_monat" valueNumeric="12"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="1"/>
+            <column name="offset" valueNumeric="0"/>
+            <column name="name" value="Heiligabend"/>
+        </insert>
+        <insert tableName="feiertagdefinition">
+            <column name="referenz_tag" valueNumeric="31"/>
+            <column name="referenz_monat" valueNumeric="12"/>
+            <column name="anteil_arbeitszeit" valueNumeric="1.0"/>
+            <column name="typ" valueNumeric="1"/>
+            <column name="offset" valueNumeric="0"/>
+            <column name="name" value="Silvester"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

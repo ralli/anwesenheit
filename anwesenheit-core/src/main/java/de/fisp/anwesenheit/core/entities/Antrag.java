@@ -164,7 +164,7 @@ public class Antrag {
   public String toString() {
     ToStringBuilder toStringBuilder = new ToStringBuilder(this);
     toStringBuilder.append("id", id).append("benutzerId", benutzerId).append("antragArt", antragArtId).append("von", von)
-        .append("bis", bis).append("antragStatusId", antragStatusId).append("anzahlTage", anzahlTage);
+            .append("bis", bis).append("antragStatusId", antragStatusId).append("anzahlTage", anzahlTage);
     return toStringBuilder.toString();
   }
 }

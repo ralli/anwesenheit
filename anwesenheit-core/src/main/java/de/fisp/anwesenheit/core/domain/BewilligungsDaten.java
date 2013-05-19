@@ -5,11 +5,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 
 public class BewilligungsDaten {
-  private long id;
-  private long antragId;
-  private int position;
-  private BewilligungsStatus bewilligungsStatus;
-  private BenutzerDaten benutzer;
+  private final long id;
+  private final long antragId;
+  private final int position;
+  private final BewilligungsStatus bewilligungsStatus;
+  private final BenutzerDaten benutzer;
 
   public BewilligungsDaten(long id, long antragId, int position, BewilligungsStatus bewilligungsStatus, BenutzerDaten benutzer) {
     this.id = id;

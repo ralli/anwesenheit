@@ -27,7 +27,7 @@ import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 @Controller
 @RequestMapping("/api/benutzer")
 public class BenutzerApiController {
-  private BenutzerService benutzerService;
+  private final BenutzerService benutzerService;
 
   private HttpHeaders createJsonHeaders() {
     HttpHeaders headers = new HttpHeaders();
@@ -44,7 +44,7 @@ public class BenutzerApiController {
 
   private String getCurrentUser() {
     String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId",
-        RequestAttributes.SCOPE_SESSION);
+            RequestAttributes.SCOPE_SESSION);
     if (result == null) {
       throw new NotAuthorizedException("Sie sind nicht angemeldet");
     }
@@ -69,7 +69,8 @@ public class BenutzerApiController {
   }
 
   @RequestMapping(value = "/search", method = RequestMethod.GET)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> search(@RequestParam(value = "term", required = true) String term) {
     HttpHeaders headers = createJsonHeaders();
     List<LabelValue> list = benutzerService.search(term);
@@ -77,7 +78,8 @@ public class BenutzerApiController {
   }
 
   @RequestMapping(value = "/current", method = RequestMethod.GET)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> findCurrentUser() {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -88,7 +90,8 @@ public class BenutzerApiController {
   }
 
   @RequestMapping(value = "/{benutzerId}", method = RequestMethod.GET)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> findByBenutzerId(@PathVariable String benutzerId) {
     BenutzerDaten daten = benutzerService.findByBenutzerId(benutzerId);
     HttpHeaders headers = createJsonHeaders();

@@ -31,7 +31,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
   private Session getCurrentSession() {
     Session session = sessionFactory.getCurrentSession();
     if (session == null) {
-    	throw new RuntimeException("No current session found!");
+      throw new RuntimeException("No current session found!");
     }
     return session;
   }
@@ -39,7 +39,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
   @Override
   public List<Bewilligung> findByAntrag(long antragId) {
     Query query = getCurrentSession().createQuery(
-        "from Bewilligung b join fetch b.benutzer join fetch b.bewilligungsStatus where b.antragId=:antragId order by b.position");
+            "from Bewilligung b join fetch b.benutzer join fetch b.bewilligungsStatus where b.antragId=:antragId order by b.position");
     query.setLong("antragId", antragId);
     @SuppressWarnings("unchecked")
     List<Bewilligung> list = query.list();
@@ -50,7 +50,7 @@ public class BewilligungDaoImpl implements BewilligungDao {
   @Override
   public Bewilligung findById(long id) {
     Query query = getCurrentSession().createQuery(
-        "from Bewilligung b join fetch b.benutzer join fetch b.bewilligungsStatus where b.id=:id");
+            "from Bewilligung b join fetch b.benutzer join fetch b.bewilligungsStatus where b.id=:id");
     query.setLong("id", id);
     @SuppressWarnings("unchecked")
     List<Bewilligung> list = query.list();

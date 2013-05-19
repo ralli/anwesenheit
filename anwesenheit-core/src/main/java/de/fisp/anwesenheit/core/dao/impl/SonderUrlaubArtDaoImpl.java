@@ -26,7 +26,7 @@ public class SonderUrlaubArtDaoImpl implements SonderUrlaubArtDao {
   private Session getCurrentSession() {
     Session session = sessionFactory.getCurrentSession();
     if (session == null) {
-    	throw new RuntimeException("No current session found!");
+      throw new RuntimeException("No current session found!");
     }
     return session;
   }
@@ -39,13 +39,13 @@ public class SonderUrlaubArtDaoImpl implements SonderUrlaubArtDao {
     log.debug("findAll: {}", list);
     return list;
   }
-  
+
   @Override
   public SonderUrlaubArt findById(String sonderUrlaubArtId) {
     Query query = getCurrentSession().createQuery("from SonderUrlaubArt s where s.sonderUrlaubArt=:sonderUrlaubArt");
     query.setString("sonderUrlaubArt", sonderUrlaubArtId);
     @SuppressWarnings("unchecked")
-    List<SonderUrlaubArt> list = query.list();    
+    List<SonderUrlaubArt> list = query.list();
     SonderUrlaubArt result = list.isEmpty() ? null : list.get(0);
     log.debug("findById({})={}", sonderUrlaubArtId, result);
     return result;

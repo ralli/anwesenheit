@@ -25,7 +25,7 @@ public class Benutzer {
   @Column(name = "password_hash")
   private String passwordHash;
 
-  @OneToMany(targetEntity = BenutzerRolle.class) 
+  @OneToMany(targetEntity = BenutzerRolle.class)
   @JoinColumn(name = "benutzer_id")
   private Set<BenutzerRolle> benutzerRollen;
 
@@ -101,7 +101,7 @@ public class Benutzer {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.append("benutzerId", benutzerId).append("vorname", vorname).append("nachname", nachname).append("benutzerTyp", benutzertyp)
-        .append("email", email);
+            .append("email", email);
     return b.toString();
   }
 }

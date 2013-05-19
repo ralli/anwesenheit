@@ -47,7 +47,7 @@ public class MailServiceImpl implements MailService {
     try {
       if (log.isDebugEnabled()) {
         log.debug("Sending Mail: \n" + "To: " + adressen + "\n" + "Subject: " + subject + "\n" + "Text: " + text + "\n" + "From: "
-            + from);
+                + from);
       }
 
       msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adressen));
@@ -77,9 +77,6 @@ public class MailServiceImpl implements MailService {
       msg.setSentDate(new Date());
 
       Transport.send(msg);
-    } catch (AddressException e) {
-      log.error(e.getMessage(), e);
-      throw new RuntimeException("Fehler beim Mailversand", e);
     } catch (MessagingException e) {
       log.error(e.getMessage(), e);
       throw new RuntimeException("Fehler beim Mailversand", e);

@@ -10,16 +10,16 @@ import de.fisp.anwesenheit.core.entities.AntragStatus;
 import de.fisp.anwesenheit.core.util.JsonDateSerializer;
 
 public class AntragListeEintrag {
-  private long id;
-  private BenutzerDaten benutzer;
-  private AntragArt antragArt;
-  private AntragStatus antragStatus;
-  private Date von;
-  private Date bis;
-  private double anzahlTage;
+  private final long id;
+  private final BenutzerDaten benutzer;
+  private final AntragArt antragArt;
+  private final AntragStatus antragStatus;
+  private final Date von;
+  private final Date bis;
+  private final double anzahlTage;
 
   public AntragListeEintrag(long id, BenutzerDaten benutzer, AntragArt antragArt, AntragStatus antragStatus, Date von, Date bis,
-      double anzahlTage) {
+                            double anzahlTage) {
     this.id = id;
     this.benutzer = benutzer;
     this.antragArt = antragArt;

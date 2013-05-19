@@ -89,11 +89,11 @@ public class Bewilligung {
   public void setBenutzer(Benutzer benutzer) {
     this.benutzer = benutzer;
   }
-  
+
   public Antrag getAntrag() {
     return antrag;
   }
-  
+
   public void setAntrag(Antrag antrag) {
     this.antrag = antrag;
   }
@@ -102,7 +102,7 @@ public class Bewilligung {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.append("id", id).append("position", position).append("antragId", antragId).append("benutzerId", benutzerId)
-        .append("bewilligungsStatus", bewilligungsStatusId);
+            .append("bewilligungsStatus", bewilligungsStatusId);
     return b.toString();
   }
 }

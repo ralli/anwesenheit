@@ -11,14 +11,14 @@ import de.fisp.anwesenheit.core.TestConfig;
 import de.fisp.anwesenheit.core.dao.BewilligungsStatusDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { TestConfig.class })
+@ContextConfiguration(classes = {TestConfig.class})
 @Transactional
 public class BewilligungsStatusDaoTest {
-	@Autowired
-	private BewilligungsStatusDao bewilligungsStatusDao;
+  @Autowired
+  private BewilligungsStatusDao bewilligungsStatusDao;
 
-	@Test
-	public void testFindAll() {
-		bewilligungsStatusDao.findAll();
-	}
+  @Test
+  public void testFindAll() {
+    bewilligungsStatusDao.findAll();
+  }
 }

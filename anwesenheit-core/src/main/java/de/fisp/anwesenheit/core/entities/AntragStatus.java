@@ -10,38 +10,38 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Entity
 @Table(name = "antrag_status")
 public class AntragStatus {
-	@Id
-	@Column(name = "antrag_status")
-	private String antragStatus;
-	private int position;
-	private String bezeichnung;
+  @Id
+  @Column(name = "antrag_status")
+  private String antragStatus;
+  private int position;
+  private String bezeichnung;
 
-	public String getAntragStatus() {
-		return antragStatus;
-	}
+  public String getAntragStatus() {
+    return antragStatus;
+  }
 
-	public void setAntragStatus(String antragStatus) {
-		this.antragStatus = antragStatus;
-	}
+  public void setAntragStatus(String antragStatus) {
+    this.antragStatus = antragStatus;
+  }
 
-	public int getPosition() {
-		return position;
-	}
+  public int getPosition() {
+    return position;
+  }
 
-	public void setPosition(int position) {
-		this.position = position;
-	}
+  public void setPosition(int position) {
+    this.position = position;
+  }
 
-	public String getBezeichnung() {
-		return bezeichnung;
-	}
+  public String getBezeichnung() {
+    return bezeichnung;
+  }
 
-	public void setBezeichnung(String bezeichnung) {
-		this.bezeichnung = bezeichnung;
-	}
-	
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
+  public void setBezeichnung(String bezeichnung) {
+    this.bezeichnung = bezeichnung;
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this);
+  }
 }

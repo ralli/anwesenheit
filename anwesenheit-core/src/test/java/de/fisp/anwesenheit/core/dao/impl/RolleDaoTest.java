@@ -11,14 +11,14 @@ import de.fisp.anwesenheit.core.TestConfig;
 import de.fisp.anwesenheit.core.dao.RolleDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { TestConfig.class })
+@ContextConfiguration(classes = {TestConfig.class})
 @Transactional
 public class RolleDaoTest {
-	@Autowired
-	private RolleDao rolleDao;
-	
-	@Test
-	public void testFindAll() {
-		rolleDao.findAll();
-	}
+  @Autowired
+  private RolleDao rolleDao;
+
+  @Test
+  public void testFindAll() {
+    rolleDao.findAll();
+  }
 }

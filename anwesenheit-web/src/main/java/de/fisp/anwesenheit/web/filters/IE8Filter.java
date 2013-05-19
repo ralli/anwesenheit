@@ -11,16 +11,21 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Der IE8 hat die Eigenschaft, dass er im Intranet standardmäßig auf einen 
+ * Der IE8 hat die Eigenschaft, dass er im Intranet standardmäßig auf einen
  * "Kompatibilitätsmodus" eingestellt ist. Das hat zur Folge, dass die Seiten
  * nicht korrekt angezeigt werden.
- *
- * Dieser Filter fügt einen HTTP-Header hinzu, der den Kompatibilitätsmodus beim 
+ * <p/>
+ * Dieser Filter fügt einen HTTP-Header hinzu, der den Kompatibilitätsmodus beim
  * IE8 abschaltet.
- *
  */
 public class IE8Filter implements Filter {
 
+  /**
+   * Empty implementation of the Filter-Interface
+   *
+   * @param filterConfig the Filterconfig
+   * @throws ServletException
+   */
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
   }
@@ -33,6 +38,9 @@ public class IE8Filter implements Filter {
     chain.doFilter(request, response);
   }
 
+  /**
+   * Empty implementation of the Filter-Interface
+   */
   @Override
   public void destroy() {
   }

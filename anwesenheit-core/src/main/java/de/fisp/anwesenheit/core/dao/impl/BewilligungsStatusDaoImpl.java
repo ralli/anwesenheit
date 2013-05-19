@@ -26,7 +26,7 @@ public class BewilligungsStatusDaoImpl implements BewilligungsStatusDao {
   private Session getCurrentSession() {
     Session session = sessionFactory.getCurrentSession();
     if (session == null) {
-    	throw new RuntimeException("No current session found!");
+      throw new RuntimeException("No current session found!");
     }
     return session;
   }

@@ -12,18 +12,18 @@ import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 import de.fisp.anwesenheit.core.util.JsonDateSerializer;
 
 public class AntragsDaten {
-  private long id;
-  private AntragArt antragArt;
-  private AntragStatus antragStatus;
-  private SonderUrlaubArt sonderUrlaubArt;
-  private Date von;
-  private Date bis;
-  private BenutzerDaten benutzer;
-  private List<BewilligungsDaten> bewilligungen;
-  private double anzahlTage;
+  private final long id;
+  private final AntragArt antragArt;
+  private final AntragStatus antragStatus;
+  private final SonderUrlaubArt sonderUrlaubArt;
+  private final Date von;
+  private final Date bis;
+  private final BenutzerDaten benutzer;
+  private final List<BewilligungsDaten> bewilligungen;
+  private final double anzahlTage;
 
   public AntragsDaten(long id, AntragArt antragArt, AntragStatus antragStatus, SonderUrlaubArt sonderUrlaubArt, Date von, Date bis, double anzahlTage,
-      BenutzerDaten benutzer, List<BewilligungsDaten> bewilligungen) {
+                      BenutzerDaten benutzer, List<BewilligungsDaten> bewilligungen) {
     super();
     this.id = id;
     this.antragArt = antragArt;
@@ -51,7 +51,7 @@ public class AntragsDaten {
   public SonderUrlaubArt getSonderUrlaubArt() {
     return sonderUrlaubArt;
   }
-  
+
   @JsonSerialize(using = JsonDateSerializer.class)
   public Date getVon() {
     return von;

@@ -47,10 +47,11 @@ public class ArbeitstageApiController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> index(
-      @RequestParam(value = "von", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date von,
-      @RequestParam(value = "bis", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date bis) {
+          @RequestParam(value = "von", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date von,
+          @RequestParam(value = "bis", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date bis) {
     HttpHeaders headers = createJsonHeaders();
 
     Map<String, Double> map = new HashMap<String, Double>();

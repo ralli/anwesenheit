@@ -84,7 +84,7 @@ public class AntragHistorie {
   public String toString() {
     ToStringBuilder b = new ToStringBuilder(this);
     b.append("id", id).append("antragId", antragId).append("benutzerId", benutzerId).append("zeitpunkt", zeitpunkt)
-        .append("beschreibung", beschreibung);
+            .append("beschreibung", beschreibung);
     return b.toString();
   }
 }

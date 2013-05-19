@@ -54,7 +54,7 @@ public class AntragServiceTest {
     antragHistorieDao = mock(AntragHistorieDao.class);
     berechtigungsService = mock(BerechtigungsService.class);
     antragService = new AntragServiceImpl(antragDao, bewilligungDao, benutzerDao, sonderUrlaubArtDao, antragHistorieDao,
-        berechtigungsService);
+            berechtigungsService);
   }
 
   @Test
@@ -220,7 +220,7 @@ public class AntragServiceTest {
     cmd.setVon(testDataFactory.createDate(7, 12, 2013));
     cmd.setBis(testDataFactory.createDate(7, 12, 2013));
     cmd.setBenutzerId(benutzerId);
-    cmd.setBewilliger(new String[] {});
+    cmd.setBewilliger(new String[]{});
     try {
       antragService.createAntrag(benutzerId, cmd);
     } catch (NotValidException ex) {
@@ -239,7 +239,7 @@ public class AntragServiceTest {
     cmd.setVon(testDataFactory.createDate(7, 12, 2013));
     cmd.setBis(testDataFactory.createDate(7, 12, 2013));
     cmd.setBenutzerId(benutzerId);
-    cmd.setBewilliger(new String[] { "chef", "boss" });
+    cmd.setBewilliger(new String[]{"chef", "boss"});
     when(berechtigungsService.isAntragEigentuemerOderErfasser(Mockito.isA(Antrag.class), Mockito.eq(benutzerId))).thenReturn(false);
     try {
       antragService.createAntrag(benutzerId, cmd);
@@ -259,7 +259,7 @@ public class AntragServiceTest {
     cmd.setVon(testDataFactory.createDate(7, 12, 2013));
     cmd.setBis(testDataFactory.createDate(7, 12, 2013));
     cmd.setBenutzerId(benutzerId);
-    cmd.setBewilliger(new String[] { "chef", "boss" });
+    cmd.setBewilliger(new String[]{"chef", "boss"});
     when(berechtigungsService.isAntragEigentuemerOderErfasser(Mockito.isA(Antrag.class), Mockito.eq(benutzerId))).thenReturn(true);
     antragService.createAntrag(benutzerId, cmd);
   }

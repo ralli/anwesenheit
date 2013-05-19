@@ -11,12 +11,12 @@ import de.fisp.anwesenheit.core.TestConfig;
 import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { TestConfig.class })
+@ContextConfiguration(classes = {TestConfig.class})
 @Transactional
 public class SonderUrlaubArtDaoTest {
   @Autowired
   private SonderUrlaubArtDao sonderUrlaubArtDao;
-  
+
   @Test
   public void findAllShouldSucceed() {
     sonderUrlaubArtDao.findAll();

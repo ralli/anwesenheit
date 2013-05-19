@@ -11,24 +11,24 @@ import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 
 public class BewilligungsDetails {
-  private long id;
-  private long antragId;
-  private int position;
-  private BenutzerDaten antragsteller;
-  private BenutzerDaten bewilliger;
-  private Date von;
-  private Date bis;
-  private double anzahlTage;
-  private AntragStatus antragStatus;
-  private AntragArt antragArt;
-  private SonderUrlaubArt sonderUrlaubArt;
-  private BewilligungsStatus bewilligungsStatus;
-  private List<BewilligungsDaten> bewilligungen;
-  private List<AntragListeEintrag> gleichzeitigeAntraege;
+  private final long id;
+  private final long antragId;
+  private final int position;
+  private final BenutzerDaten antragsteller;
+  private final BenutzerDaten bewilliger;
+  private final Date von;
+  private final Date bis;
+  private final double anzahlTage;
+  private final AntragStatus antragStatus;
+  private final AntragArt antragArt;
+  private final SonderUrlaubArt sonderUrlaubArt;
+  private final BewilligungsStatus bewilligungsStatus;
+  private final List<BewilligungsDaten> bewilligungen;
+  private final List<AntragListeEintrag> gleichzeitigeAntraege;
 
   public BewilligungsDetails(long id, long antragId, int position, BenutzerDaten antragsteller, BenutzerDaten bewilliger, Date von, Date bis,
-      double anzahlTage, AntragStatus antragStatus, AntragArt antragArt, SonderUrlaubArt sonderUrlaubArt,
-      BewilligungsStatus bewilligungsStatus, List<BewilligungsDaten> bewilligungen, List<AntragListeEintrag> gleichzeitigeAntraege) {
+                             double anzahlTage, AntragStatus antragStatus, AntragArt antragArt, SonderUrlaubArt sonderUrlaubArt,
+                             BewilligungsStatus bewilligungsStatus, List<BewilligungsDaten> bewilligungen, List<AntragListeEintrag> gleichzeitigeAntraege) {
     this.id = id;
     this.antragId = antragId;
     this.antragsteller = antragsteller;
@@ -56,7 +56,7 @@ public class BewilligungsDetails {
   public int getPosition() {
     return position;
   }
-  
+
   public BenutzerDaten getAntragsteller() {
     return antragsteller;
   }

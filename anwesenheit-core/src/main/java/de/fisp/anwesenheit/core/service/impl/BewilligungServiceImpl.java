@@ -36,19 +36,22 @@ import de.fisp.anwesenheit.core.util.NotAuthorizedException;
 import de.fisp.anwesenheit.core.util.NotFoundException;
 import de.fisp.anwesenheit.core.util.NotValidException;
 
+/**
+ * Verschiedene Operationen rund um Bewilligungen.
+ */
 @Service
 public class BewilligungServiceImpl implements BewilligungService {
   private static final Logger logger = LoggerFactory.getLogger(BewilligungServiceImpl.class);
-  private BewilligungDao bewilligungDao;
-  private AntragDao antragDao;
-  private AntragHistorieDao antragHistorieDao;
-  private BenutzerDao benutzerDao;
-  private BerechtigungsService berechtigungsService;
-  private BewilligungsStatusDao bewilligungsStatusDao;
+  private final BewilligungDao bewilligungDao;
+  private final AntragDao antragDao;
+  private final AntragHistorieDao antragHistorieDao;
+  private final BenutzerDao benutzerDao;
+  private final BerechtigungsService berechtigungsService;
+  private final BewilligungsStatusDao bewilligungsStatusDao;
 
   @Autowired
   public BewilligungServiceImpl(BewilligungDao bewilligungDao, AntragDao antragDao, AntragHistorieDao antragHistorieDao,
-      BenutzerDao benutzerDao, BerechtigungsService berechtigungsService, BewilligungsStatusDao bewilligungsStatusDao) {
+                                BenutzerDao benutzerDao, BerechtigungsService berechtigungsService, BewilligungsStatusDao bewilligungsStatusDao) {
     this.bewilligungDao = bewilligungDao;
     this.antragDao = antragDao;
     this.antragHistorieDao = antragHistorieDao;
@@ -85,7 +88,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     }
 
     String message = String.format("Bewilligung Bewilliger: %s, Status: %s gelöscht", bewilligung.getBenutzerId(),
-        bewilligung.getBewilligungsStatusId());
+            bewilligung.getBewilligungsStatusId());
     aktualisiereAntragStatus(bewilligung.getAntrag());
 
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
@@ -95,12 +98,12 @@ public class BewilligungServiceImpl implements BewilligungService {
 
   private BenutzerDaten createBenutzerDaten(Benutzer benutzer) {
     return new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(),
-        benutzer.getEmail());
+            benutzer.getEmail());
   }
 
   private BewilligungsDaten createBewilligungsDaten(Bewilligung bewilligung) {
     return new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(),
-        bewilligung.getBewilligungsStatus(), createBenutzerDaten(bewilligung.getBenutzer()));
+            bewilligung.getBewilligungsStatus(), createBenutzerDaten(bewilligung.getBenutzer()));
   }
 
   @Override
@@ -147,7 +150,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     BewilligungsDaten daten = createBewilligungsDaten(bewilligung);
 
     String message = String.format("Bewilligung Bewilliger: %s, Status: %s hinzugefügt", bewilligung.getBenutzerId(),
-        bewilligung.getBewilligungsStatusId());
+            bewilligung.getBewilligungsStatusId());
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
     aktualisiereAntragStatus(antrag);
 
@@ -159,8 +162,8 @@ public class BewilligungServiceImpl implements BewilligungService {
   private BewilligungsListeEintrag createBewilligungsListeEintrag(Bewilligung bewilligung) {
     Antrag antrag = bewilligung.getAntrag();
     return new BewilligungsListeEintrag(bewilligung.getId(), bewilligung.getBewilligungsStatus(),
-        bewilligung.getAntragId(), antrag.getAntragArt(), antrag.getAntragStatus(), createBenutzerDaten(antrag.getBenutzer()),
-        antrag.getVon(), antrag.getBis());
+            bewilligung.getAntragId(), antrag.getAntragArt(), antrag.getAntragStatus(), createBenutzerDaten(antrag.getBenutzer()),
+            antrag.getVon(), antrag.getBis());
   }
 
   @Override
@@ -205,7 +208,7 @@ public class BewilligungServiceImpl implements BewilligungService {
        * Die Bewilligungen, mit Position in [1,2] sind die Bewilligungen, die Unterschreiben müssen.
        * Positionen > 2 sind nur "zur Info" und für die Ermittlung des Antragstatus nicht relevant.
        */
-      if(b.getPosition() > 2)
+      if (b.getPosition() > 2)
         break;
 
       if ("OFFEN".equals(b.getBewilligungsStatusId()))
@@ -220,15 +223,13 @@ public class BewilligungServiceImpl implements BewilligungService {
 
     if (existAbgelehnt) {
       antragStatus = "ABGELEHNT";
-    }
-    else if (existBewilligt) {
+    } else if (existBewilligt) {
       if (existOffen) {
         antragStatus = "IN_ARBEIT";
       } else {
         antragStatus = "BEWILLIGT";
       }
-    }
-    else {
+    } else {
       antragStatus = "NEU";
     }
 
@@ -238,7 +239,7 @@ public class BewilligungServiceImpl implements BewilligungService {
   @Override
   @Transactional
   public BewilligungsDaten updateBewilligungStatus(String benutzerId, UpdateBewilligungCommand command) {
-    logger.debug("updateBewilligungStatus({}, {})", new Object[] { benutzerId, command });
+    logger.debug("updateBewilligungStatus({}, {})", new Object[]{benutzerId, command});
     Bewilligung bewilligung = bewilligungDao.findById(command.getId());
 
     if (bewilligung == null) {
@@ -259,7 +260,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     bewilligungDao.update(bewilligung);
 
     String message = String.format("Bewilligungsstatus geändert. neu: %s (vorher: %s)", command.getBewilligungsStatus(),
-        bewilligungsStatusAlt);
+            bewilligungsStatusAlt);
 
     insertAntragHistorie(benutzerId, bewilligung.getAntragId(), message);
     aktualisiereAntragStatus(bewilligung.getAntrag());
@@ -324,17 +325,16 @@ public class BewilligungServiceImpl implements BewilligungService {
     filter.setVon(antrag.getVon());
     filter.setBis(antrag.getBis());
     List<Antrag> antraege;
-    
-    if(berechtigungsService.hatSonderBerechtigungen(benutzerId)) {
+
+    if (berechtigungsService.hatSonderBerechtigungen(benutzerId)) {
       antraege = antragDao.findByFilter(filter);
-    }
-    else {
+    } else {
       antraege = antragDao.findByBewilligerAndFilter(benutzerId, filter);
     }
-    
+
     for (Antrag a : antraege) {
       AntragListeEintrag eintrag = new AntragListeEintrag(a.getId(), createBenutzerDaten(a.getBenutzer()), a.getAntragArt(),
-          a.getAntragStatus(), a.getVon(), a.getBis(), a.getAnzahlTage());
+              a.getAntragStatus(), a.getVon(), a.getBis(), a.getAnzahlTage());
       if (isAktiverAntrag(a)) {
         gleichzeitigeEintraege.add(eintrag);
       }

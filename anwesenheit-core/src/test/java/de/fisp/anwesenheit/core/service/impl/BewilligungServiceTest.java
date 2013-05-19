@@ -49,7 +49,7 @@ public class BewilligungServiceTest {
     berechtigungsService = mock(BerechtigungsService.class);
     bewilligungsStatusDao = mock(BewilligungsStatusDao.class);
     bewilligungService = new BewilligungServiceImpl(bewilligungDao, antragDao, antragHistorieDao, benutzerDao,
-        berechtigungsService, bewilligungsStatusDao);
+            berechtigungsService, bewilligungsStatusDao);
   }
 
   /**

@@ -16,38 +16,38 @@ import de.fisp.anwesenheit.core.dao.BenutzerDao;
 import de.fisp.anwesenheit.core.entities.Benutzer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { TestConfig.class })
+@ContextConfiguration(classes = {TestConfig.class})
 @Transactional
 public class BenutzerDaoTest {
-	@Autowired
-	private BenutzerDao benutzerDao;
-	@Autowired
-	private TestDataFactory testDataFactory;
+  @Autowired
+  private BenutzerDao benutzerDao;
+  @Autowired
+  private TestDataFactory testDataFactory;
 
-	@Test
-	public void benutzerDaoShouldBeWired() {
-		Assert.assertNotNull(benutzerDao);
-	}
+  @Test
+  public void benutzerDaoShouldBeWired() {
+    Assert.assertNotNull(benutzerDao);
+  }
 
-	@Test
-	public void testInsertUpdateDelete() {
-		final String benutzerId = "demotest";
-		final String vorname = "Bongo";
-		Benutzer benutzer = testDataFactory.createBenutzer(benutzerId);
-		benutzerDao.insert(benutzer);
-		benutzer = benutzerDao.findById(benutzerId);
-		Assert.assertNotNull(benutzer);
-		benutzer.setVorname(vorname);
-		benutzerDao.update(benutzer);
-		benutzer = benutzerDao.findById(benutzerId);
-		Assert.assertNotNull(benutzer);
-		List<Benutzer> list = benutzerDao.search("demotest");
-		Assert.assertEquals(1, list.size());
-		Assert.assertEquals(vorname, benutzer.getVorname());
-		benutzerDao.delete(benutzer);
-		benutzer = benutzerDao.findById(benutzerId);
-		Assert.assertNull(benutzer);
-		
-	}
-	
+  @Test
+  public void testInsertUpdateDelete() {
+    final String benutzerId = "demotest";
+    final String vorname = "Bongo";
+    Benutzer benutzer = testDataFactory.createBenutzer(benutzerId);
+    benutzerDao.insert(benutzer);
+    benutzer = benutzerDao.findById(benutzerId);
+    Assert.assertNotNull(benutzer);
+    benutzer.setVorname(vorname);
+    benutzerDao.update(benutzer);
+    benutzer = benutzerDao.findById(benutzerId);
+    Assert.assertNotNull(benutzer);
+    List<Benutzer> list = benutzerDao.search("demotest");
+    Assert.assertEquals(1, list.size());
+    Assert.assertEquals(vorname, benutzer.getVorname());
+    benutzerDao.delete(benutzer);
+    benutzer = benutzerDao.findById(benutzerId);
+    Assert.assertNull(benutzer);
+
+  }
+
 }

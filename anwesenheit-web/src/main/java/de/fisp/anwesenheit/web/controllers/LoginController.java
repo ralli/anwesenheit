@@ -28,7 +28,7 @@ import de.fisp.anwesenheit.core.service.LoginService;
 public class LoginController {
   @Autowired
   private LoginService loginService;
-  private Logger logger = LoggerFactory.getLogger(LoginController.class);
+  private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
   @RequestMapping(value = "/login", method = RequestMethod.GET)
   public String login(@RequestParam(value = "redirectUrl", required = false) String redirectUrl, Model model) {
@@ -71,12 +71,11 @@ public class LoginController {
       return "/login";
     }
     RequestContextHolder.currentRequestAttributes().setAttribute("benutzerId", loginCommand.getLogin(),
-        RequestAttributes.SCOPE_SESSION);
+            RequestAttributes.SCOPE_SESSION);
     RequestContextHolder.currentRequestAttributes().setAttribute("benutzerName", getBenutzerName(benutzerDaten),
-        RequestAttributes.SCOPE_SESSION);
-    String result = StringUtils.isNotBlank(loginCommand.getRedirectUrl()) ? "redirect:" + "/#!/" + loginCommand.getRedirectUrl()
-        : "redirect:/";
-    return result;
+            RequestAttributes.SCOPE_SESSION);
+    return StringUtils.isNotBlank(loginCommand.getRedirectUrl()) ? "redirect:" + "/#!/" + loginCommand.getRedirectUrl()
+            : "redirect:/";
   }
 
   @RequestMapping(value = "/logoff", method = RequestMethod.GET)

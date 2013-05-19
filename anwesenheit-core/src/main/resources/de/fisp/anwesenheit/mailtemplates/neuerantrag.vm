@@ -1,13 +1,13 @@
 <p>${antrag.benutzer.vorname} ${antrag.benutzer.nachname} legt Ihnen einen neuen Antrag auf zur Bewilligung
-    auf ${antrag.antragArt.bezeichnung} vor:</p>
+  auf ${antrag.antragArt.bezeichnung} vor:</p>
 <ul>
-    <li>Art des Antrags: ${antrag.antragArt.bezeichnung}</li>
-    <li>Zeitraum vom: $date.format('dd.MM.yyyy', ${antrag.von})
-        bis: $date.format('dd.MM.yyyy', ${antrag.bis})
-        ($number.format('0.#', ${antrag.anzahlTage}) Tage)
-    </li>
-    #if(${antrag.antragArt.antragArt} == "SONDER")
-        <li>Art des Sonderurlaubs: ${antrag.sonderUrlaubArt.sonderUrlaubArt}</li>
-    #end
+  <li>Art des Antrags: ${antrag.antragArt.bezeichnung}</li>
+  <li>Zeitraum vom: $date.format('dd.MM.yyyy', ${antrag.von})
+    bis: $date.format('dd.MM.yyyy', ${antrag.bis})
+    ($number.format('0.#', ${antrag.anzahlTage}) Tage)
+  </li>
+  #if(${antrag.antragArt.antragArt} == "SONDER")
+    <li>Art des Sonderurlaubs: ${antrag.sonderUrlaubArt.sonderUrlaubArt}</li>
+  #end
 </ul>
 <p>Über den folgenden Link gelangen Sie direkt zum Antrag: <a href="${bewilligungsUrl}">Link zum Antrag</a></p>

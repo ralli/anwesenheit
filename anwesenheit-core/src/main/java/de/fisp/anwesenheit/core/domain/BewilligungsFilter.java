@@ -9,7 +9,7 @@ public class BewilligungsFilter {
   private Date von;
   private Date bis;
   private String statusFilter; // OFFEN, BEWILLIGT, ABGELEHNT (Default:
-                               // ALLE)
+  // ALLE)
 
   public String getBenutzerId() {
     return benutzerId;
@@ -42,7 +42,7 @@ public class BewilligungsFilter {
   public String getStatusFilter() {
     return statusFilter;
   }
-  
+
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this);

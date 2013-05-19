@@ -28,7 +28,7 @@ public class FeiertagServiceTest {
   private FeiertagDefinitionDao feiertagDefinitionDao;
   private FeiertagDao feiertagDao;
   private List<FeiertagDefinition> feiertagDefinitionen;
-  private TestDataFactory testDataFactory = new TestDataFactory();
+  private final TestDataFactory testDataFactory = new TestDataFactory();
 
   private void setAttribute(Object obj, String fieldName, Object value) throws Exception {
     Class<?> c = obj.getClass();
@@ -71,7 +71,7 @@ public class FeiertagServiceTest {
   public void testBerechneAnzahlTage() {
     Date von = testDataFactory.createDate(18, 4, 2013); // Donnerstag
     Date bis = testDataFactory.createDate(22, 4, 2013); // Montag
-                                                        // (einschließlich)
+    // (einschließlich)
     List<Feiertag> list = new ArrayList<Feiertag>();
     list.add(testDataFactory.createFeiertag(testDataFactory.createDate(21, 4, 2013), 1.0, "Feiertag am Sonntag"));
     list.add(testDataFactory.createFeiertag(testDataFactory.createDate(22, 4, 2013), 0.5, "Halber Feiertag am Montag"));

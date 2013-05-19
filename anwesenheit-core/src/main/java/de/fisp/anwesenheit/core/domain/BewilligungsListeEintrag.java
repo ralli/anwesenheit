@@ -12,17 +12,17 @@ import de.fisp.anwesenheit.core.entities.AntragStatus;
 import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 
 public class BewilligungsListeEintrag {
-  private long id;
-  private BewilligungsStatus bewilligungsStatus;
-  private long antragId;
-  private AntragArt antragArt;
-  private AntragStatus antragStatus;
-  private BenutzerDaten benutzer;
-  private Date von;
-  private Date bis;
+  private final long id;
+  private final BewilligungsStatus bewilligungsStatus;
+  private final long antragId;
+  private final AntragArt antragArt;
+  private final AntragStatus antragStatus;
+  private final BenutzerDaten benutzer;
+  private final Date von;
+  private final Date bis;
 
   public BewilligungsListeEintrag(long id, BewilligungsStatus bewilligungsStatus, long antragId, AntragArt antragArt,
-      AntragStatus antragStatus, BenutzerDaten benutzer, Date von, Date bis) {
+                                  AntragStatus antragStatus, BenutzerDaten benutzer, Date von, Date bis) {
     this.id = id;
     this.bewilligungsStatus = bewilligungsStatus;
     this.antragId = antragId;
@@ -49,9 +49,9 @@ public class BewilligungsListeEintrag {
   }
 
   public String getStatus() {
-    return bewilligungsStatus.getBewilligungsStatus(); 
+    return bewilligungsStatus.getBewilligungsStatus();
   }
-  
+
   public long getId() {
     return id;
   }

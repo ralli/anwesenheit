@@ -47,6 +47,6 @@ public class BenutzerServiceTest {
     final String searchTerm = "whatever";
     when(benutzerDao.search(searchTerm)).thenReturn(new ArrayList<Benutzer>());
     List<LabelValue> result = benutzerService.search(searchTerm);
-    Assert.assertTrue("Liste soll leer sein", result.isEmpty());    
+    Assert.assertTrue("Liste soll leer sein", result.isEmpty());
   }
 }

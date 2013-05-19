@@ -17,10 +17,11 @@ import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 public class SonderUrlaubArtApiController {
   @Autowired
   private SonderUrlaubArtDao sonderUrlaubArtDao;
-  
+
   @RequestMapping(method = RequestMethod.GET)
   @Transactional
-  public @ResponseBody
+  public
+  @ResponseBody
   List<SonderUrlaubArt> index() {
     return sonderUrlaubArtDao.findAll();
   }

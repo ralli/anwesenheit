@@ -28,9 +28,9 @@ public class MailBenachrichtigungsServiceTest {
   private AntragService antragService;
   private MailService mailService;
   private VelocityEngine velocityEngine;
-  private ToolManager toolManager = createToolManager();
+  private final ToolManager toolManager = createToolManager();
   private MailBenachrichtigungsServiceImpl mailBenachrichtigungsService;
-  private TestDataFactory testDataFactory = new TestDataFactory();
+  private final TestDataFactory testDataFactory = new TestDataFactory();
 
   @Before
   public void setUp() {
@@ -73,7 +73,7 @@ public class MailBenachrichtigungsServiceTest {
     bewilligungen.add(bewilligungsDaten);
     bewilligungen.add(bewilligungsDaten2);
     AntragsDaten daten = new AntragsDaten(antragId, antragArt, antragStatus, sonderUrlaubArt, von, bis, anzahlTage, benutzer,
-        bewilligungen);
+            bewilligungen);
     return daten;
   }
 

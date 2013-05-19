@@ -9,7 +9,7 @@ import de.fisp.anwesenheit.core.entities.Feiertag;
 import de.fisp.anwesenheit.core.entities.FeiertagDefinition;
 
 public class Feiertagsberechnung {
-  private List<FeiertagDefinition> definitionen;
+  private final List<FeiertagDefinition> definitionen;
 
   public Feiertagsberechnung(List<FeiertagDefinition> definitionen) {
     this.definitionen = definitionen;

@@ -11,8 +11,8 @@ import de.fisp.anwesenheit.core.entities.Feiertag;
 import de.fisp.anwesenheit.core.service.Feiertagsberechnung;
 
 public class FeiertagberechnungTest {
-  private Logger log = LoggerFactory.getLogger(FeiertagberechnungTest.class);
-  TestDataFactory testDataFactory = new TestDataFactory();
+  private static final Logger log = LoggerFactory.getLogger(FeiertagberechnungTest.class);
+  private final TestDataFactory testDataFactory = new TestDataFactory();
 
   @Test
   public void testBerechnung() {

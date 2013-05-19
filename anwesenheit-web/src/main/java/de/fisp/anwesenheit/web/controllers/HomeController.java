@@ -29,8 +29,7 @@ public class HomeController {
       String result = "redirect:/login?redirectUrl=" + redirectUrl;
       logger.debug("redirect to: {}", result);
       return result;
-    }
-    else if(StringUtils.isNotBlank(deepLink)) {
+    } else if (StringUtils.isNotBlank(deepLink)) {
       String result = "redirect:/#!/" + deepLink;
       logger.debug("Angemeldet. redirect to: {}", result);
       return result;

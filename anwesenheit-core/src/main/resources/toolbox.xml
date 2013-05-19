@@ -4,7 +4,7 @@
         <key>date</key>
         <scope>application</scope>
         <class>org.apache.velocity.tools.generic.DateTool</class>
-        <parameter name="format" value="dd.MM.yyyy" />
+        <parameter name="format" value="dd.MM.yyyy"/>
     </tool>
     <tool>
         <key>display</key>
@@ -15,7 +15,7 @@
         <key>math</key>
         <scope>application</scope>
         <class>org.apache.velocity.tools.generic.MathTool</class>
-        <parameter name="locale" value="DE.DE" />
+        <parameter name="locale" value="DE.DE"/>
     </tool>
     <tool>
         <key>iter</key>

@@ -31,7 +31,7 @@ public class PasswordServiceImpl implements PasswordService {
       return Base64.encodeBase64String(encoded);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
-    }  
+    }
   }
 
   @Override

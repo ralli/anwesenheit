@@ -28,7 +28,7 @@ public class FeiertagDaoImpl implements FeiertagDao {
   private Session getCurrentSession() {
     Session session = sessionFactory.getCurrentSession();
     if (session == null) {
-    	throw new RuntimeException("No current session found!");
+      throw new RuntimeException("No current session found!");
     }
     return session;
   }
@@ -70,7 +70,7 @@ public class FeiertagDaoImpl implements FeiertagDao {
   @Override
   public void deleteByYear(int year) {
     Query q = getCurrentSession().createQuery(
-        "delete from Feiertag f where f.datum between :start and :end and f.definitionId is not null");
+            "delete from Feiertag f where f.datum between :start and :end and f.definitionId is not null");
     q.setParameter("start", getStartDate(year));
     q.setParameter("end", getEndDate(year));
     int count = q.executeUpdate();

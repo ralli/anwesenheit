@@ -1,2 +1,4 @@
-create database anwesenheit default character set utf8;
-grant all on anwesenheit.* to 'anwesenheit'@'localhost' identified by 'anwesenheit';
+CREATE DATABASE anwesenheit
+  DEFAULT CHARACTER SET utf8;
+GRANT ALL ON anwesenheit.* TO 'anwesenheit'@'localhost'
+IDENTIFIED BY 'anwesenheit';

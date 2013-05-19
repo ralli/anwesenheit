@@ -10,17 +10,15 @@ import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 public interface BewilligungsStatusDao {
   /**
    * Liefert die Liste der möglichen Bewilligungsstatus.
-   * 
+   *
    * @return Die Liste der möglichen Bewilligungsstatus.
    */
   List<BewilligungsStatus> findAll();
 
   /**
    * Liefert einen Bewilligungstatus anhand seiner Id.
-   * 
-   * @param bewilligungsStatusId
-   *          Die ID des zu lesenden BewilligungsStatus
-   *          
+   *
+   * @param bewilligungsStatusId Die ID des zu lesenden BewilligungsStatus
    * @return Der BewilligungsStatus oder null, wenn kein passender
    *         BewilligungsStatus gefunden wurde
    */

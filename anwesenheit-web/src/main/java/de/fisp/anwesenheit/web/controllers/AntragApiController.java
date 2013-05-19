@@ -5,7 +5,13 @@ import java.util.*;
 
 import javax.validation.Valid;
 
-import de.fisp.anwesenheit.core.domain.*;
+import de.fisp.anwesenheit.core.domain.AntragHistorieDaten;
+import de.fisp.anwesenheit.core.domain.AntragListe;
+import de.fisp.anwesenheit.core.domain.AntragUebersichtFilter;
+import de.fisp.anwesenheit.core.domain.AntragsDaten;
+import de.fisp.anwesenheit.core.domain.AntragsFilter;
+import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
+import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +44,7 @@ public class AntragApiController {
 
   private String getCurrentUser() {
     String result = (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId",
-        RequestAttributes.SCOPE_SESSION);
+            RequestAttributes.SCOPE_SESSION);
     if (result == null) {
       throw new NotAuthorizedException("Sie sind nicht angemeldet");
     }
@@ -72,25 +78,26 @@ public class AntragApiController {
   }
 
   @RequestMapping(value = "/uebersicht", method = RequestMethod.GET)
-  public @ResponseBody
-  ResponseEntity<String> uebersicht(@RequestParam(value="von", required=false) @DateTimeFormat(iso=ISO.DATE) Date von,
-                                    @RequestParam(value="bis", required=false) @DateTimeFormat(iso=ISO.DATE) Date bis,
-                                    @RequestParam(value="statusOffen", required=false) Boolean statusOffen,
-                                    @RequestParam(value="statusBewilligt", required=false) Boolean statusBewilligt,
-                                    @RequestParam(value="statusAbgelehnt", required=false) Boolean statusAbgelehnt,
-                                    @RequestParam(value="statusStorniert", required=false) Boolean statusStorniert) {
+  public
+  @ResponseBody
+  ResponseEntity<String> uebersicht(@RequestParam(value = "von", required = false) @DateTimeFormat(iso = ISO.DATE) Date von,
+                                    @RequestParam(value = "bis", required = false) @DateTimeFormat(iso = ISO.DATE) Date bis,
+                                    @RequestParam(value = "statusOffen", required = false) Boolean statusOffen,
+                                    @RequestParam(value = "statusBewilligt", required = false) Boolean statusBewilligt,
+                                    @RequestParam(value = "statusAbgelehnt", required = false) Boolean statusAbgelehnt,
+                                    @RequestParam(value = "statusStorniert", required = false) Boolean statusStorniert) {
     HttpHeaders headers = createJsonHeaders();
     try {
       final String benutzerId = getCurrentUser();
       AntragUebersichtFilter filter = new AntragUebersichtFilter();
       List<String> statusFilter = new ArrayList<String>();
-      if(Boolean.TRUE.equals(statusOffen))
+      if (Boolean.TRUE.equals(statusOffen))
         statusFilter.add("OFFEN");
-      if(Boolean.TRUE.equals(statusBewilligt))
+      if (Boolean.TRUE.equals(statusBewilligt))
         statusFilter.add("BEWILLIGT");
-      if(Boolean.TRUE.equals(statusAbgelehnt))
+      if (Boolean.TRUE.equals(statusAbgelehnt))
         statusFilter.add("ABGELEHNT");
-      if(Boolean.TRUE.equals(statusStorniert))
+      if (Boolean.TRUE.equals(statusStorniert))
         statusFilter.add("STORNIERT");
       filter.setStatusList(statusFilter);
       filter.setVon(von);
@@ -107,9 +114,10 @@ public class AntragApiController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> index(@RequestParam(value = "von", required = false) @DateTimeFormat(iso = ISO.DATE) Date von,
-      @RequestParam(value = "status", required = false) String status) {
+                               @RequestParam(value = "status", required = false) String status) {
     HttpHeaders headers = createJsonHeaders();
     try {
       final String benutzerId = getCurrentUser();
@@ -127,7 +135,8 @@ public class AntragApiController {
 
   @RequestMapping(value = "/{id}/historie", method = RequestMethod.GET)
   @Transactional
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> historie(@PathVariable long id) {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -141,7 +150,8 @@ public class AntragApiController {
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> details(@PathVariable long id) {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -155,7 +165,8 @@ public class AntragApiController {
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> delete(@PathVariable long id) {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -169,7 +180,8 @@ public class AntragApiController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> insert(@RequestBody @Valid CreateAntragCommand createAntragCommand) {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -187,8 +199,9 @@ public class AntragApiController {
     }
   }
 
-  @RequestMapping(value="/{id}/storno", method=RequestMethod.PUT)
-  public @ResponseBody 
+  @RequestMapping(value = "/{id}/storno", method = RequestMethod.PUT)
+  public
+  @ResponseBody
   ResponseEntity<String> storniereAntrag(@PathVariable long id) {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -200,11 +213,12 @@ public class AntragApiController {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.UNAUTHORIZED);
     } catch (NotValidException ex) {
       return new ResponseEntity<String>(jsonMessage(ex.getMessage()), headers, HttpStatus.BAD_REQUEST);
-    }  
+    }
   }
-  
+
   @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> update(@PathVariable long id, @RequestBody @Valid UpdateAntragCommand updateAntragCommand) {
     HttpHeaders headers = createJsonHeaders();
     try {

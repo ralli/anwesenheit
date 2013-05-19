@@ -22,8 +22,8 @@ public class BenutzerRolle implements Serializable {
   @Id
   private String rolle;
 
-  @ManyToOne(targetEntity=Benutzer.class)
-  @JoinColumn(name="benutzer_id", insertable=false, updatable=false)
+  @ManyToOne(targetEntity = Benutzer.class)
+  @JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
   private Benutzer benutzer;
 
   public String getBenutzerId() {

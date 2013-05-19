@@ -25,8 +25,8 @@ import de.fisp.anwesenheit.core.util.NotFoundException;
 @Service
 public class LoginServiceImpl implements LoginService {
   private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
-  private BenutzerDao benutzerDao;
-  private PasswordService passwordService;
+  private final BenutzerDao benutzerDao;
+  private final PasswordService passwordService;
 
   // private static final Logger logger =
   // LoggerFactory.getLogger(LoginServiceImpl.class);

@@ -18,71 +18,73 @@ import de.fisp.anwesenheit.core.entities.Benutzer;
 
 @Service
 public class BenutzerDaoImpl implements BenutzerDao {
-	private static final Logger log = LoggerFactory.getLogger(BenutzerDaoImpl.class);
-	@Autowired
-	private SessionFactory sessionFactory;
+  private static final Logger log = LoggerFactory.getLogger(BenutzerDaoImpl.class);
+  private static final int SEARCH_MAX_RESULTS = 10;
 
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+  @Autowired
+  private SessionFactory sessionFactory;
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Benutzer> findAll() {
-		Session session = sessionFactory.getCurrentSession();
-		List<Benutzer> list = session.createQuery(
-				"from Benutzer order by benutzerId").list();
-		log.debug("findAll: count = {}", list.size());
-		return list;
-	}
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Benutzer findById(String benutzerId) {
-		Session session = sessionFactory.getCurrentSession();
-		Query query = session
-				.createQuery("from Benutzer where benutzerId=:benutzerId");
-		query.setString("benutzerId", benutzerId);
-		List<Benutzer> list = query.list();
-		Benutzer result = list.isEmpty() ? null : list.get(0);
-		log.debug("findById({}) = {}", benutzerId, result);
-		return result;
-	}
+  @Override
+  @SuppressWarnings("unchecked")
+  public List<Benutzer> findAll() {
+    Session session = sessionFactory.getCurrentSession();
+    List<Benutzer> list = session.createQuery(
+            "from Benutzer order by benutzerId").list();
+    log.debug("findAll: count = {}", list.size());
+    return list;
+  }
 
-	@Override
-	public void insert(Benutzer benutzer) {
-		log.debug("insert({})", benutzer);
-		Session session = sessionFactory.getCurrentSession();
-		session.save(benutzer);
-	}
+  @SuppressWarnings("unchecked")
+  @Override
+  public Benutzer findById(String benutzerId) {
+    Session session = sessionFactory.getCurrentSession();
+    Query query = session
+            .createQuery("from Benutzer where benutzerId=:benutzerId");
+    query.setString("benutzerId", benutzerId);
+    List<Benutzer> list = query.list();
+    Benutzer result = list.isEmpty() ? null : list.get(0);
+    log.debug("findById({}) = {}", benutzerId, result);
+    return result;
+  }
 
-	@Override
-	public void update(Benutzer benutzer) {
-		log.debug("update({})", benutzer);
-		Session session = sessionFactory.getCurrentSession();
-		session.update(benutzer);
-	}
+  @Override
+  public void insert(Benutzer benutzer) {
+    log.debug("insert({})", benutzer);
+    Session session = sessionFactory.getCurrentSession();
+    session.save(benutzer);
+  }
 
-	@Override
-	public void delete(Benutzer benutzer) {
-		log.debug("delete({})", benutzer);
-		Session session = sessionFactory.getCurrentSession();
-		session.delete(benutzer);
-	}
+  @Override
+  public void update(Benutzer benutzer) {
+    log.debug("update({})", benutzer);
+    Session session = sessionFactory.getCurrentSession();
+    session.update(benutzer);
+  }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Benutzer> search(String searchTerm) {
-		log.debug("search({})", searchTerm);
-		Session session = sessionFactory.getCurrentSession();
-		Criteria c = session.createCriteria(Benutzer.class);
-		String term = "%" + searchTerm + "%";
-		c.add(Restrictions.disjunction()
-				.add(Restrictions.ilike("benutzerId", term))
-				.add(Restrictions.ilike("vorname", term))
-				.add(Restrictions.ilike("nachname", term)));
-		c.addOrder(Order.asc("nachname"));
-		c.setMaxResults(10);
-		return c.list();
-	}
+  @Override
+  public void delete(Benutzer benutzer) {
+    log.debug("delete({})", benutzer);
+    Session session = sessionFactory.getCurrentSession();
+    session.delete(benutzer);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<Benutzer> search(String searchTerm) {
+    log.debug("search({})", searchTerm);
+    Session session = sessionFactory.getCurrentSession();
+    Criteria c = session.createCriteria(Benutzer.class);
+    String term = "%" + searchTerm + "%";
+    c.add(Restrictions.disjunction()
+            .add(Restrictions.ilike("benutzerId", term))
+            .add(Restrictions.ilike("vorname", term))
+            .add(Restrictions.ilike("nachname", term)));
+    c.addOrder(Order.asc("nachname"));
+    c.setMaxResults(SEARCH_MAX_RESULTS);
+    return c.list();
+  }
 }

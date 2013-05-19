@@ -3,10 +3,10 @@ package de.fisp.anwesenheit.core.domain;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class BenutzerDaten {
-  private String benutzerId;
-  private String vorname;
-  private String nachname;
-  private String email;
+  private final String benutzerId;
+  private final String vorname;
+  private final String nachname;
+  private final String email;
 
   public BenutzerDaten(String benutzerId, String vorname, String nachname, String email) {
     this.benutzerId = benutzerId;

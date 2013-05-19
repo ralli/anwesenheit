@@ -19,7 +19,7 @@ import de.fisp.anwesenheit.core.service.BenutzerService;
 @Service
 public class BenutzerServiceImpl implements BenutzerService {
   private static final Logger logger = LoggerFactory.getLogger(BenutzerServiceImpl.class);
-  private BenutzerDao benutzerDao;
+  private final BenutzerDao benutzerDao;
 
   @Autowired
   public BenutzerServiceImpl(BenutzerDao benutzerDao) {
@@ -67,6 +67,6 @@ public class BenutzerServiceImpl implements BenutzerService {
     if (benutzer == null)
       return null;
     return new BenutzerDaten(benutzer.getBenutzerId(), benutzer.getVorname(), benutzer.getNachname(),
-        benutzer.getEmail());
+            benutzer.getEmail());
   }
 }

@@ -70,7 +70,8 @@ public class BewilligungApiController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> findByCurrentUser() {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -85,7 +86,8 @@ public class BewilligungApiController {
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> show(@PathVariable long id) {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -101,7 +103,8 @@ public class BewilligungApiController {
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> deleteBewilligung(@PathVariable long id) {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -117,7 +120,8 @@ public class BewilligungApiController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> addBewilligung(@Valid @RequestBody AddBewilligungCommand addBewilligungCommand) {
     HttpHeaders headers = createJsonHeaders();
     try {
@@ -133,7 +137,8 @@ public class BewilligungApiController {
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-  public @ResponseBody
+  public
+  @ResponseBody
   ResponseEntity<String> updateBewilligung(@PathVariable long id, @Valid @RequestBody UpdateBewilligungCommand command) {
     HttpHeaders headers = createJsonHeaders();
     try {

@@ -10,14 +10,14 @@ import de.fisp.anwesenheit.core.TestConfig;
 import de.fisp.anwesenheit.core.service.FeiertagService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { TestConfig.class })
+@ContextConfiguration(classes = {TestConfig.class})
 public class CreateFeiertageTest {
   @Autowired
   private FeiertagService feiertagService;
-  
+
   @Test
   public void insertFeiertage() {
-    for(int year = 2013; year <= 2023; ++year) {
+    for (int year = 2013; year <= 2023; ++year) {
       feiertagService.generateForYear(year);
     }
   }

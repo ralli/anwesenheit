@@ -13,97 +13,97 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Entity
 @Table(name = "feiertagdefinition")
 public class FeiertagDefinition implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * Typ: Fixes Datum
-	 */
-	public static final int FIX = 1;
-	/**
-	 * Typ: Relativ zum Ostersonntag
-	 */
-	public static final int OSTERN = 2;
-	/**
-	 * Typ: Muttertag
-	 */
-	public static final int MUTTERTAG = 3;
-	/**
-	 * Typ: Relativ zum Buß und Bettag
-	 */
-	public static final int ERSTER_DIENSTAG_IM_NOVEMBER = 4;
+  private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue
-	private long id;
-	private String name;
-	@Column(name="typ")
-	private int type;
-	@Column(name = "anteil_arbeitszeit")
-	private double anteilArbeitszeit;
-	private int offset;
-	@Column(name = "referenz_tag")
-	private int referenzTag;
-	@Column(name = "referenz_monat")
-	private int referenzMonat;
+  /**
+   * Typ: Fixes Datum
+   */
+  public static final int FIX = 1;
+  /**
+   * Typ: Relativ zum Ostersonntag
+   */
+  public static final int OSTERN = 2;
+  /**
+   * Typ: Muttertag
+   */
+  public static final int MUTTERTAG = 3;
+  /**
+   * Typ: Relativ zum Buß und Bettag
+   */
+  public static final int ERSTER_DIENSTAG_IM_NOVEMBER = 4;
 
-	public long getId() {
-		return id;
-	}
+  @Id
+  @GeneratedValue
+  private long id;
+  private String name;
+  @Column(name = "typ")
+  private int type;
+  @Column(name = "anteil_arbeitszeit")
+  private double anteilArbeitszeit;
+  private int offset;
+  @Column(name = "referenz_tag")
+  private int referenzTag;
+  @Column(name = "referenz_monat")
+  private int referenzMonat;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+  public long getId() {
+    return id;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public int getType() {
-		return type;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public void setType(int type) {
-		this.type = type;
-	}
+  public int getType() {
+    return type;
+  }
 
-	public double getAnteilArbeitszeit() {
-		return anteilArbeitszeit;
-	}
+  public void setType(int type) {
+    this.type = type;
+  }
 
-	public void setAnteilArbeitszeit(double anteilArbeitszeit) {
-		this.anteilArbeitszeit = anteilArbeitszeit;
-	}
+  public double getAnteilArbeitszeit() {
+    return anteilArbeitszeit;
+  }
 
-	public int getOffset() {
-		return offset;
-	}
+  public void setAnteilArbeitszeit(double anteilArbeitszeit) {
+    this.anteilArbeitszeit = anteilArbeitszeit;
+  }
 
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
+  public int getOffset() {
+    return offset;
+  }
 
-	public int getReferenzTag() {
-		return referenzTag;
-	}
+  public void setOffset(int offset) {
+    this.offset = offset;
+  }
 
-	public void setReferenzTag(int referenzTag) {
-		this.referenzTag = referenzTag;
-	}
+  public int getReferenzTag() {
+    return referenzTag;
+  }
 
-	public int getReferenzMonat() {
-		return referenzMonat;
-	}
+  public void setReferenzTag(int referenzTag) {
+    this.referenzTag = referenzTag;
+  }
 
-	public void setReferenzMonat(int referenzMonat) {
-		this.referenzMonat = referenzMonat;
-	}
+  public int getReferenzMonat() {
+    return referenzMonat;
+  }
 
-	@Override
-	public String toString() {
-	  return ToStringBuilder.reflectionToString(this);
-	}
+  public void setReferenzMonat(int referenzMonat) {
+    this.referenzMonat = referenzMonat;
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this);
+  }
 }

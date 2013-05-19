@@ -28,10 +28,10 @@ import de.fisp.anwesenheit.core.service.MailService;
 @Service
 public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsService {
   private static final Logger log = LoggerFactory.getLogger(MailBenachrichtigungsServiceImpl.class);
-  private AntragService antragService;
-  private MailService mailService;
-  private VelocityEngine velocityEngine;
-  private ToolManager toolManager;
+  private final AntragService antragService;
+  private final MailService mailService;
+  private final VelocityEngine velocityEngine;
+  private final ToolManager toolManager;
 
   @Autowired
   public MailBenachrichtigungsServiceImpl(AntragService antragService, MailService mailService, VelocityEngine velocityEngine, ToolManager toolManager) {
@@ -45,7 +45,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   public void sendeAntragsMail(String benutzerId, long antragId) {
     AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
     for (BewilligungsDaten b : antrag.getBewilligungen()) {
-      if(b.getPosition() == 2) {
+      if (b.getPosition() == 2) {
         BenutzerDaten bewilliger = b.getBenutzer();
         String email = bewilliger.getEmail();
         String betreff = getBetreff(antrag);
@@ -59,7 +59,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
     BenutzerDaten antragSteller = antrag.getBenutzer();
 
     return String.format("Urlaubsantrag für %s vom %s bis %s (%s Tage)", getBenutzerName(antragSteller),
-        formatDate(antrag.getVon()), formatDate(antrag.getBis()), formatTage(antrag.getAnzahlTage()));
+            formatDate(antrag.getVon()), formatDate(antrag.getBis()), formatTage(antrag.getAnzahlTage()));
   }
 
   private String getAntragsText(AntragsDaten antrag, BewilligungsDaten bewilligungsDaten) {

@@ -14,10 +14,13 @@ import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.util.NotFoundException;
 
+/**
+ * Implementierung verschiedener Methoden zur Berechtigungsprüfung.
+ */
 @Service
 public class BerechtigungsServiceImpl implements BerechtigungsService {
-  private BewilligungDao bewilligungDao;
-  private BenutzerDao benutzerDao;
+  private final BewilligungDao bewilligungDao;
+  private final BenutzerDao benutzerDao;
 
   @Autowired
   public BerechtigungsServiceImpl(BewilligungDao bewilligungDao, BenutzerDao benutzerDao) {
@@ -82,10 +85,8 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
     if (currentBenutzerId == null)
       return false;
 
-    if (currentBenutzerId.equals(benutzerId))
-      return true;
+    return currentBenutzerId.equals(benutzerId) || hatSonderBerechtigungen(currentBenutzerId);
 
-    return hatSonderBerechtigungen(currentBenutzerId);
   }
 
   @Override
@@ -115,22 +116,18 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
     if (currentBenutzerId == null)
       return false;
 
-    if (currentBenutzerId.equals(benutzerId))
-      return true;
+    return currentBenutzerId.equals(benutzerId) || hatSonderBerechtigungen(currentBenutzerId);
 
-    return hatSonderBerechtigungen(currentBenutzerId);
   }
 
   @Override
   public boolean darfBewilligungAnsehen(String benutzerId, Bewilligung bewilligung) {
-    return darfBewilligungenAnsehen(benutzerId, bewilligung.getBenutzerId());    
+    return darfBewilligungenAnsehen(benutzerId, bewilligung.getBenutzerId());
   }
-  
+
   @Override
   public boolean darfBewilligungenAendern(String currentBenutzerId, String benutzerId) {
-    if (currentBenutzerId.equals(benutzerId))
-      return true;
+    return currentBenutzerId.equals(benutzerId) || hatSonderBerechtigungen(currentBenutzerId);
 
-    return hatSonderBerechtigungen(currentBenutzerId);
   }
 }

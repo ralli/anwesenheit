@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class AntragListe {
-  private BenutzerDaten benutzer;
-  private List<AntragListeEintrag> antraege;
+  private final BenutzerDaten benutzer;
+  private final List<AntragListeEintrag> antraege;
 
   public AntragListe(BenutzerDaten benutzer, List<AntragListeEintrag> antraege) {
     this.benutzer = benutzer;

@@ -20,7 +20,8 @@ public class AntragArtApiController {
 
   @RequestMapping(method = RequestMethod.GET)
   @Transactional
-  public @ResponseBody
+  public
+  @ResponseBody
   List<AntragArt> index() {
     return antragArtDao.findAll();
   }

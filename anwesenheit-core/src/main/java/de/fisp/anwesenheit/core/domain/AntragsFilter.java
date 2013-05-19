@@ -9,7 +9,7 @@ public class AntragsFilter {
   private Date von;
   private Date bis;
   private String antragsStatusFilter; // OFFEN, BEWILLIGT, ABGELEHNT, STORNIERT (Default:
-                                      // ALLE)
+  // ALLE)
 
 
   public String getBenutzerPattern() {

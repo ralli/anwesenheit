@@ -23,7 +23,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { TestConfig.class })
+@ContextConfiguration(classes = {TestConfig.class})
 @Transactional
 public class AntragDaoTest {
   @Autowired
@@ -33,10 +33,9 @@ public class AntragDaoTest {
   @Autowired
   private TestDataFactory testDataFactory;
 
-  private Benutzer insertBenutzer(String benutzerId) {
+  private void insertBenutzer(String benutzerId) {
     Benutzer benutzer = testDataFactory.createBenutzer(benutzerId);
     benutzerDao.insert(benutzer);
-    return benutzer;
   }
 
   @Test
@@ -84,7 +83,7 @@ public class AntragDaoTest {
     filter.setAntragsStatusFilter("OFFEN");
     antragDao.findByBewilligerAndFilter(benutzerId, filter);
   }
-  
+
   @Test
   public void testFindByFilter() {
     AntragsFilter filter = new AntragsFilter();

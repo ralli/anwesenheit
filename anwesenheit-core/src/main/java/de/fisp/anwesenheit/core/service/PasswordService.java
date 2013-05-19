@@ -1,7 +1,7 @@
 package de.fisp.anwesenheit.core.service;
 
 /**
- * Verschlüsseln von Passwörtern mit einer Hash-Funktion
+ * Verschlüsseln von Passwörtern mit einer Hash-Funktion.
  */
 public interface PasswordService {
   /**
