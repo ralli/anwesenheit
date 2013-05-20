@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fisp.anwesenheit.core.service.MailBenachrichtigungsService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,7 @@ public class BewilligungServiceTest {
   private BerechtigungsService berechtigungsService;
   private BewilligungServiceImpl bewilligungService;
   private BewilligungsStatusDao bewilligungsStatusDao;
+  private MailBenachrichtigungsService mailBenachrichtigungsService;
 
   private static final Logger logger = LoggerFactory.getLogger(BewilligungServiceTest.class);
   private static final TestDataFactory testDataFactory = new TestDataFactory();
@@ -48,8 +50,9 @@ public class BewilligungServiceTest {
     benutzerDao = mock(BenutzerDao.class);
     berechtigungsService = mock(BerechtigungsService.class);
     bewilligungsStatusDao = mock(BewilligungsStatusDao.class);
+    mailBenachrichtigungsService = mock(MailBenachrichtigungsService.class);
     bewilligungService = new BewilligungServiceImpl(bewilligungDao, antragDao, antragHistorieDao, benutzerDao,
-            berechtigungsService, bewilligungsStatusDao);
+            berechtigungsService, bewilligungsStatusDao, mailBenachrichtigungsService);
   }
 
   /**

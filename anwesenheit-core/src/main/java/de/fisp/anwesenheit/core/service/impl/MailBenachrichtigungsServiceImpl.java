@@ -28,31 +28,97 @@ import de.fisp.anwesenheit.core.service.MailService;
 @Service
 public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsService {
   private static final Logger log = LoggerFactory.getLogger(MailBenachrichtigungsServiceImpl.class);
-  private final AntragService antragService;
+  public static final String EMAIL_FROM = "noreply@f-i-solutions-plus.de";
+
+  public void setAntragService(AntragService antragService) {
+    this.antragService = antragService;
+  }
+
+  @Autowired
+  private AntragService antragService;
   private final MailService mailService;
   private final VelocityEngine velocityEngine;
   private final ToolManager toolManager;
 
   @Autowired
-  public MailBenachrichtigungsServiceImpl(AntragService antragService, MailService mailService, VelocityEngine velocityEngine, ToolManager toolManager) {
-    this.antragService = antragService;
+  public MailBenachrichtigungsServiceImpl(MailService mailService,
+                                          VelocityEngine velocityEngine,
+                                          ToolManager toolManager) {
     this.mailService = mailService;
     this.velocityEngine = velocityEngine;
     this.toolManager = toolManager;
   }
 
   @Override
-  public void sendeAntragsMail(String benutzerId, long antragId) {
+  public void sendeErsteBewilligungsMail(String benutzerId, long antragId) {
     AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
-    for (BewilligungsDaten b : antrag.getBewilligungen()) {
-      if (b.getPosition() == 2) {
-        BenutzerDaten bewilliger = b.getBenutzer();
+    for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
+      if (istBewilligerFuerErsteUnterschrift(bewilligungsDaten)) {
+        BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
         String email = bewilliger.getEmail();
         String betreff = getBetreff(antrag);
-        String text = getAntragsText(antrag, b);
+        String text = getAntragsTextForBewilligung(antrag, bewilligungsDaten, "neuerantrag.vm");
         mailService.sendeMail(betreff, text, "noreply@f-i-solutions-plus.de", email);
       }
     }
+  }
+
+  @Override
+  public void sendeZweiteBewilligungsMail(String benutzerId, long antragId) {
+    AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
+    for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
+      if (istBewilligerFuerZweiteUnterschrift(bewilligungsDaten)) {
+        BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
+        String email = bewilliger.getEmail();
+        String betreff = getBetreff(antrag);
+        String text = getAntragsTextForBewilligung(antrag, bewilligungsDaten, "neuerantrag.vm");
+        mailService.sendeMail(betreff, text, EMAIL_FROM, email);
+      }
+    }
+  }
+
+  @Override
+  public void sendeAbgelehntMail(String benutzerId, long antragId) {
+    AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
+    for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
+      BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
+      String email = bewilliger.getEmail();
+      String betreff = "ABGELEHNT: " + getBetreff(antrag);
+      String text = getAntragsTextForBewilligung(antrag, bewilligungsDaten, "antragabgelehnt.vm");
+      mailService.sendeMail(betreff, text, EMAIL_FROM, email);
+    }
+  }
+
+  @Override
+  public void sendeBewilligtMail(String benutzerId, long antragId) {
+    AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
+    String betreff = "BEWILLIGT: " + getBetreff(antrag);
+    String text = getAntragsText(antrag, "antragbewilligt.vm");
+    mailService.sendeMail(betreff, text, EMAIL_FROM, antrag.getBenutzer().getEmail());
+    for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
+      BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
+      mailService.sendeMail(betreff, text, EMAIL_FROM, bewilliger.getEmail());
+    }
+  }
+
+  @Override
+  public void sendeStornoMail(String benutzerId, long antragId) {
+    AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
+    String betreff = "STORNIERT: " + getBetreff(antrag);
+    String text = getAntragsText(antrag, "antragstorniert.vm");
+    mailService.sendeMail(betreff, text, EMAIL_FROM, antrag.getBenutzer().getEmail());
+    for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
+      BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
+      mailService.sendeMail(betreff, text, EMAIL_FROM, bewilliger.getEmail());
+    }
+  }
+
+  private boolean istBewilligerFuerErsteUnterschrift(BewilligungsDaten b) {
+    return b.getPosition() == 1;
+  }
+
+  private boolean istBewilligerFuerZweiteUnterschrift(BewilligungsDaten b) {
+    return b.getPosition() == 1;
   }
 
   private String getBetreff(AntragsDaten antrag) {
@@ -62,12 +128,25 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
             formatDate(antrag.getVon()), formatDate(antrag.getBis()), formatTage(antrag.getAnzahlTage()));
   }
 
-  private String getAntragsText(AntragsDaten antrag, BewilligungsDaten bewilligungsDaten) {
+  private String getAntragsText(AntragsDaten antrag, String template) {
     Context context = toolManager.createContext();
     context.put("antrag", antrag);
-    context.put("bewilligungsUrl", getUrlForBewilligung(bewilligungsDaten.getId()));
+    context.put("antragsUrl", getUrlForAntrag(antrag.getId()));
     StringWriter writer = new StringWriter();
-    velocityEngine.mergeTemplate("de/fisp/anwesenheit/mailtemplates/neuerantrag.vm", "UTF-8", context, writer);
+    velocityEngine.mergeTemplate("de/fisp/anwesenheit/mailtemplates/" + template, "UTF-8", context, writer);
+    String text = writer.toString();
+    log.debug(text);
+    return text;
+  }
+
+
+  private String getAntragsTextForBewilligung(AntragsDaten antrag, BewilligungsDaten bewilligungsDaten, String template) {
+    Context context = toolManager.createContext();
+    context.put("antrag", antrag);
+    context.put("bewilligung", bewilligungsDaten);
+    context.put("antragUrl", getUrlForAntrag(antrag.getId()));
+    StringWriter writer = new StringWriter();
+    velocityEngine.mergeTemplate("de/fisp/anwesenheit/mailtemplates/" + template, "UTF-8", context, writer);
     String text = writer.toString();
     log.debug(text);
     return text;
@@ -76,6 +155,10 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   private String formatTage(double tage) {
     NumberFormat fmt = new DecimalFormat("0.#");
     return fmt.format(tage);
+  }
+
+  private String getUrlForAntrag(long antragId) {
+    return "http://srv-1822direkt2:8080/anwesenheit-web/?deepLinkUrl=uebersicht/" + antragId;
   }
 
   private String getUrlForBewilligung(long bewilligungsId) {

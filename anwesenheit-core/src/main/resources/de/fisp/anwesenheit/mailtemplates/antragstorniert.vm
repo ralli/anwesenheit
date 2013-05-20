@@ -1,10 +1,10 @@
 <p>
-  Der Antrag von ${antrag.benutzer.vorname} ${antrag.benutzer.nachname} auf ${antrag.antragArt.bezeichnung} wurde angenommen.
+  ${antrag.benutzer.vorname} ${antrag.benutzer.nachname} hat den gestellten Antrag auf ${antrag.antragArt.bezeichnung}
+  storniert.
 </p>
 <ul>
   <li>Art des Antrags: ${antrag.antragArt.bezeichnung}</li>
-  <li>Zeitraum vom: $date.format('dd.MM.yyyy', ${antrag.von})
-    bis: $date.format('dd.MM.yyyy', ${antrag.bis})
+  <li>Zeitraum vom: $date.format('dd.MM.yyyy', ${antrag.von}) bis: $date.format('dd.MM.yyyy', ${antrag.bis})
     ($number.format('0.#', ${antrag.anzahlTage}) Tage)
   </li>
   #if(${antrag.antragArt.antragArt} == "SONDER")

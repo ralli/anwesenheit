@@ -18,6 +18,7 @@ import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
 import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
 import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
+import de.fisp.anwesenheit.core.service.MailBenachrichtigungsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,21 +44,23 @@ import de.fisp.anwesenheit.core.util.NotValidException;
 @Service
 public class AntragServiceImpl implements AntragService {
   private static final Logger logger = LoggerFactory.getLogger(AntragService.class);
-  private final AntragDao antragDao;
-  private final BewilligungDao bewilligungDao;
-  private final BenutzerDao benutzerDao;
-  private final AntragHistorieDao antragHistorieDao;
-  private final BerechtigungsService berechtigungsService;
-  private final SonderUrlaubArtDao sonderUrlaubArtDao;
-
   @Autowired
-  public AntragServiceImpl(AntragDao antragDao, BewilligungDao bewilligungDao, BenutzerDao benutzerDao, SonderUrlaubArtDao sonderUrlaubArtDao, AntragHistorieDao antragHistorieDao, BerechtigungsService berechtigungsService) {
-    this.antragDao = antragDao;
-    this.bewilligungDao = bewilligungDao;
-    this.benutzerDao = benutzerDao;
-    this.sonderUrlaubArtDao = sonderUrlaubArtDao;
-    this.antragHistorieDao = antragHistorieDao;
-    this.berechtigungsService = berechtigungsService;
+  private AntragDao antragDao;
+  @Autowired
+  private BewilligungDao bewilligungDao;
+  @Autowired
+  private BenutzerDao benutzerDao;
+  @Autowired
+  private AntragHistorieDao antragHistorieDao;
+  @Autowired
+  private BerechtigungsService berechtigungsService;
+  @Autowired
+  private SonderUrlaubArtDao sonderUrlaubArtDao;
+  @Autowired
+  private MailBenachrichtigungsService mailBenachrichtigungsService;
+
+  public static Logger getLogger() {
+    return logger;
   }
 
   @Override
@@ -184,6 +187,9 @@ public class AntragServiceImpl implements AntragService {
     }
 
     insertAntragHistorie(benutzerId, antrag, "Antrag angelegt");
+
+    mailBenachrichtigungsService.sendeErsteBewilligungsMail(benutzerId, antrag.getId());
+
     logger.debug("createAntrag: id = {}", antrag.getId());
     return antrag.getId();
   }
@@ -325,5 +331,61 @@ public class AntragServiceImpl implements AntragService {
 
   private AntragHistorieDaten createAntragHistorieDaten(AntragHistorie antragHistorie) {
     return new AntragHistorieDaten(antragHistorie.getId(), antragHistorie.getAntragId(), antragHistorie.getBenutzerId(), antragHistorie.getZeitpunkt(), antragHistorie.getBeschreibung(), createBenutzerDaten(antragHistorie.getBenutzer()));
+  }
+
+  public AntragDao getAntragDao() {
+    return antragDao;
+  }
+
+  public void setAntragDao(AntragDao antragDao) {
+    this.antragDao = antragDao;
+  }
+
+  public BewilligungDao getBewilligungDao() {
+    return bewilligungDao;
+  }
+
+  public void setBewilligungDao(BewilligungDao bewilligungDao) {
+    this.bewilligungDao = bewilligungDao;
+  }
+
+  public BenutzerDao getBenutzerDao() {
+    return benutzerDao;
+  }
+
+  public void setBenutzerDao(BenutzerDao benutzerDao) {
+    this.benutzerDao = benutzerDao;
+  }
+
+  public AntragHistorieDao getAntragHistorieDao() {
+    return antragHistorieDao;
+  }
+
+  public void setAntragHistorieDao(AntragHistorieDao antragHistorieDao) {
+    this.antragHistorieDao = antragHistorieDao;
+  }
+
+  public BerechtigungsService getBerechtigungsService() {
+    return berechtigungsService;
+  }
+
+  public void setBerechtigungsService(BerechtigungsService berechtigungsService) {
+    this.berechtigungsService = berechtigungsService;
+  }
+
+  public SonderUrlaubArtDao getSonderUrlaubArtDao() {
+    return sonderUrlaubArtDao;
+  }
+
+  public void setSonderUrlaubArtDao(SonderUrlaubArtDao sonderUrlaubArtDao) {
+    this.sonderUrlaubArtDao = sonderUrlaubArtDao;
+  }
+
+  public MailBenachrichtigungsService getMailBenachrichtigungsService() {
+    return mailBenachrichtigungsService;
+  }
+
+  public void setMailBenachrichtigungsService(MailBenachrichtigungsService mailBenachrichtigungsService) {
+    this.mailBenachrichtigungsService = mailBenachrichtigungsService;
   }
 }

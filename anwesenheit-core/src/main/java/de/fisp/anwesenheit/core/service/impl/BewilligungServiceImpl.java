@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.fisp.anwesenheit.core.service.MailBenachrichtigungsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,16 +49,23 @@ public class BewilligungServiceImpl implements BewilligungService {
   private final BenutzerDao benutzerDao;
   private final BerechtigungsService berechtigungsService;
   private final BewilligungsStatusDao bewilligungsStatusDao;
+  private final MailBenachrichtigungsService mailBenachrichtigungsService;
 
   @Autowired
-  public BewilligungServiceImpl(BewilligungDao bewilligungDao, AntragDao antragDao, AntragHistorieDao antragHistorieDao,
-                                BenutzerDao benutzerDao, BerechtigungsService berechtigungsService, BewilligungsStatusDao bewilligungsStatusDao) {
+  public BewilligungServiceImpl(BewilligungDao bewilligungDao,
+                                AntragDao antragDao,
+                                AntragHistorieDao antragHistorieDao,
+                                BenutzerDao benutzerDao,
+                                BerechtigungsService berechtigungsService,
+                                BewilligungsStatusDao bewilligungsStatusDao,
+                                MailBenachrichtigungsService mailBenachrichtigungsService) {
     this.bewilligungDao = bewilligungDao;
     this.antragDao = antragDao;
     this.antragHistorieDao = antragHistorieDao;
     this.benutzerDao = benutzerDao;
     this.berechtigungsService = berechtigungsService;
     this.bewilligungsStatusDao = bewilligungsStatusDao;
+    this.mailBenachrichtigungsService = mailBenachrichtigungsService;
   }
 
   private void addAntragHistorie(long antragId, String benutzerId, String message) {
@@ -89,7 +97,8 @@ public class BewilligungServiceImpl implements BewilligungService {
 
     String message = String.format("Bewilligung Bewilliger: %s, Status: %s gelöscht", bewilligung.getBenutzerId(),
             bewilligung.getBewilligungsStatusId());
-    aktualisiereAntragStatus(bewilligung.getAntrag());
+
+    aktualisiereAntragStatus(benutzerId, bewilligung.getAntrag());
 
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
 
@@ -152,7 +161,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     String message = String.format("Bewilligung Bewilliger: %s, Status: %s hinzugefügt", bewilligung.getBenutzerId(),
             bewilligung.getBewilligungsStatusId());
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
-    aktualisiereAntragStatus(antrag);
+    aktualisiereAntragStatus(benutzerId, antrag);
 
     logger.debug("addBewilligung({}, {}) = {}", benutzerId, command, daten);
 
@@ -190,10 +199,27 @@ public class BewilligungServiceImpl implements BewilligungService {
     antragHistorieDao.insert(antragHistorie);
   }
 
-  private void aktualisiereAntragStatus(Antrag antrag) {
+  private void aktualisiereAntragStatus(String benutzerId, Antrag antrag) {
+    String bisherigerStatus = antrag.getAntragStatusId();
     String antragStatus = ermittleAntragStatus(antrag);
     antrag.setAntragStatusId(antragStatus);
     antragDao.update(antrag);
+
+    versendeStatusAenderungsMails(benutzerId, antrag, bisherigerStatus, antragStatus);
+  }
+
+  private void versendeStatusAenderungsMails(String benutzerId, Antrag antrag, String bisherigerStatus, String antragStatus) {
+    if (bisherigerStatus != null && !bisherigerStatus.equals(antragStatus)) {
+      if ("IN_ARBEIT".equals(antragStatus)) {
+        mailBenachrichtigungsService.sendeZweiteBewilligungsMail(benutzerId, antrag.getId());
+      } else if ("ABGELEHNT".equals(antragStatus)) {
+        mailBenachrichtigungsService.sendeAbgelehntMail(benutzerId, antrag.getId());
+      } else if ("BEWILLIGT".equals(antragStatus)) {
+        mailBenachrichtigungsService.sendeBewilligtMail(benutzerId, antrag.getId());
+      } else if ("STORNIERT".equals(antragStatus)) {
+        mailBenachrichtigungsService.sendeStornoMail(benutzerId, antrag.getId());
+      }
+    }
   }
 
   private String ermittleAntragStatus(Antrag antrag) {
@@ -208,7 +234,7 @@ public class BewilligungServiceImpl implements BewilligungService {
        * Die Bewilligungen, mit Position in [1,2] sind die Bewilligungen, die Unterschreiben müssen.
        * Positionen > 2 sind nur "zur Info" und für die Ermittlung des Antragstatus nicht relevant.
        */
-      if (b.getPosition() > 2)
+      if (isNurZurInfoBewilliger(b))
         break;
 
       if ("OFFEN".equals(b.getBewilligungsStatusId()))
@@ -234,6 +260,14 @@ public class BewilligungServiceImpl implements BewilligungService {
     }
 
     return antragStatus;
+  }
+
+  private boolean isNurZurInfoBewilliger(Bewilligung b) {
+    //
+    // Bewilliger, die Unterschreiben müssen haben die Position 1 (erste Unterschrift) und Position 2.
+    // Alle anderen Bewilliger (position > 2) sind "nur zur Info"
+    //
+    return b.getPosition() > 2;
   }
 
   @Override
@@ -263,7 +297,7 @@ public class BewilligungServiceImpl implements BewilligungService {
             bewilligungsStatusAlt);
 
     insertAntragHistorie(benutzerId, bewilligung.getAntragId(), message);
-    aktualisiereAntragStatus(bewilligung.getAntrag());
+    aktualisiereAntragStatus(benutzerId, bewilligung.getAntrag());
 
     bewilligung.setBewilligungsStatus(bewilligungsStatus);
 

@@ -9,7 +9,6 @@ import de.fisp.anwesenheit.core.service.impl.DummyMailServiceImpl;
 
 @Configuration
 public class MailConfig {
-
   private static final Logger log = LoggerFactory.getLogger(MailConfig.class);
 
   public MailService mailService() {

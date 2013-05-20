@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fisp.anwesenheit.core.service.MailBenachrichtigungsService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,6 +44,7 @@ public class AntragServiceTest {
   private BerechtigungsService berechtigungsService;
   private AntragServiceImpl antragService;
   private TestDataFactory testDataFactory;
+  private MailBenachrichtigungsService mailBenachrichtigungsService;
 
   @Before
   public void setUp() {
@@ -53,8 +55,15 @@ public class AntragServiceTest {
     sonderUrlaubArtDao = mock(SonderUrlaubArtDao.class);
     antragHistorieDao = mock(AntragHistorieDao.class);
     berechtigungsService = mock(BerechtigungsService.class);
-    antragService = new AntragServiceImpl(antragDao, bewilligungDao, benutzerDao, sonderUrlaubArtDao, antragHistorieDao,
-            berechtigungsService);
+    mailBenachrichtigungsService = mock(MailBenachrichtigungsService.class);
+    antragService = new AntragServiceImpl();
+    antragService.setAntragDao(antragDao);
+    antragService.setAntragHistorieDao(antragHistorieDao);
+    antragService.setBenutzerDao(benutzerDao);
+    antragService.setBerechtigungsService(berechtigungsService);
+    antragService.setBewilligungDao(bewilligungDao);
+    antragService.setMailBenachrichtigungsService(mailBenachrichtigungsService);
+    antragService.setSonderUrlaubArtDao(sonderUrlaubArtDao);
   }
 
   @Test

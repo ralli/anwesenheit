@@ -37,7 +37,8 @@ public class MailBenachrichtigungsServiceTest {
     antragService = mock(AntragService.class);
     mailService = mock(MailService.class);
     velocityEngine = createVelocityEngine();
-    mailBenachrichtigungsService = new MailBenachrichtigungsServiceImpl(antragService, mailService, velocityEngine, toolManager);
+    mailBenachrichtigungsService =  new MailBenachrichtigungsServiceImpl(mailService, velocityEngine, toolManager);
+    mailBenachrichtigungsService.setAntragService(antragService);
   }
 
   private VelocityEngine createVelocityEngine() {
@@ -63,7 +64,7 @@ public class MailBenachrichtigungsServiceTest {
     Date bis = testDataFactory.createDate(6, 1, 2014);
     AntragStatus antragStatus = testDataFactory.createAntragStatus("NEU");
     double anzahlTage = 0.5;
-    BenutzerDaten benutzer = new BenutzerDaten("test", "Horst", "Hrubesch", "test.test.de");
+    BenutzerDaten benutzer = new BenutzerDaten("test", "Horst", "Hrubesch", "test@test.de");
     BewilligungsStatus bewilligungsStatus = testDataFactory.createBewilligungsStatus("OFFEN");
     BenutzerDaten bewilliger = new BenutzerDaten("bewilliger", "Charly", "Chan", "oliver.porzel@f-i-solutions-plus.de");
     BewilligungsDaten bewilligungsDaten = new BewilligungsDaten(1, antragId, 1, bewilligungsStatus, bewilliger);
@@ -78,11 +79,39 @@ public class MailBenachrichtigungsServiceTest {
   }
 
   @Test
-  public void sendMail() {
+  public void sendeErsteBewilligungsMail() {
     String benutzerId = "demo";
     long antragId = 2L;
     AntragsDaten antragsDaten = createAntragsDaten(antragId);
     when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
-    mailBenachrichtigungsService.sendeAntragsMail(benutzerId, antragId);
+    mailBenachrichtigungsService.sendeErsteBewilligungsMail(benutzerId, antragId);
   }
+
+  @Test
+  public void sendeZweiteBewilligungsMail() {
+    String benutzerId = "demo";
+    long antragId = 2L;
+    AntragsDaten antragsDaten = createAntragsDaten(antragId);
+    when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
+    mailBenachrichtigungsService.sendeZweiteBewilligungsMail(benutzerId, antragId);
+  }
+
+  @Test
+  public void sendeAntragAbgelehntMails() {
+    String benutzerId = "demo";
+    long antragId = 2L;
+    AntragsDaten antragsDaten = createAntragsDaten(antragId);
+    when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
+    mailBenachrichtigungsService.sendeAbgelehntMail(benutzerId, antragId);
+  }
+
+  @Test
+  public void sendeAntragBewilligtMails() {
+    String benutzerId = "demo";
+    long antragId = 2L;
+    AntragsDaten antragsDaten = createAntragsDaten(antragId);
+    when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
+    mailBenachrichtigungsService.sendeBewilligtMail(benutzerId, antragId);
+  }
+
 }
