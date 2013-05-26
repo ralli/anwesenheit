@@ -76,8 +76,7 @@ JNDI-Datenquelle nicht startet.
 
 Der Name der Datenquelle ist: **AnwesenheitDS**. Eine mögliche Konfiguration der Datenquelle sieht in der Datei "standard.xml" folgendermaßen aus:
 
-<pre>
-
+```xml
      <datasource jndi-name="java:jboss/datasources/AnwesenheitDS" pool-name="AnwesenheitDS" enabled="true">
         <connection-url>jdbc:mysql://localhost/anwesenheit</connection-url>
         <driver>mysql</driver>
@@ -86,8 +85,7 @@ Der Name der Datenquelle ist: **AnwesenheitDS**. Eine mögliche Konfiguration de
             <password>anwesenheit</password>
         </security>
      </datasource>
-
-</pre>
+```
 
 
 Voraussetzung ist, dass der MySQL-Treiber auf dem JBoss installiert ist. Ein Beispiel für die Installation findet man beispielsweise hier:
