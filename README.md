@@ -69,3 +69,26 @@ Die notwendigen Eclipse-Plugins können über den Eclipse Marketplace direkt ins
 
 Die Anwendung wird als normales WAR auf dem Servlet-Container deployed.
 
+## Verwenden JNDI auf JBoss
+
+Auf JBoss verwendet die Anwendung eine JNDI-Datenquelle. D.h. auch, dass die Anwendung ohne konfigurierte
+JNDI-Datenquelle nicht startet.
+
+Der Name der Datenquelle ist: **AnwesenheitDS**. Eine mögliche Konfiguration der Datenquelle sieht in der Datei "standard.xml" folgendermaßen aus:
+
+<pre>
+
+     <datasource jndi-name="java:jboss/datasources/AnwesenheitDS" pool-name="AnwesenheitDS" enabled="true">
+        <connection-url>jdbc:mysql://localhost/anwesenheit</connection-url>
+        <driver>mysql</driver>
+        <security>
+            <user-name>anwesenheit</user-name>
+            <password>anwesenheit</password>
+        </security>
+     </datasource>
+
+</pre>
+
+
+Voraussetzung ist, dass der MySQL-Treiber auf dem JBoss installiert ist. Ein Beispiel für die Installation findet man beispielsweise hier:
+http://javathreads.de/2011/09/jboss-as-7-mysql-datasource-konfigurieren/ .
