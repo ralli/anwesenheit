@@ -77,14 +77,25 @@ JNDI-Datenquelle nicht startet.
 Der Name der Datenquelle ist: **AnwesenheitDS**. Eine mögliche Konfiguration der Datenquelle sieht in der Datei "standard.xml" folgendermaßen aus:
 
 ```xml
-     <datasource jndi-name="java:jboss/datasources/AnwesenheitDS" pool-name="AnwesenheitDS" enabled="true">
-        <connection-url>jdbc:mysql://localhost/anwesenheit</connection-url>
-        <driver>mysql</driver>
-        <security>
-            <user-name>anwesenheit</user-name>
-            <password>anwesenheit</password>
-        </security>
-     </datasource>
+<datasource jndi-name="java:jboss/datasources/AnwesenheitDS" pool-name="AnwesenheitDS" enabled="true">
+  <connection-url>jdbc:mysql://localhost/anwesenheit</connection-url>
+  <driver>mysql</driver>
+  <security>
+      <user-name>anwesenheit</user-name>
+      <password>anwesenheit</password>
+  </security>
+</datasource>
+```
+
+In den Treibern muss dann auch der My-SQL-Treiber stehen:
+
+```xml
+<drivers>
+    <driver name="h2" module="com.h2database.h2">
+        <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
+    </driver>
+    <driver name="mysql" module="com.mysql"/>
+</drivers>
 ```
 
 
