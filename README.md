@@ -101,3 +101,7 @@ In den Treibern muss dann auch der My-SQL-Treiber stehen:
 
 Voraussetzung ist, dass der MySQL-Treiber auf dem JBoss installiert ist. Ein Beispiel für die Installation findet man beispielsweise hier:
 http://javathreads.de/2011/09/jboss-as-7-mysql-datasource-konfigurieren/ .
+
+## JNDI-Mailsessions auf JBoss
+
+Auf JBoss verwendet die Anwedndung die Default Mail Session, die man unter dem JNDI-Namen **java:jboss/mail/Default** findet.
