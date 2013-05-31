@@ -9,7 +9,7 @@
 
     <!-- Application Loggers -->
     <logger name="de.fisp">
-        <level value="info"/>
+        <level value="debug"/>
     </logger>
 
     <!-- 3rdparty Loggers -->
