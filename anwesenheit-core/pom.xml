@@ -12,6 +12,10 @@
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <liquibase.db.driver>com.mysql.jdbc.Driver</liquibase.db.driver>
+        <liquibase.db.url>jdbc:mysql://localhost/anwesenheit</liquibase.db.url>
+        <liquibase.db.username>anwesenheit</liquibase.db.username>
+        <liquibase.db.password>anwesenheit</liquibase.db.password>
     </properties>
     <dependencies>
         <dependency>
@@ -156,10 +160,10 @@
                 <version>2.0.5</version>
                 <configuration>
                     <changeLogFile>src/main/db/changelog.xml</changeLogFile>
-                    <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost/anwesenheit</url>
-                    <username>anwesenheit</username>
-                    <password>anwesenheit</password>
+                    <driver>${liquibase.db.driver}</driver>
+                    <url>${liquibase.db.url}</url>
+                    <username>${liquibase.db.username}</username>
+                    <password>${liquibase.db.password}</password>
                 </configuration>
                 <dependencies>
                     <dependency>

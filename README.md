@@ -24,7 +24,23 @@ grant all on anwesenheit.* to 'anwesenheit'@'localhost' identified by 'anwesenhe
 
 Anlage des Datenbankschemas (im Unterprojekt "anwesenheit-core"):
 
+```
 mvn liquibase:update
+```
+
+Wenn man zur Datenbankgenerierung abweichende Verbindungsdaten verwenden möchte, kann man dem Maven-Kommando
+entsprechende Properties auf der Kommandozeile mitgeben:
+
+* liquibase.db.driver
+* liquibase.db.url
+* liquibase.db.username
+* liquibase.db.password
+
+Beispielwerte findet man im pom.xml von anwesenheit-core. Beispiel:
+
+```
+mvn liquibase:update -Dliquibase.db.url='jdbc:mysql://localhost/anwesenheit_test'
+```
 
 Laden von Testdaten:
 
@@ -46,14 +62,18 @@ Die für die korrekte Berechnung des Urlaubszeitraums benötigten Daten lassen s
 (CreateFeiertageTest) ausführen. Der Test schreibt die Feiertage der nächsten 10 Jahre in die Tabelle "feiertag".
 am einfachsten geht das über das Kommando:
 
+```
 mvn test
+```
 
 ## Build
 
 Die Anwendung wird als Maven-Anwendung gebaut. 
 Im Verzeichnis "anwesenheit": 
 
+```
 mvn install
+```
 
 Das War befindet sich dann im Verzeichnis anwesenheit-web/target/anwesenheit-web.war
 
