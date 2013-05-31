@@ -6,8 +6,10 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 
+import de.fisp.anwesenheit.core.dao.*;
 import de.fisp.anwesenheit.core.domain.AntragHistorieDaten;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragListeEintrag;
@@ -18,6 +20,7 @@ import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
 import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
 import de.fisp.anwesenheit.core.domain.UpdateAntragCommand;
+import de.fisp.anwesenheit.core.entities.*;
 import de.fisp.anwesenheit.core.service.MailBenachrichtigungsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,16 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.fisp.anwesenheit.core.dao.AntragDao;
-import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
-import de.fisp.anwesenheit.core.dao.BenutzerDao;
-import de.fisp.anwesenheit.core.dao.BewilligungDao;
-import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
-import de.fisp.anwesenheit.core.entities.Antrag;
-import de.fisp.anwesenheit.core.entities.AntragHistorie;
-import de.fisp.anwesenheit.core.entities.Benutzer;
-import de.fisp.anwesenheit.core.entities.Bewilligung;
-import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 import de.fisp.anwesenheit.core.service.AntragService;
 import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.util.NotAuthorizedException;
@@ -58,6 +51,12 @@ public class AntragServiceImpl implements AntragService {
   private SonderUrlaubArtDao sonderUrlaubArtDao;
   @Autowired
   private MailBenachrichtigungsService mailBenachrichtigungsService;
+  @Autowired
+  private AntragArtDao antragArtDao;
+  @Autowired
+  private AntragStatusDao antragStatusDao;
+  @Autowired
+  private BewilligungsStatusDao bewilligungsStatusDao;
 
   public static Logger getLogger() {
     return logger;
@@ -134,7 +133,12 @@ public class AntragServiceImpl implements AntragService {
   }
 
   private AntragListeEintrag createAntragListeEintrag(Antrag antrag) {
-    return new AntragListeEintrag(antrag.getId(), createBenutzerDaten(antrag.getBenutzer()), antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage());
+    return new AntragListeEintrag(antrag.getId(), createBenutzerDaten(antrag.getBenutzer()),
+            antrag.getAntragArt(),
+            antrag.getAntragStatus(),
+            antrag.getVon(),
+            antrag.getBis(),
+            antrag.getAnzahlTage());
   }
 
   private void updateSonderUrlaubArt(Antrag antrag, String antragArtId, String sonderUrlaubArtId, double anzahlTage) {
@@ -162,27 +166,35 @@ public class AntragServiceImpl implements AntragService {
 
     Antrag antrag = new Antrag();
     antrag.setBenutzerId(command.getBenutzerId());
+    antrag.setBenutzer(benutzerDao.findById(command.getBenutzerId()));
     antrag.setAntragArtId(command.getAntragArt());
+    antrag.setAntragArt(antragArtDao.findById(command.getAntragArt()));
     updateSonderUrlaubArt(antrag, command.getAntragArt(), command.getSonderUrlaubArt(), command.getAnzahlTage());
     antrag.setAntragStatusId("NEU");
+    antrag.setAntragStatus(antragStatusDao.findById("NEU"));
     antrag.setVon(command.getVon());
     antrag.setBis(command.getBis());
+    antrag.setBewilligungen(new LinkedHashSet<Bewilligung>());
 
     if (!berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)) {
       throw new NotAuthorizedException("Keine ausreichenden Berechtigungen zum Anlegen des Antrags.");
     }
 
+    BewilligungsStatus statusOffen = bewilligungsStatusDao.findById("OFFEN");
     antragDao.insert(antrag);
     int position = 1;
     for (String bewilligerId : command.getBewilliger()) {
       Bewilligung bewilligung = new Bewilligung();
 
       bewilligung.setAntragId(antrag.getId());
+      bewilligung.setAntrag(antrag);
       bewilligung.setBenutzerId(bewilligerId);
+      bewilligung.setBenutzer(benutzerDao.findById(bewilligerId));
       bewilligung.setBewilligungsStatusId("OFFEN");
+      bewilligung.setBewilligungsStatus(statusOffen);
       bewilligung.setPosition(position);
       bewilligungDao.insert(bewilligung);
-
+      antrag.getBewilligungen().add(bewilligung);
       ++position;
     }
 
@@ -266,7 +278,8 @@ public class AntragServiceImpl implements AntragService {
     antrag.setBis(command.getBis());
     updateSonderUrlaubArt(antrag, command.getAntragArt(), command.getSonderUrlaubArt(), command.getAnzahlTage());
     antragDao.update(antrag);
-    String message = String.format("Antrag geändert: Art: %s, Von: %s, Bis: %s, Tage: %s", command.getAntragArt(), dateToString(command.getVon()), dateToString(command.getBis()), tageToString(command.getAnzahlTage()));
+    String message = String.format("Antrag geändert: Art: %s, Von: %s, Bis: %s, Tage: %s", command.getAntragArt(),
+            dateToString(command.getVon()), dateToString(command.getBis()), tageToString(command.getAnzahlTage()));
     insertAntragHistorie(benutzerId, antrag, message);
     return createAntragsDatenFromAntrag(antragId, antragDao.findById(antragId));
   }
@@ -330,7 +343,10 @@ public class AntragServiceImpl implements AntragService {
   }
 
   private AntragHistorieDaten createAntragHistorieDaten(AntragHistorie antragHistorie) {
-    return new AntragHistorieDaten(antragHistorie.getId(), antragHistorie.getAntragId(), antragHistorie.getBenutzerId(), antragHistorie.getZeitpunkt(), antragHistorie.getBeschreibung(), createBenutzerDaten(antragHistorie.getBenutzer()));
+    return new AntragHistorieDaten(antragHistorie.getId(), antragHistorie.getAntragId(),
+            antragHistorie.getBenutzerId(),
+            antragHistorie.getZeitpunkt(), antragHistorie.getBeschreibung(),
+            createBenutzerDaten(antragHistorie.getBenutzer()));
   }
 
   public AntragDao getAntragDao() {

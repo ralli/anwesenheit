@@ -21,4 +21,9 @@ public class AntragArtDaoTest {
   public void testFindAll() {
     antragArtDao.findAll();
   }
+
+  @Test
+  public void testFindById() {
+    antragArtDao.findById("URLAUB");
+  }
 }

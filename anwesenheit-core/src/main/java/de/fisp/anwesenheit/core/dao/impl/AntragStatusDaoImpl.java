@@ -32,6 +32,18 @@ public class AntragStatusDaoImpl implements AntragStatusDao {
   }
 
   @Override
+  public AntragStatus findById(String antragStatus) {
+    Query query = getCurrentSession().createQuery(
+            "from AntragStatus a where a.antragStatus=:antragStatus");
+    query.setString("antragStatus", antragStatus);
+    @SuppressWarnings("unchecked")
+    List<AntragStatus> list = query.list();
+    AntragStatus result = list.isEmpty() ? null : list.get(0);
+    log.debug("findById({})={}", antragStatus, result);
+    return result;
+  }
+
+  @Override
   public List<AntragStatus> findAll() {
     Query query = getCurrentSession().createQuery(
             "from AntragStatus a order by a.position");

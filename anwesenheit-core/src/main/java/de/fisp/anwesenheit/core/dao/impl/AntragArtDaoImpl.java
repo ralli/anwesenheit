@@ -33,6 +33,19 @@ public class AntragArtDaoImpl implements AntragArtDao {
   }
 
   @Override
+  public AntragArt findById(String antragArt) {
+    Session session = getCurrentSession();
+    final String hql = "from AntragArt a where a.antragArt=:antragArt";
+    Query q = session.createQuery(hql);
+    q.setString("antragArt", antragArt);
+    @SuppressWarnings("unchecked")
+    List<AntragArt> list = q.list();
+    AntragArt result = list.isEmpty() ? null : list.get(0);
+    log.debug("findById({})={}", antragArt, result);
+    return result;
+  }
+
+  @Override
   public List<AntragArt> findAll() {
     Session session = getCurrentSession();
     Query query = session.createQuery("from AntragArt a order by a.position");

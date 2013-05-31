@@ -21,4 +21,9 @@ public class AntragStatusDaoTest {
   public void testFindAll() {
     antragStatusDao.findAll();
   }
+
+  @Test
+  public void testFindById() {
+    antragStatusDao.findById("NEU");
+  }
 }
