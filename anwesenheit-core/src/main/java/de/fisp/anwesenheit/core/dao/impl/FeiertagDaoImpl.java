@@ -38,7 +38,7 @@ public class FeiertagDaoImpl implements FeiertagDao {
     Query q = getCurrentSession().createQuery("from Feiertag f order by datum");
     @SuppressWarnings("unchecked")
     List<Feiertag> list = q.list();
-    log.info("findAll: count = {}", list.size());
+    log.debug("findAll: count = {}", list.size());
     return list;
   }
 
@@ -63,7 +63,7 @@ public class FeiertagDaoImpl implements FeiertagDao {
     q.setParameter("end", getEndDate(year));
     @SuppressWarnings("unchecked")
     List<Feiertag> list = q.list();
-    log.info("findByYear({}) = {}", year, list);
+    log.debug("findByYear({}) = {}", year, list);
     return list;
   }
 
@@ -74,24 +74,24 @@ public class FeiertagDaoImpl implements FeiertagDao {
     q.setParameter("start", getStartDate(year));
     q.setParameter("end", getEndDate(year));
     int count = q.executeUpdate();
-    log.info("deleteByYear({}): {} Feiertage gelöscht", year, count);
+    log.debug("deleteByYear({}): {} Feiertage gelöscht", year, count);
   }
 
   @Override
   public void insert(Feiertag feiertag) {
-    log.info("insert: {}", feiertag);
+    log.debug("insert: {}", feiertag);
     getCurrentSession().save(feiertag);
   }
 
   @Override
   public void update(Feiertag feiertag) {
-    log.info("update: {}", feiertag);
+    log.debug("update: {}", feiertag);
     getCurrentSession().update(feiertag);
   }
 
   @Override
   public void delete(Feiertag feiertag) {
-    log.info("delete({}", feiertag);
+    log.debug("delete({}", feiertag);
     getCurrentSession().delete(feiertag);
   }
 
@@ -102,7 +102,7 @@ public class FeiertagDaoImpl implements FeiertagDao {
     q.setParameter("end", bis);
     @SuppressWarnings("unchecked")
     List<Feiertag> list = q.list();
-    log.info("findByZeitraum({}, {}): count={} Feiertage gelöscht", von, bis, list.size());
+    log.debug("findByZeitraum({}, {}): count={} Feiertage gelesen", von, bis, list.size());
     return list;
   }
 }
