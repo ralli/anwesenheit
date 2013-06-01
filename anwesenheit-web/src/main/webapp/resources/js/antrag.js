@@ -482,15 +482,14 @@ app.controller("NewAntragCtrl", [ '$scope',
 
             $scope.bewilligungError = "";
 
-            if (_.find($scope.antrag.bewilliger, equalsBenutzerId)) {
-                $scope.bewilligungError = "Die Bewilligung kann nicht mehrfach hinzugefügt werden";
-                return;
-            }
-
             var successCallback = function (benutzerDaten) {
+                $scope.bewilligerKey = "";
+                if (_.find($scope.antrag.bewilliger, equalsBenutzerId)) {
+                  $scope.bewilligungError = "Die Bewilligung kann nicht mehrfach hinzugefügt werden";
+                  return;
+                }
                 benutzerDaten.position = $scope.antrag.bewilliger.length + 1;
                 $scope.antrag.bewilliger.push(benutzerDaten);
-                $scope.bewilligerKey = "";
             };
             var errorCallback = function (data) {
                 $scope.bewilligungError = data.data.message;
@@ -653,8 +652,9 @@ app.directive("benutzerAutocomplete", function () {
                 'source': "./api/benutzer/search",
                 'select': function (event, ui) {
                     scope.bewilligerKey = ui.item.value;
-                    scope.$digest();
-                    scope._addBewilliger(ui.item.value);
+                    // Eigentlich wäre es cooler, wenn hier sofort ein Bewilliger hinzugefügt würde,
+                    // leider scheint das aktuell nicht richtig zu funktionieren...
+                    // scope._addBewilliger(ui.item.value);
                 },
                 'minLength': 2
             });
