@@ -118,7 +118,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   }
 
   private boolean istBewilligerFuerZweiteUnterschrift(BewilligungsDaten b) {
-    return b.getPosition() == 1;
+    return b.getPosition() == 2;
   }
 
   private String getBetreff(AntragsDaten antrag) {
@@ -144,7 +144,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
     Context context = toolManager.createContext();
     context.put("antrag", antrag);
     context.put("bewilligung", bewilligungsDaten);
-    context.put("antragUrl", getUrlForAntrag(antrag.getId()));
+    context.put("bewilligungsUrl", getUrlForBewilligung(bewilligungsDaten.getId()));
     StringWriter writer = new StringWriter();
     velocityEngine.mergeTemplate("de/fisp/anwesenheit/mailtemplates/" + template, "UTF-8", context, writer);
     String text = writer.toString();
