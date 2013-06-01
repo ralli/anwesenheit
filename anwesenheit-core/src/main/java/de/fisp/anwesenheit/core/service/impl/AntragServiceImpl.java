@@ -404,4 +404,16 @@ public class AntragServiceImpl implements AntragService {
   public void setMailBenachrichtigungsService(MailBenachrichtigungsService mailBenachrichtigungsService) {
     this.mailBenachrichtigungsService = mailBenachrichtigungsService;
   }
+
+  public void setAntragArtDao(AntragArtDao antragArtDao) {
+    this.antragArtDao = antragArtDao;
+  }
+
+  public void setAntragStatusDao(AntragStatusDao antragStatusDao) {
+    this.antragStatusDao = antragStatusDao;
+  }
+
+  public void setBewilligungsStatusDao(BewilligungsStatusDao bewilligungsStatusDao) {
+    this.bewilligungsStatusDao = bewilligungsStatusDao;
+  }
 }

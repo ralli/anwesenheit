@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fisp.anwesenheit.core.dao.*;
 import de.fisp.anwesenheit.core.service.MailBenachrichtigungsService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
@@ -17,11 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.fisp.anwesenheit.core.TestDataFactory;
-import de.fisp.anwesenheit.core.dao.AntragDao;
-import de.fisp.anwesenheit.core.dao.AntragHistorieDao;
-import de.fisp.anwesenheit.core.dao.BenutzerDao;
-import de.fisp.anwesenheit.core.dao.BewilligungDao;
-import de.fisp.anwesenheit.core.dao.SonderUrlaubArtDao;
 import de.fisp.anwesenheit.core.domain.AntragListe;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
 import de.fisp.anwesenheit.core.domain.CreateAntragCommand;
@@ -41,9 +37,13 @@ public class AntragServiceTest {
   private BenutzerDao benutzerDao;
   private SonderUrlaubArtDao sonderUrlaubArtDao;
   private AntragHistorieDao antragHistorieDao;
+  private AntragArtDao antragArtDao;
+  private AntragStatusDao antragStatusDao;
+  private BewilligungsStatusDao bewilligungsStatusDao;
   private BerechtigungsService berechtigungsService;
   private AntragServiceImpl antragService;
   private TestDataFactory testDataFactory;
+
   private MailBenachrichtigungsService mailBenachrichtigungsService;
 
   @Before
@@ -56,6 +56,10 @@ public class AntragServiceTest {
     antragHistorieDao = mock(AntragHistorieDao.class);
     berechtigungsService = mock(BerechtigungsService.class);
     mailBenachrichtigungsService = mock(MailBenachrichtigungsService.class);
+    antragArtDao = mock(AntragArtDao.class);
+    antragStatusDao = mock(AntragStatusDao.class);
+    bewilligungsStatusDao = mock(BewilligungsStatusDao.class);
+
     antragService = new AntragServiceImpl();
     antragService.setAntragDao(antragDao);
     antragService.setAntragHistorieDao(antragHistorieDao);
@@ -64,6 +68,9 @@ public class AntragServiceTest {
     antragService.setBewilligungDao(bewilligungDao);
     antragService.setMailBenachrichtigungsService(mailBenachrichtigungsService);
     antragService.setSonderUrlaubArtDao(sonderUrlaubArtDao);
+    antragService.setAntragArtDao(antragArtDao);
+    antragService.setAntragStatusDao(antragStatusDao);
+    antragService.setBewilligungsStatusDao(bewilligungsStatusDao);
   }
 
   @Test
