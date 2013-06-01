@@ -1,7 +1,12 @@
 package de.fisp.anwesenheit.core.dao.impl;
 
-import de.fisp.anwesenheit.core.domain.AntragUebersichtFilter;
-import org.junit.Assert;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +18,10 @@ import de.fisp.anwesenheit.core.TestConfig;
 import de.fisp.anwesenheit.core.TestDataFactory;
 import de.fisp.anwesenheit.core.dao.AntragDao;
 import de.fisp.anwesenheit.core.dao.BenutzerDao;
+import de.fisp.anwesenheit.core.domain.AntragUebersichtFilter;
 import de.fisp.anwesenheit.core.domain.AntragsFilter;
 import de.fisp.anwesenheit.core.entities.Antrag;
 import de.fisp.anwesenheit.core.entities.Benutzer;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class})

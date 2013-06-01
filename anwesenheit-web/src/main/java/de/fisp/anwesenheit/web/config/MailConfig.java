@@ -1,19 +1,18 @@
 package de.fisp.anwesenheit.web.config;
 
-import de.fisp.anwesenheit.core.service.impl.MailServiceImpl;
+import javax.mail.Session;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import de.fisp.anwesenheit.core.service.MailService;
-import de.fisp.anwesenheit.core.service.impl.DummyMailServiceImpl;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jndi.JndiObjectFactoryBean;
 
-import javax.mail.Session;
-import javax.sql.DataSource;
+import de.fisp.anwesenheit.core.service.MailService;
+import de.fisp.anwesenheit.core.service.impl.DummyMailServiceImpl;
+import de.fisp.anwesenheit.core.service.impl.MailServiceImpl;
 
 @Configuration
 @PropertySource("classpath:/anwesenheit.properties")

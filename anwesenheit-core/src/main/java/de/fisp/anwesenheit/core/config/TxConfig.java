@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 public class TxConfig {
-  @SuppressWarnings("SpringJavaAutowiringInspection")
   @Autowired
   private SessionFactory sessionFactory;
   private static final Logger logger = LoggerFactory.getLogger(TxConfig.class);
