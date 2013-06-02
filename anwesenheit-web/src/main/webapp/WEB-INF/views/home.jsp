@@ -2,7 +2,7 @@
 <%@page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/bootstrap" prefix="b" %>
-<html ng-app="antrag">
+<html ng-app="app">
 <head>
   <title>Anwesenheiten</title>
   <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
@@ -60,8 +60,15 @@
 <script src="<c:url value="/webjars/angular-ui/0.4.0/angular-ui-ieshiv.min.js"/>"></script>
 <script src="<c:url value="/webjars/bootstrap/2.3.1/js/bootstrap.min.js" />"></script>
 <script src="<c:url value="/webjars/angular-ui-bootstrap/0.3.0/ui-bootstrap-tpls.min.js" />"></script>
-<script src="<c:url value="/resources/js/antrag.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/webjars/underscorejs/1.4.4/underscore.min.js"/>"></script>
 <script src="<c:url value="/resources/lib/toastr/toastr.js" />"></script>
+
+<script src="<c:url value="/resources/js/services.js?reload=1"/>" charset="UTF-8"></script>
+<script src="<c:url value="/resources/js/helpers.js?reload=1"/>" charset="UTF-8"></script>
+<script src="<c:url value="/resources/js/controllers/antrag.js?reload=1"/>" charset="UTF-8"></script>
+<script src="<c:url value="/resources/js/controllers/bewilligung.js?reload=1"/>" charset="UTF-8"></script>
+<script src="<c:url value="/resources/js/controllers/uebersicht.js?reload=1"/>" charset="UTF-8"></script>
+<script src="<c:url value="/resources/js/app.js?reload=1"/>" charset="UTF-8"></script>
+
 </body>
 </html>
