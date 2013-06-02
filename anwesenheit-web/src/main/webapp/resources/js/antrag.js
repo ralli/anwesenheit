@@ -143,29 +143,25 @@ app.factory("bewilligungService", [ '$resource', function ($resource) {
             "update": { "method": "PUT" },
             "remove": { "method": "DELETE" }
         });
-    result.bewilligeAntrag = function (b, successCallback) {
+    result.bewilligeAntrag = function (b, successCallback, errorCallback) {
         var updateCommand = {
             'id': b.id,
             'bewilligungsStatus': 'BEWILLIGT'
         };
         result.update(updateCommand,
             successCallback,
-            function(data) {
-                toastr.error(data.message);
-            }
+            errorCallback
         );
       };
 
-      result.lehneAntragAb = function (b, successCallback) {
+      result.lehneAntragAb = function (b, successCallback, errorCallback) {
         var updateCommand = {
             'id': b.id,
             'bewilligungsStatus': 'ABGELEHNT'
         };
         result.update(updateCommand,
           successCallback,
-          function(data) {
-            toastr.error(data.message);
-          }
+          errorCallback
         );
       };
 
@@ -677,17 +673,28 @@ app.controller("ListBewilligungCtrl", [ '$scope', 'bewilligungService', 'bewilli
         };
 
         $scope.bewilligeAntrag = function(b) {
-            bewilligungService.bewilligeAntrag(b, function(data) {
-                b.bewilligungsStatus = data.bewilligungsStatus;
-                toastr.success("Der Antrag wurde bewilligt");
-            });
+          var successCallback = function(data) {
+            b.bewilligungsStatus = data.bewilligungsStatus;
+            toastr.success("Der Antrag wurde bewilligt");
+          };
+          var errorCallback = function(data) {
+            toastr.error(data.message);
+          };
+
+          bewilligungService.bewilligeAntrag(b, successCallback, errorCallback);
         };
 
         $scope.lehneAntragAb = function(b) {
-            bewilligungService.lehneAntragAb(b, function(data) {
-                    b.bewilligungsStatus = data.bewilligungsStatus;
-                    toastr.success("Der Antrag wurde abgelehnt");
-            });
+          var successCallback = function(data) {
+            b.bewilligungsStatus = data.bewilligungsStatus;
+            toastr.success("Der Antrag wurde abgelehnt");
+          };
+
+          var errorCallback = function(data) {
+            toastr.error(data.message);
+          };
+
+          bewilligungService.lehneAntragAb(b, successCallback, errorCallback);
         };
 
         $scope.rowClassFor = rowClassForBewilligung;
@@ -713,17 +720,28 @@ app.controller("ShowBewilligungCtrl", ['$scope', '$routeParams', '$location', 'b
         };
 
         $scope.bewilligeAntrag = function (b) {
-            bewilligungService.bewilligeAntrag(b, function (/* data */) {
-                $location.path("/bewilligungen");
-                toastr.success("Der Antrag wurde bewilligt");
-            });
+          var successCallback = function (/* data */) {
+            $location.path("/bewilligungen");
+            toastr.success("Der Antrag wurde bewilligt");
+          };
+          var errorCallback = function(data) {
+            toastr.error(data.message);
+          };
+
+          bewilligungService.bewilligeAntrag(b, successCallback, errorCallback);
         };
 
         $scope.lehneAntragAb = function (b) {
-            bewilligungService.lehneAntragAb(b, function (/* data */) {
-                $location.path("/bewilligungen");
-                toastr.success("Der Antrag wurde abgelehnt");
-            });
+          var successCallback = function (/* data */) {
+            $location.path("/bewilligungen");
+            toastr.success("Der Antrag wurde abgelehnt");
+          };
+
+          var errorCallback = function(data) {
+            toastr.error(data.message);
+          };
+
+          bewilligungService.lehneAntragAb(b, successCallback, errorCallback);
         };
 
         $scope.hatGleichzeitigeAntraege = function () {
