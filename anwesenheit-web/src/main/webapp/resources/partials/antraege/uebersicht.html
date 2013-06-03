@@ -62,6 +62,7 @@
         <th>Von</th>
         <th>Bis</th>
         <th>Anzahl Tage</th>
+        <th>Aktionen</th>
     </tr>
   </thead>
   <tbody>
@@ -72,6 +73,7 @@
         <td>{{antrag.von|date:'dd.MM.yyyy'}}</td>
         <td>{{antrag.bis|date:'dd.MM.yyyy'}}</td>
         <td>{{antrag.anzahlTage|number}}</td>
+        <td><a ng-href="#!/uebersicht/{{antrag.id}}">Details</a></td>
     </tr>
   </tbody>
 </table>

@@ -5,7 +5,7 @@
 
   /* global angular: false, $: false, _: false, toastr: false */
 
-  var app = angular.module("app", [ "ngResource", "app.services", "app.ctrl.antrag", "app.ctrl.bewilligung", "app.ctrl.uebersicht" ]);
+  var app = angular.module("app", [ "ngResource", "app.services", "app.ctrl.antrag", "app.ctrl.bewilligung", "app.ctrl.uebersicht" , "app.directives"]);
 
   app.config([ '$routeProvider', '$locationProvider', '$httpProvider', function ($routeProvider, $locationProvider, $httpProvider) {
     $locationProvider.html5Mode(false);
@@ -23,6 +23,9 @@
         }).when("/uebersicht", {
           templateUrl: './resources/partials/antraege/uebersicht.html',
           controller: 'AntragUebersichtCtrl'
+        }).when("/uebersicht/:id", {
+          templateUrl: './resources/partials/antraege/uebersichtdetails.html',
+          controller: 'AntragDetailsCtrl'
         }).when("/antraege/:id/edit", {
           templateUrl: './resources/partials/antraege/edit.html',
           controller: 'EditAntragCtrl'

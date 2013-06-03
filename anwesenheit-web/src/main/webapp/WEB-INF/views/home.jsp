@@ -68,6 +68,7 @@
 <script src="<c:url value="/resources/js/controllers/antrag.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/resources/js/controllers/bewilligung.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/resources/js/controllers/uebersicht.js?reload=1"/>" charset="UTF-8"></script>
+<script src="<c:url value="/resources/js/directives.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/resources/js/app.js?reload=1"/>" charset="UTF-8"></script>
 
 </body>

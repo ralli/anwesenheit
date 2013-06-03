@@ -1,0 +1,88 @@
+<form class="form-horizontal">
+  <fieldset>
+    <legend>Antrag</legend>
+    <div class="control-group">
+      <label class="control-label">Antragsteller</label>
+      <div class="controls">
+        <span class="uneditable-input">{{antrag.benutzer.vorname}} {{antrag.benutzer.nachname}}</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Antragsart</label>
+      <div class="controls">
+        <span class="uneditable-input">{{antrag.antragArt.bezeichnung}}</span>
+      </div>
+    </div>
+    <div class="control-group" ng-show="sonderUrlaubArtVisible()">
+      <label class="control-label">Grund für Sonderurlaub</label>
+      <div class="controls">
+        <span class="uneditable-input">{{antrag.sonderUrlaubArt.bezeichnung}}</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Antragsstatus</label>
+      <div class="controls">
+        <span class="uneditable-input">{{antrag.antragStatus.bezeichnung}}</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Von</label>
+      <div class="controls">
+        <span class="uneditable-input">{{antrag.von|date:'dd.MM.yyyy'}}</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Bis</label>
+      <div class="controls">
+        <span class="uneditable-input">{{antrag.bis|date:'dd.MM.yyyy'}}</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Anzahl Tage</label>
+      <div class="controls">
+        <span class="uneditable-input">{{antrag.anzahlTage|number}}</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+        <a ng-href="{{backlink}}" class="btn">Zurück</a>
+      </div>
+    </div>
+  </fieldset>
+</form>
+<h2>Bewilligungen</h2>
+<table class="table table-bordered">
+  <thead>
+  <tr>
+    <th>Bewilliger</th>
+    <th>Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr ng-repeat="bewilligung in antrag.bewilligungen" ng-class="rowClassFor(bewilligung)">
+    <td>{{bewilligung.benutzer.vorname}}
+      {{bewilligung.benutzer.nachname}}</td>
+    <td>{{bewilligung.bewilligungsStatus.bezeichnung}}</td>
+  </tr>
+  </tbody>
+</table>
+<p><button class="btn" ng-click="leseHistorie()" ng-show="!historie"><i class="icon-refresh"></i> Historie</button></p>
+<div ng-show="historie">
+  <h2>Historie</h2>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Benutzer</th>
+      <th>Zeitpunkt</th>
+      <th>Beschreibung</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="hist in historie">
+      <td>{{hist.benutzer.vorname}} {{hist.benutzer.nachname}}</td>
+      <td>{{hist.zeitpunkt|date:'dd.MM.yyyy HH:mm'}}</td>
+      <td>{{hist.beschreibung}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -120,23 +120,11 @@
       $scope.fetchAntragListe();
     }]);
 
-  app.controller("AntragDetailsCtrl", [ '$scope', '$routeParams', 'antragService', 'antragHistorieService', 'helpers',
-    function ($scope, $routeParams, antragService, antragHistorieService, helpers) {
+  app.controller("AntragDetailsCtrl", [ '$scope', '$routeParams', 'antragService',
+    function ($scope, $routeParams, antragService) {
       $scope.antrag = antragService.get({
         "id": $routeParams.id
       });
-
-      $scope.sonderUrlaubArtVisible = function () {
-        return $scope.antrag && $scope.antrag.antragArt && $scope.antrag.antragArt.antragArt === "SONDER";
-      };
-
-      $scope.leseHistorie = function () {
-        antragHistorieService.query({'antragId': $scope.antrag.id }, function (data) {
-          $scope.historie = data;
-        });
-      };
-
-      $scope.rowClassFor = helpers.rowClassForBewilligung;
     }
   ]);
 
