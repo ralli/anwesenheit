@@ -141,9 +141,7 @@ public class TestDataFactory {
     Feiertag feiertag = new Feiertag();
     feiertag.setAnteilArbeitszeit(anteilArbeitszeit);
     feiertag.setDatum(date);
-    feiertag.setDefinition(createFeiertagDefinition(0, 0, anteilArbeitszeit, 1, 0, name));
     feiertag.setName(name);
-    feiertag.setDefinitionId(feiertag.getDefinition().getId());
     return feiertag;
   }
 }

@@ -28,11 +28,6 @@ public class Feiertag implements Serializable {
   @NotNull
   @Size(min = 1, max = 40)
   private String name;
-  @Column(name = "definition_id", nullable = true)
-  private Long definitionId;
-  @ManyToOne(optional = true)
-  @JoinColumn(name = "definition_id", insertable = false, updatable = false, nullable = true)
-  private FeiertagDefinition definition;
   @Temporal(TemporalType.DATE)
   @NotNull
   private Date datum;
@@ -55,21 +50,6 @@ public class Feiertag implements Serializable {
     this.name = name;
   }
 
-  public Long getDefinitionId() {
-    return definitionId;
-  }
-
-  public void setDefinitionId(Long definitionId) {
-    this.definitionId = definitionId;
-  }
-
-  public FeiertagDefinition getDefinition() {
-    return definition;
-  }
-
-  public void setDefinition(FeiertagDefinition definition) {
-    this.definition = definition;
-  }
 
   public Date getDatum() {
     return datum;
@@ -97,8 +77,6 @@ public class Feiertag implements Serializable {
     if (Double.compare(feiertag.anteilArbeitszeit, anteilArbeitszeit) != 0) return false;
     if (id != feiertag.id) return false;
     if (datum != null ? !datum.equals(feiertag.datum) : feiertag.datum != null) return false;
-    if (definitionId != null ? !definitionId.equals(feiertag.definitionId) : feiertag.definitionId != null)
-      return false;
     if (name != null ? !name.equals(feiertag.name) : feiertag.name != null) return false;
 
     return true;
@@ -110,7 +88,6 @@ public class Feiertag implements Serializable {
     long temp;
     result = id;
     result = 31 * result + (name != null ? name.hashCode() : 0);
-    result = 31 * result + (definitionId != null ? definitionId.hashCode() : 0);
     result = 31 * result + (datum != null ? datum.hashCode() : 0);
     temp = Double.doubleToLongBits(anteilArbeitszeit);
     result = 31 * result + (int) (temp ^ (temp >>> 32));
@@ -119,7 +96,11 @@ public class Feiertag implements Serializable {
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this).append(id).append(name).append(datum)
-            .toString();
+    return "Feiertag{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", datum=" + datum +
+            ", anteilArbeitszeit=" + anteilArbeitszeit +
+            '}';
   }
 }

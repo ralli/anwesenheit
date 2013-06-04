@@ -64,8 +64,6 @@ public class Feiertagsberechnung {
       Feiertag feiertag = new Feiertag();
       feiertag.setName(definition.getName());
       feiertag.setDatum(cal.getTime());
-      feiertag.setDefinitionId(definition.getId());
-      feiertag.setDefinition(definition);
       feiertag.setAnteilArbeitszeit(definition.getAnteilArbeitszeit());
       result.add(feiertag);
     }
