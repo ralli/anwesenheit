@@ -145,6 +145,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
     context.put("antrag", antrag);
     context.put("bewilligung", bewilligungsDaten);
     context.put("bewilligungsUrl", getUrlForBewilligung(bewilligungsDaten.getId()));
+    context.put("antragsUrl", getUrlForAntrag(antrag.getId()));
     StringWriter writer = new StringWriter();
     velocityEngine.mergeTemplate("de/fisp/anwesenheit/mailtemplates/" + template, "UTF-8", context, writer);
     String text = writer.toString();
