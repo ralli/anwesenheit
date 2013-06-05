@@ -13,6 +13,7 @@
     <modules>
         <module>anwesenheit-core</module>
         <module>anwesenheit-web</module>
+        <module>anwesenheit-admin</module>
     </modules>
     <properties>
         <!-- dependency versions -->
