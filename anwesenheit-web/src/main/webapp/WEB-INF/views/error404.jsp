@@ -12,8 +12,7 @@
 
 <!-- Le styles -->
 <link href="<c:url value="webjars/bootstrap/2.3.1/css/bootstrap.min.css" />" rel="stylesheet" />
-<link href="<c:url value="webjars/bootstrap/2.3.1/css/bootstrap-responsive.min.css" />" rel="stylesheet" />
-<link href="<c:url value="/resources/test.css" />" rel="stylesheet" />
+<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet" />
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
