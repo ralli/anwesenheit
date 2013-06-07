@@ -4,24 +4,12 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import de.fisp.anwesenheit.core.entities.*;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
-
-import de.fisp.anwesenheit.core.entities.Antrag;
-import de.fisp.anwesenheit.core.entities.AntragArt;
-import de.fisp.anwesenheit.core.entities.AntragHistorie;
-import de.fisp.anwesenheit.core.entities.AntragStatus;
-import de.fisp.anwesenheit.core.entities.Benutzer;
-import de.fisp.anwesenheit.core.entities.BenutzerRolle;
-import de.fisp.anwesenheit.core.entities.Bewilligung;
-import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
-import de.fisp.anwesenheit.core.entities.Feiertag;
-import de.fisp.anwesenheit.core.entities.FeiertagDefinition;
-import de.fisp.anwesenheit.core.entities.Rolle;
-import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 
 @Configuration
 public class HibernateConfig {
@@ -33,7 +21,7 @@ public class HibernateConfig {
     hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
     localSessionFactoryBean.setHibernateProperties(hibernateProperties);
     Class<?>[] classes = {
-            Antrag.class, AntragArt.class, AntragHistorie.class, AntragStatus.class, Benutzer.class, BenutzerRolle.class, Rolle.class, BewilligungsStatus.class, Bewilligung.class, SonderUrlaubArt.class, FeiertagDefinition.class, Feiertag.class
+            Antrag.class, AntragArt.class, AntragHistorie.class, AntragStatus.class, Benutzer.class, BenutzerRolle.class, Rolle.class, BewilligungsStatus.class, Bewilligung.class, SonderUrlaubArt.class, FeiertagDefinition.class, Feiertag.class, Parameter.class
     };
     localSessionFactoryBean.setAnnotatedClasses(classes);
     return localSessionFactoryBean;

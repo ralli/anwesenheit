@@ -11,19 +11,19 @@ import de.fisp.anwesenheit.core.TestConfig;
 import de.fisp.anwesenheit.core.dao.ParameterDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { TestConfig.class })
+@ContextConfiguration(classes = {TestConfig.class})
 @Transactional
 public class ParameterDaoTest {
-	@Autowired
-	private ParameterDao parameterDao;
+  @Autowired
+  private ParameterDao parameterDao;
 
-	@Test
-	public void testFindAll() {
-		parameterDao.findAll();
-	}
-	
-	@Test
-	public void testFindById() {
-		parameterDao.findById("hase");
-	}
+  @Test
+  public void testFindAll() {
+    parameterDao.findAll();
+  }
+
+  @Test
+  public void testFindById() {
+    parameterDao.findById("hase");
+  }
 }

@@ -605,4 +605,23 @@
         <dropColumn columnName="definition_id"
                     tableName="feiertag"/>
     </changeSet>
+    <changeSet author="raljuhn" id="createTableParameters">
+        <createTable tableName="parameter">
+            <column name="id" type="varchar(30)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="wert" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="beschreibung" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" engine innodb"/>
+        </modifySql>
+    </changeSet>
 </databaseChangeLog>
