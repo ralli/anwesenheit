@@ -5,7 +5,7 @@
 
   /* global angular: false, $: false, _: false, toastr: false */
 
-  var app = angular.module("app", [ "ngResource", "app.services", "app.ctrl.antrag", "app.ctrl.bewilligung", "app.ctrl.uebersicht" , "app.directives"]);
+  var app = angular.module("app", [ "ngResource", "app.services", "app.ctrl.antrag", "app.ctrl.bewilligung", "app.ctrl.uebersicht", "app.ctrl.reports", "app.directives"]);
 
   app.config([ '$routeProvider', '$locationProvider', '$httpProvider', function ($routeProvider, $locationProvider, $httpProvider) {
     $locationProvider.html5Mode(false);
@@ -39,8 +39,13 @@
           templateUrl: './resources/partials/bewilligungen/index.html',
           controller: 'ListBewilligungCtrl'
         }).when("/bewilligungen/:id", {
-          templateUrl: './resources/partials/bewilligungen/show.html',
-          controller: 'ShowBewilligungCtrl'
+            templateUrl: './resources/partials/bewilligungen/show.html',
+            controller: 'ShowBewilligungCtrl'
+        });
+
+        $routeProvider.when("/reports", {
+          templateUrl: './resources/partials/reports/index.html',
+          controller: 'ReportsCtrl'
         });
 
     /*

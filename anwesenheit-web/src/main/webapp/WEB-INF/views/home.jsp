@@ -33,6 +33,7 @@
           <li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i> Anträge</a></li>
           <li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i> Bewilligungen</a></li>
           <li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i> Übersicht</a></li>
+          <li><a href="<c:url value="#!/reports" />"><i class="icon-bar-chart"></i> Reports</a></li>
         </ul>
         <ul class="nav pull-right">
           <li class="navbar-text">
@@ -68,6 +69,7 @@
 <script src="<c:url value="/resources/js/controllers/antrag.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/resources/js/controllers/bewilligung.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/resources/js/controllers/uebersicht.js?reload=1"/>" charset="UTF-8"></script>
+<script src="<c:url value="/resources/js/controllers/reports.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/resources/js/directives.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/resources/js/app.js?reload=1"/>" charset="UTF-8"></script>
 

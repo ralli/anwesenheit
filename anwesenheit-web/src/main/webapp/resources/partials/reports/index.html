@@ -1,0 +1,14 @@
+<div class="hero-unit">
+    <h1>Reports</h1>
+  <form class="form-inline" style="padding-top:1em;">
+    <label for="monat">Monat:</label>
+    <select id="monat"
+            name="monat"
+            ng-model="monat"
+            ng-options="a.num as a.name for a in monate"></select>
+    <label for="jahr">Jahr</label>
+    <input id="jahr" type="text" ng-model="jahr"></input>
+    <a href="/anwesenheit-birt?date={{jahr}}-{{monat}}-01" class="btn btn-primary">Report</a>
+  </form>
+  <p>Monat: {{monat|json}} Jahr: {{jahr}} Datum: {{jahr}}-{{monat}}-01</p>
+</div>
