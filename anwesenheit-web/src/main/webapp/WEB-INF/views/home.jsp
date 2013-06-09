@@ -33,7 +33,8 @@
           <li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i> Anträge</a></li>
           <li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i> Bewilligungen</a></li>
           <li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i> Übersicht</a></li>
-          <li><a href="<c:url value="#!/reports" />"><i class="icon-bar-chart"></i> Reports</a></li>
+<%--      Auskommentiert, da noch nicht vollständig implementiert...
+          <li><a href="<c:url value="#!/reports" />"><i class="icon-bar-chart"></i> Reports</a></li> --%>
         </ul>
         <ul class="nav pull-right">
           <li class="navbar-text">

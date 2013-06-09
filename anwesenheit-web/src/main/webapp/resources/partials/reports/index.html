@@ -8,7 +8,7 @@
             ng-options="a.num as a.name for a in monate"></select>
     <label for="jahr">Jahr</label>
     <input id="jahr" type="text" ng-model="jahr"></input>
-    <a href="./report?von={{jahr}}-{{monat}}-01" class="btn btn-primary">Report</a>
+    <a href="./report?datum={{jahr}}-{{monat}}-01" class="btn btn-primary">Report</a>
   </form>
   <p>Monat: {{monat|json}} Jahr: {{jahr}} Datum: {{jahr}}-{{monat}}-01</p>
 </div>
