@@ -1,5 +1,8 @@
 <div class="hero-unit">
-    <h1>Reports</h1>
+  <h1>Urlaubsreport</h1>
+
+  <p>Bitte wählen Sie den Monat und das Jahr der auszuwertenen Urlaubsübersicht aus:</p>
+
   <form class="form-inline" style="padding-top:1em;">
     <label for="monat">Monat:</label>
     <select id="monat"
@@ -10,5 +13,4 @@
     <input id="jahr" type="text" ng-model="jahr"></input>
     <a href="./report?datum={{jahr}}-{{monat}}-01" class="btn btn-primary">Report</a>
   </form>
-  <p>Monat: {{monat|json}} Jahr: {{jahr}} Datum: {{jahr}}-{{monat}}-01</p>
 </div>
