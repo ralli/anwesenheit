@@ -13,6 +13,7 @@ import de.fisp.anwesenheit.core.entities.BenutzerRolle;
 import de.fisp.anwesenheit.core.entities.Bewilligung;
 import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import de.fisp.anwesenheit.core.util.NotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementierung verschiedener Methoden zur Berechtigungsprüfung.
@@ -29,6 +30,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
   }
 
   @Override
+  @Transactional
   public boolean darfAntragAnsehen(Antrag antrag, Benutzer benutzer) {
     if (benutzer.getBenutzerId().equals(antrag.getBenutzerId()))
       return true;
@@ -43,6 +45,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
   }
 
   @Override
+  @Transactional
   public boolean darfAntragAnsehen(Antrag antrag, String benutzerId) {
     if (benutzerId == null)
       return false;
@@ -55,6 +58,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
   }
 
   @Override
+  @Transactional
   public boolean isAntragEigentuemerOderErfasser(Antrag antrag, Benutzer benutzer) {
     if (benutzer.getBenutzerId().equals(antrag.getBenutzerId()))
       return true;
@@ -69,6 +73,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
   }
 
   @Override
+  @Transactional
   public boolean isAntragEigentuemerOderErfasser(Antrag antrag, String benutzerId) {
     if (benutzerId == null)
       return false;
@@ -81,6 +86,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
   }
 
   @Override
+  @Transactional
   public boolean darfAlleAntraegeSehen(String currentBenutzerId, String benutzerId) {
     if (currentBenutzerId == null)
       return false;
@@ -90,6 +96,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
   }
 
   @Override
+  @Transactional
   public boolean hatSonderBerechtigungen(Benutzer benutzer) {
     for (BenutzerRolle br : benutzer.getBenutzerRollen()) {
       if ("ERFASSER".equals(br.getRolle()))
@@ -100,6 +107,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
   }
 
   @Override
+  @Transactional
   public boolean hatSonderBerechtigungen(String benutzerId) {
     if (benutzerId == null)
       return false;
@@ -112,6 +120,7 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
   }
 
   @Override
+  @Transactional
   public boolean darfBewilligungenAnsehen(String currentBenutzerId, String benutzerId) {
     if (currentBenutzerId == null)
       return false;
@@ -121,11 +130,13 @@ public class BerechtigungsServiceImpl implements BerechtigungsService {
   }
 
   @Override
+  @Transactional
   public boolean darfBewilligungAnsehen(String benutzerId, Bewilligung bewilligung) {
     return darfBewilligungenAnsehen(benutzerId, bewilligung.getBenutzerId());
   }
 
   @Override
+  @Transactional
   public boolean darfBewilligungenAendern(String currentBenutzerId, String benutzerId) {
     return currentBenutzerId.equals(benutzerId) || hatSonderBerechtigungen(currentBenutzerId);
 

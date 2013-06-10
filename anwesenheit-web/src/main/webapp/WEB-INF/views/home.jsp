@@ -29,13 +29,6 @@
     <div class="container">
       <div class="container nav-collapse">
         <a class="brand" href="<c:url value="#!" />">Anwesenheit</a>
-        <ul class="nav">
-          <li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i> Anträge</a></li>
-          <li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i> Bewilligungen</a></li>
-          <li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i> Übersicht</a></li>
-<%--      Auskommentiert, da noch nicht vollständig implementiert...
-          <li><a href="<c:url value="#!/reports" />"><i class="icon-bar-chart"></i> Reports</a></li> --%>
-        </ul>
         <ul class="nav pull-right">
           <li class="navbar-text">
             <b:currentUserName id="current-user-name">Username</b:currentUserName>
@@ -44,6 +37,14 @@
             <a href="<c:url value="/logoff" />"><i class="icon-off"></i> Abmelden</a>
           </li>
         </ul>
+          <ul class="nav">
+              <li><a href="<c:url value="#!/antraege" />"><i class="icon-tasks"></i> Anträge</a></li>
+              <li><a href="<c:url value="#!/bewilligungen" />"><i class="icon-ok"></i> Bewilligungen</a></li>
+              <li><a href="<c:url value="#!/uebersicht" />"><i class="icon-calendar"></i> Übersicht</a></li>
+              <c:if test="${hatSonderBerechtigung}">
+                  <li><a href="<c:url value="#!/reports" />"><i class="icon-bar-chart"></i> Reports</a></li>
+              </c:if>
+          </ul>
       </div>
     </div>
   </div>

@@ -1,8 +1,10 @@
 package de.fisp.anwesenheit.web.controllers;
 
+import de.fisp.anwesenheit.core.service.BerechtigungsService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 @Controller
 public class HomeController {
   private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+  @Autowired
+  private BerechtigungsService berechtigungsService;
 
   private String getCurrentUser() {
     return (String) RequestContextHolder.currentRequestAttributes().getAttribute("benutzerId", RequestAttributes.SCOPE_SESSION);
@@ -29,7 +33,11 @@ public class HomeController {
       String result = "redirect:/login?redirectUrl=" + redirectUrl;
       logger.debug("redirect to: {}", result);
       return result;
-    } else if (StringUtils.isNotBlank(deepLink)) {
+    }
+    boolean hatSonderBerechtigung = berechtigungsService.hatSonderBerechtigungen(getCurrentUser());
+    logger.debug("hatSonderberechtigung: {}", hatSonderBerechtigung);
+    model.addAttribute("hatSonderBerechtigung", hatSonderBerechtigung);
+    if (StringUtils.isNotBlank(deepLink)) {
       String result = "redirect:/#!/" + deepLink;
       logger.debug("Angemeldet. redirect to: {}", result);
       return result;
