@@ -1,6 +1,5 @@
 <p>
-  ${bewilligung.benutzer.vorname} ${bewilligung.benutzer.nachname} hat Ihrem Antrag auf
-  ${antrag.antragArt.bezeichnung} abgelehnt.
+  ${bewilligung.benutzer.vorname} ${bewilligung.benutzer.nachname} hat Ihren Antrag auf ${antrag.antragArt.bezeichnung} abgelehnt.
 </p>
 <ul>
   <li>Art des Antrags: ${antrag.antragArt.bezeichnung}</li>

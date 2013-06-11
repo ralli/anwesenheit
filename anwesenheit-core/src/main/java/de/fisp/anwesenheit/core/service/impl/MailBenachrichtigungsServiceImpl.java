@@ -29,6 +29,7 @@ import de.fisp.anwesenheit.core.service.MailService;
 public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsService {
   private static final Logger log = LoggerFactory.getLogger(MailBenachrichtigungsServiceImpl.class);
   public static final String EMAIL_FROM = "noreply@f-i-solutions-plus.de";
+  public static final String BASIS_URL = "http://159.4.110.139:8090/anwesenheit-web";
 
   public void setAntragService(AntragService antragService) {
     this.antragService = antragService;
@@ -78,27 +79,24 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   }
 
   @Override
-  public void sendeAbgelehntMail(String benutzerId, long antragId) {
+  public void sendeAbgelehntMail(String benutzerId, long antragId, long bewilligungId) {
     AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
-    for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
-      BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
-      String email = bewilliger.getEmail();
-      String betreff = "ABGELEHNT: " + getBetreff(antrag);
-      String text = getAntragsTextForBewilligung(antrag, bewilligungsDaten, "antragabgelehnt.vm");
-      mailService.sendeMail(betreff, text, EMAIL_FROM, email);
+    for(BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
+      if(bewilligungsDaten.getId() == bewilligungId) {
+        String text = getAntragsTextForBewilligung(antrag, bewilligungsDaten, "antragabgelehnt.vm");
+        String email = antrag.getBenutzer().getEmail();
+        String betreff = "ABGELEHNT: " + getBetreff(antrag);
+        mailService.sendeMail(betreff, text, EMAIL_FROM, email);
+      }
     }
   }
 
   @Override
-  public void sendeBewilligtMail(String benutzerId, long antragId) {
+  public void sendeBewilligtMail(String benutzerId, long antragId, long bewilligungId) {
     AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
     String betreff = "BEWILLIGT: " + getBetreff(antrag);
     String text = getAntragsText(antrag, "antragbewilligt.vm");
     mailService.sendeMail(betreff, text, EMAIL_FROM, antrag.getBenutzer().getEmail());
-    for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
-      BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
-      mailService.sendeMail(betreff, text, EMAIL_FROM, bewilliger.getEmail());
-    }
   }
 
   @Override
@@ -159,11 +157,11 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   }
 
   private String getUrlForAntrag(long antragId) {
-    return "http://srv-1822direkt2:8080/anwesenheit-web/?deepLinkUrl=uebersicht/" + antragId;
+    return BASIS_URL + "/?deepLinkUrl=uebersicht/" + antragId;
   }
 
   private String getUrlForBewilligung(long bewilligungsId) {
-    return "http://srv-1822direkt2:8080/anwesenheit-web/?deepLinkUrl=bewilligungen/" + bewilligungsId;
+    return BASIS_URL + "/?deepLinkUrl=bewilligungen/" + bewilligungsId;
   }
 
   private String formatDate(Date date) {

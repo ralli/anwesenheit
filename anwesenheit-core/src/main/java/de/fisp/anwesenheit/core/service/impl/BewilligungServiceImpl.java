@@ -98,7 +98,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     String message = String.format("Bewilligung Bewilliger: %s, Status: %s gelöscht", bewilligung.getBenutzerId(),
             bewilligung.getBewilligungsStatusId());
 
-    aktualisiereAntragStatus(benutzerId, bewilligung.getAntrag());
+    aktualisiereAntragStatus(benutzerId, bewilligung);
 
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
 
@@ -145,6 +145,7 @@ public class BewilligungServiceImpl implements BewilligungService {
 
     bewilligung = new Bewilligung();
     bewilligung.setAntragId(command.getAntragId());
+    bewilligung.setAntrag(antrag);
     bewilligung.setBenutzerId(command.getBenutzerId());
     bewilligung.setBewilligungsStatusId("OFFEN");
     bewilligung.setPosition(bewilligungDao.getMaxPosition(command.getAntragId()) + 1);
@@ -156,12 +157,13 @@ public class BewilligungServiceImpl implements BewilligungService {
     bewilligungsStatus.setBezeichnung("Offen");
     bewilligungsStatus.setPosition(1);
     bewilligung.setBewilligungsStatus(bewilligungsStatus);
+
     BewilligungsDaten daten = createBewilligungsDaten(bewilligung);
 
     String message = String.format("Bewilligung Bewilliger: %s, Status: %s hinzugefügt", bewilligung.getBenutzerId(),
             bewilligung.getBewilligungsStatusId());
     addAntragHistorie(bewilligung.getAntragId(), benutzerId, message);
-    aktualisiereAntragStatus(benutzerId, antrag);
+    aktualisiereAntragStatus(benutzerId, bewilligung);
 
     logger.debug("addBewilligung({}, {}) = {}", benutzerId, command, daten);
 
@@ -199,23 +201,24 @@ public class BewilligungServiceImpl implements BewilligungService {
     antragHistorieDao.insert(antragHistorie);
   }
 
-  private void aktualisiereAntragStatus(String benutzerId, Antrag antrag) {
+  private void aktualisiereAntragStatus(String benutzerId, Bewilligung bewilligung) {
+    Antrag antrag = bewilligung.getAntrag();
     String bisherigerStatus = antrag.getAntragStatusId();
     String antragStatus = ermittleAntragStatus(antrag);
     antrag.setAntragStatusId(antragStatus);
     antragDao.update(antrag);
 
-    versendeStatusAenderungsMails(benutzerId, antrag, bisherigerStatus, antragStatus);
+    versendeStatusAenderungsMails(benutzerId, antrag, bewilligung, bisherigerStatus, antragStatus);
   }
 
-  private void versendeStatusAenderungsMails(String benutzerId, Antrag antrag, String bisherigerStatus, String antragStatus) {
+  private void versendeStatusAenderungsMails(String benutzerId, Antrag antrag, Bewilligung bewilligung, String bisherigerStatus, String antragStatus) {
     if (bisherigerStatus != null && !bisherigerStatus.equals(antragStatus)) {
       if ("IN_ARBEIT".equals(antragStatus)) {
         mailBenachrichtigungsService.sendeZweiteBewilligungsMail(benutzerId, antrag.getId());
       } else if ("ABGELEHNT".equals(antragStatus)) {
-        mailBenachrichtigungsService.sendeAbgelehntMail(benutzerId, antrag.getId());
+        mailBenachrichtigungsService.sendeAbgelehntMail(benutzerId, antrag.getId(), bewilligung.getId());
       } else if ("BEWILLIGT".equals(antragStatus)) {
-        mailBenachrichtigungsService.sendeBewilligtMail(benutzerId, antrag.getId());
+        mailBenachrichtigungsService.sendeBewilligtMail(benutzerId, antrag.getId(), bewilligung.getId());
       } else if ("STORNIERT".equals(antragStatus)) {
         mailBenachrichtigungsService.sendeStornoMail(benutzerId, antrag.getId());
       }
@@ -297,7 +300,7 @@ public class BewilligungServiceImpl implements BewilligungService {
             bewilligungsStatusAlt);
 
     insertAntragHistorie(benutzerId, bewilligung.getAntragId(), message);
-    aktualisiereAntragStatus(benutzerId, bewilligung.getAntrag());
+    aktualisiereAntragStatus(benutzerId, bewilligung);
 
     bewilligung.setBewilligungsStatus(bewilligungsStatus);
 

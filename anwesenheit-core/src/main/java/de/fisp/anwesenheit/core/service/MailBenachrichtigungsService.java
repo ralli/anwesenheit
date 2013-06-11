@@ -28,7 +28,7 @@ public interface MailBenachrichtigungsService {
    * @param benutzerId Die ID des angemeldeten Benutzers (der erste oder zweite Bewilliger)
    * @param antragId   Die ID des zugehörigen Antrags
    */
-  void sendeAbgelehntMail(String benutzerId, long antragId);
+  void sendeAbgelehntMail(String benutzerId, long antragId, long bewilligungId);
 
   /**
    * Versendet Mails an den Antragsteller und die alle Bewilliger.
@@ -36,7 +36,7 @@ public interface MailBenachrichtigungsService {
    * @param benutzerId Die ID des angemeldeten Benutzers (der erste oder zweite Bewilliger)
    * @param antragId   Die ID des zugehörigen Antrags
    */
-  void sendeBewilligtMail(String benutzerId, long antragId);
+  void sendeBewilligtMail(String benutzerId, long antragId, long bewilligungId);
 
   /**
    * Versendet Mails an den Antragsteller und die relevanten Bewilliger. Relevante Bewilliger sind die, die

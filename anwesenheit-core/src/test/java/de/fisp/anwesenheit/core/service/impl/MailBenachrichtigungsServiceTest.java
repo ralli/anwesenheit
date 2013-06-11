@@ -100,18 +100,20 @@ public class MailBenachrichtigungsServiceTest {
   public void sendeAntragAbgelehntMails() {
     String benutzerId = "demo";
     long antragId = 2L;
+    long bewilligungsId = 1L;
     AntragsDaten antragsDaten = createAntragsDaten(antragId);
     when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
-    mailBenachrichtigungsService.sendeAbgelehntMail(benutzerId, antragId);
+    mailBenachrichtigungsService.sendeAbgelehntMail(benutzerId, antragId, bewilligungsId);
   }
 
   @Test
   public void sendeAntragBewilligtMails() {
     String benutzerId = "demo";
     long antragId = 2L;
+    long bewilligungsId = 1L;
     AntragsDaten antragsDaten = createAntragsDaten(antragId);
     when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
-    mailBenachrichtigungsService.sendeBewilligtMail(benutzerId, antragId);
+    mailBenachrichtigungsService.sendeBewilligtMail(benutzerId, antragId, bewilligungsId);
   }
 
 }
