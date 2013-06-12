@@ -157,11 +157,11 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   }
 
   private String getUrlForAntrag(long antragId) {
-    return BASIS_URL + "/?deepLinkUrl=uebersicht/" + antragId;
+    return BASIS_URL + "/?deepLink=uebersicht/" + antragId;
   }
 
   private String getUrlForBewilligung(long bewilligungsId) {
-    return BASIS_URL + "/?deepLinkUrl=bewilligungen/" + bewilligungsId;
+    return BASIS_URL + "/?deepLink=bewilligungen/" + bewilligungsId;
   }
 
   private String formatDate(Date date) {
