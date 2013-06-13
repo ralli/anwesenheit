@@ -401,7 +401,7 @@
         var params = {};
         params.von = $filter("date")($scope.antrag.von, "yyyy-MM-dd");
         params.bis = $filter("date")($scope.antrag.bis, "yyyy-MM-dd");
-        arbeitstageService.get(params, function (/* data */) {
+        arbeitstageService.get(params, function (data) {
           $scope.antrag.anzahlTage = $filter("number")(data.arbeitsTage);
         });
       };
