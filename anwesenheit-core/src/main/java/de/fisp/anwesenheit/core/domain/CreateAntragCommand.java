@@ -12,6 +12,7 @@ public class CreateAntragCommand {
   private Date bis;
   private double anzahlTage;
   private String[] bewilliger;
+  private String kommentar;
 
   public String getBenutzerId() {
     return benutzerId;
@@ -72,5 +73,13 @@ public class CreateAntragCommand {
 
   public void setSonderUrlaubArt(String sonderUrlaubArt) {
     this.sonderUrlaubArt = sonderUrlaubArt;
+  }
+
+  public String getKommentar() {
+    return kommentar;
+  }
+
+  public void setKommentar(String kommentar) {
+    this.kommentar = kommentar;
   }
 }

@@ -11,6 +11,7 @@ public class UpdateAntragCommand {
   private Date von;
   private Date bis;
   private double anzahlTage;
+  private String kommentar;
 
   public long getId() {
     return id;
@@ -58,6 +59,14 @@ public class UpdateAntragCommand {
 
   public void setAnzahlTage(double anzahlTage) {
     this.anzahlTage = anzahlTage;
+  }
+
+  public String getKommentar() {
+    return kommentar;
+  }
+
+  public void setKommentar(String kommentar) {
+    this.kommentar = kommentar;
   }
 
   @Override

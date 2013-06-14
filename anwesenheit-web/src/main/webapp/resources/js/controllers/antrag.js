@@ -176,6 +176,7 @@
             von: new Date(),
             bis: new Date(),
             anzahlTage: "0",
+            kommentar: '',
             bewilliger: []
           };
         });
@@ -191,6 +192,7 @@
             von: $filter("date")($scope.antrag.von, "yyyy-MM-dd"),
             bis: $filter("date")($scope.antrag.bis, "yyyy-MM-dd"),
             anzahlTage: parseNumber($scope.antrag.anzahlTage),
+            kommentar: $scope.antrag.kommentar,
             bewilliger: $.map($scope.antrag.bewilliger, function (b) {
               return b.benutzerId;
             })
@@ -353,6 +355,7 @@
           sonderUrlaubArt: $scope.antrag.sonderUrlaubArt,
           von: $filter("date")($scope.antrag.von, "yyyy-MM-dd"),
           bis: $filter("date")($scope.antrag.bis, "yyyy-MM-dd"),
+          kommentar: $scope.antrag.kommentar,
           anzahlTage: parseNumber($scope.antrag.anzahlTage)
         };
 

@@ -21,9 +21,10 @@ public class AntragsDaten {
   private final BenutzerDaten benutzer;
   private final List<BewilligungsDaten> bewilligungen;
   private final double anzahlTage;
+  private final String kommentar;
 
   public AntragsDaten(long id, AntragArt antragArt, AntragStatus antragStatus, SonderUrlaubArt sonderUrlaubArt, Date von, Date bis, double anzahlTage,
-                      BenutzerDaten benutzer, List<BewilligungsDaten> bewilligungen) {
+                      BenutzerDaten benutzer, List<BewilligungsDaten> bewilligungen, String kommentar) {
     super();
     this.id = id;
     this.antragArt = antragArt;
@@ -34,6 +35,7 @@ public class AntragsDaten {
     this.benutzer = benutzer;
     this.bewilligungen = bewilligungen;
     this.anzahlTage = anzahlTage;
+    this.kommentar = kommentar;
   }
 
   public long getId() {
@@ -72,6 +74,10 @@ public class AntragsDaten {
 
   public List<BewilligungsDaten> getBewilligungen() {
     return bewilligungen;
+  }
+
+  public String getKommentar() {
+    return kommentar;
   }
 
   @Override

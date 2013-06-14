@@ -73,8 +73,9 @@ public class MailBenachrichtigungsServiceTest {
     List<BewilligungsDaten> bewilligungen = new ArrayList<BewilligungsDaten>();
     bewilligungen.add(bewilligungsDaten);
     bewilligungen.add(bewilligungsDaten2);
+    String kommentar = String.format("Ich bin ein Kommentar zu Antrag: %d", antragId);
     AntragsDaten daten = new AntragsDaten(antragId, antragArt, antragStatus, sonderUrlaubArt, von, bis, anzahlTage, benutzer,
-            bewilligungen);
+            bewilligungen, kommentar);
     return daten;
   }
 

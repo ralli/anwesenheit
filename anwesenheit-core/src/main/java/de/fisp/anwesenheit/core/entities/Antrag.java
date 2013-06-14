@@ -37,6 +37,8 @@ public class Antrag {
   private String antragStatusId;
   @Column(name = "anzahl_tage")
   private double anzahlTage;
+  @Column(name="kommentar")
+  private String kommentar;
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "benutzer_id", insertable = false, updatable = false)
@@ -160,11 +162,19 @@ public class Antrag {
     this.bewilligungen = bewilligungen;
   }
 
+  public String getKommentar() {
+    return kommentar;
+  }
+
+  public void setKommentar(String kommentar) {
+    this.kommentar = kommentar;
+  }
+
   @Override
   public String toString() {
     ToStringBuilder toStringBuilder = new ToStringBuilder(this);
     toStringBuilder.append("id", id).append("benutzerId", benutzerId).append("antragArt", antragArtId).append("von", von)
-            .append("bis", bis).append("antragStatusId", antragStatusId).append("anzahlTage", anzahlTage);
+            .append("bis", bis).append("antragStatusId", antragStatusId).append("anzahlTage", anzahlTage).append("kommentar", kommentar);
     return toStringBuilder.toString();
   }
 }

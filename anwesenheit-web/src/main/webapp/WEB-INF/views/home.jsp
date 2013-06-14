@@ -65,7 +65,7 @@
 <script src="<c:url value="/webjars/angular-ui-bootstrap/0.3.0/ui-bootstrap-tpls.min.js" />"></script>
 <script src="<c:url value="/webjars/underscorejs/1.4.4/underscore.min.js"/>"></script>
 <script src="<c:url value="/resources/lib/toastr/toastr.js" />"></script>
-
+<script src="<c:url value="/resources/lib/showdown/showdown-min.js" />"></script>
 <script src="<c:url value="/resources/js/services.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/resources/js/helpers.js?reload=1"/>" charset="UTF-8"></script>
 <script src="<c:url value="/resources/js/controllers/antrag.js?reload=1"/>" charset="UTF-8"></script>

@@ -43,7 +43,13 @@
         <span class="uneditable-input">{{antrag.anzahlTage|number}}</span>
       </div>
     </div>
-    <div class="control-group">
+    <div class="control-group" ng-show="antrag.kommentar">
+      <label class="control-label">Kommentar</label>
+      <div class="controls">
+        <div markdown="true" ng-content="antrag.kommentar">Hier kommt der Text mit Markdown formatiert rein...</div>
+      </div>
+    </div>
+    <div class="control-group" >
       <div class="controls">
         <a ng-href="{{backlink}}" class="btn">Zurück</a>
       </div>

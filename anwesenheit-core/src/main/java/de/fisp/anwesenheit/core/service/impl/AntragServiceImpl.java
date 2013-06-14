@@ -79,7 +79,16 @@ public class AntragServiceImpl implements AntragService {
 
   private AntragsDaten createAntragsDatenFromAntrag(long id, Antrag antrag) {
     BenutzerDaten benutzerDaten = createBenutzerDaten(antrag.getBenutzer());
-    AntragsDaten result = new AntragsDaten(antrag.getId(), antrag.getAntragArt(), antrag.getAntragStatus(), antrag.getSonderUrlaubArt(), antrag.getVon(), antrag.getBis(), antrag.getAnzahlTage(), benutzerDaten, loadBewilligungsDaten(id));
+    AntragsDaten result = new AntragsDaten(antrag.getId(),
+            antrag.getAntragArt(),
+            antrag.getAntragStatus(),
+            antrag.getSonderUrlaubArt(),
+            antrag.getVon(),
+            antrag.getBis(),
+            antrag.getAnzahlTage(),
+            benutzerDaten,
+            loadBewilligungsDaten(id),
+            antrag.getKommentar());
     logger.debug("findAntragById({}) = {}", id, result);
     return result;
   }
@@ -89,7 +98,11 @@ public class AntragServiceImpl implements AntragService {
   }
 
   private BewilligungsDaten createBewilligungsDaten(Bewilligung bewilligung) {
-    return new BewilligungsDaten(bewilligung.getId(), bewilligung.getAntragId(), bewilligung.getPosition(), bewilligung.getBewilligungsStatus(), createBenutzerDaten(bewilligung.getBenutzer()));
+    return new BewilligungsDaten(bewilligung.getId(),
+            bewilligung.getAntragId(),
+            bewilligung.getPosition(),
+            bewilligung.getBewilligungsStatus(),
+            createBenutzerDaten(bewilligung.getBenutzer()));
   }
 
   private List<BewilligungsDaten> loadBewilligungsDaten(long antragId) {
@@ -174,6 +187,7 @@ public class AntragServiceImpl implements AntragService {
     antrag.setAntragStatus(antragStatusDao.findById("NEU"));
     antrag.setVon(command.getVon());
     antrag.setBis(command.getBis());
+    antrag.setKommentar(command.getKommentar());
     antrag.setBewilligungen(new LinkedHashSet<Bewilligung>());
 
     if (!berechtigungsService.isAntragEigentuemerOderErfasser(antrag, benutzerId)) {
@@ -276,6 +290,7 @@ public class AntragServiceImpl implements AntragService {
     antrag.setAntragArtId(command.getAntragArt());
     antrag.setVon(command.getVon());
     antrag.setBis(command.getBis());
+    antrag.setKommentar(command.getKommentar());
     updateSonderUrlaubArt(antrag, command.getAntragArt(), command.getSonderUrlaubArt(), command.getAnzahlTage());
     antragDao.update(antrag);
     String message = String.format("Antrag geändert: Art: %s, Von: %s, Bis: %s, Tage: %s", command.getAntragArt(),

@@ -605,6 +605,7 @@
         <dropColumn columnName="definition_id"
                     tableName="feiertag"/>
     </changeSet>
+
     <changeSet author="raljuhn" id="createTableParameters">
         <createTable tableName="parameter">
             <column name="id" type="varchar(30)">
@@ -623,5 +624,11 @@
         <modifySql dbms="mysql">
             <append value=" engine innodb"/>
         </modifySql>
+    </changeSet>
+
+    <changeSet author="raljuhn" id="addKommentarToAntrag">
+        <addColumn tableName="antrag">
+            <column name="kommentar" type="text"/>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
