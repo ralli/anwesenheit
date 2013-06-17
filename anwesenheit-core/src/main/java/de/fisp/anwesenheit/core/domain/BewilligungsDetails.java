@@ -22,12 +22,13 @@ public class BewilligungsDetails {
   private final AntragStatus antragStatus;
   private final AntragArt antragArt;
   private final SonderUrlaubArt sonderUrlaubArt;
+  private final String kommentar;
   private final BewilligungsStatus bewilligungsStatus;
   private final List<BewilligungsDaten> bewilligungen;
   private final List<AntragListeEintrag> gleichzeitigeAntraege;
 
   public BewilligungsDetails(long id, long antragId, int position, BenutzerDaten antragsteller, BenutzerDaten bewilliger, Date von, Date bis,
-                             double anzahlTage, AntragStatus antragStatus, AntragArt antragArt, SonderUrlaubArt sonderUrlaubArt,
+                             double anzahlTage, AntragStatus antragStatus, AntragArt antragArt, SonderUrlaubArt sonderUrlaubArt, String kommentar,
                              BewilligungsStatus bewilligungsStatus, List<BewilligungsDaten> bewilligungen, List<AntragListeEintrag> gleichzeitigeAntraege) {
     this.id = id;
     this.antragId = antragId;
@@ -40,6 +41,7 @@ public class BewilligungsDetails {
     this.antragStatus = antragStatus;
     this.antragArt = antragArt;
     this.sonderUrlaubArt = sonderUrlaubArt;
+    this.kommentar = kommentar;
     this.bewilligungsStatus = bewilligungsStatus;
     this.bewilligungen = bewilligungen;
     this.gleichzeitigeAntraege = gleichzeitigeAntraege;
@@ -87,6 +89,10 @@ public class BewilligungsDetails {
 
   public SonderUrlaubArt getSonderUrlaubArt() {
     return sonderUrlaubArt;
+  }
+
+  public String getKommentar() {
+    return kommentar;
   }
 
   public BewilligungsStatus getBewilligungsStatus() {

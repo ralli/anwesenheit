@@ -380,7 +380,7 @@ public class BewilligungServiceImpl implements BewilligungService {
     return new BewilligungsDetails(bewilligung.getId(), antrag.getId(), bewilligung.getPosition(),
             createBenutzerDaten(antrag.getBenutzer()), createBenutzerDaten(bewilligung.getBenutzer()), antrag.getVon(),
             antrag.getBis(), antrag.getAnzahlTage(), antrag.getAntragStatus(), antrag.getAntragArt(), antrag.getSonderUrlaubArt(),
-            bewilligung.getBewilligungsStatus(), daten, gleichzeitigeEintraege);
+            antrag.getKommentar(), bewilligung.getBewilligungsStatus(), daten, gleichzeitigeEintraege);
   }
 
   private boolean isAktiverAntrag(Antrag a) {

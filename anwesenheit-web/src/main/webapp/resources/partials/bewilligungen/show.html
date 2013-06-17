@@ -50,7 +50,16 @@
             <span class="uneditable-input">{{bewilligung.anzahlTage|number}}</span>
         </div>
     </div>
-    <div class="control-group">
+  <div class="control-group" ng-show="bewilligung.kommentar">
+    <label class="control-label">Kommentar</label>
+
+    <div class="controls">
+      <div markdown="true" class="input-xxlarge uneditable-input uneditable-textarea"
+           ng-content="bewilligung.kommentar">Hier kommt der Text mit Markdown formatiert rein...
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
         <div class="controls">
             <a href="" class="btn btn-success" ng-click="bewilligeAntrag(bewilligung)" ><i class="icon-ok"></i> Bewilligen</a>
             <a href="" class="btn btn-danger" ng-click="lehneAntragAb(bewilligung)"><i class="icon-remove"></i> Ablehnen</a>
