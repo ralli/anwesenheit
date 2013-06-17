@@ -472,6 +472,13 @@
                 </exclusions>
             </dependency>
 
+            <!-- pegdown Markdown processor -->
+            <dependency>
+                <groupId>org.pegdown</groupId>
+                <artifactId>pegdown</artifactId>
+                <version>1.3.0</version>
+            </dependency>
+
             <!-- Webjars -->
             <dependency>
                 <groupId>org.webjars</groupId>

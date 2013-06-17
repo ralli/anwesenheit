@@ -21,7 +21,7 @@ public class AntragsDaten {
   private final BenutzerDaten benutzer;
   private final List<BewilligungsDaten> bewilligungen;
   private final double anzahlTage;
-  private final String kommentar;
+  private String kommentar;
 
   public AntragsDaten(long id, AntragArt antragArt, AntragStatus antragStatus, SonderUrlaubArt sonderUrlaubArt, Date von, Date bis, double anzahlTage,
                       BenutzerDaten benutzer, List<BewilligungsDaten> bewilligungen, String kommentar) {
@@ -83,5 +83,9 @@ public class AntragsDaten {
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this);
+  }
+
+  public void setKommentar(String kommentar) {
+    this.kommentar = kommentar;
   }
 }

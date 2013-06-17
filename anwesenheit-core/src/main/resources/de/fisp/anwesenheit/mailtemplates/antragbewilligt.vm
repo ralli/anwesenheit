@@ -7,6 +7,11 @@
     bis: $date.format('dd.MM.yyyy', ${antrag.bis})
     ($number.format('0.#', ${antrag.anzahlTage}) Tage)
   </li>
+  #if(${antrag.kommentar})
+    <li>
+      ${antrag.kommentar}
+    </li>
+  #end
   #if(${antrag.antragArt.antragArt} == "SONDER")
     <li>Art des Sonderurlaubs: ${antrag.sonderUrlaubArt.sonderUrlaubArt}</li>
   #end

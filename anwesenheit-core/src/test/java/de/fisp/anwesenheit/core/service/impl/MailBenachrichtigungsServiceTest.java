@@ -28,6 +28,7 @@ public class MailBenachrichtigungsServiceTest {
   private AntragService antragService;
   private MailService mailService;
   private VelocityEngine velocityEngine;
+  private MarkDownFormatterImpl formatter;
   private final ToolManager toolManager = createToolManager();
   private MailBenachrichtigungsServiceImpl mailBenachrichtigungsService;
   private final TestDataFactory testDataFactory = new TestDataFactory();
@@ -36,8 +37,9 @@ public class MailBenachrichtigungsServiceTest {
   public void setUp() {
     antragService = mock(AntragService.class);
     mailService = mock(MailService.class);
+    formatter = new MarkDownFormatterImpl();
     velocityEngine = createVelocityEngine();
-    mailBenachrichtigungsService =  new MailBenachrichtigungsServiceImpl(mailService, velocityEngine, toolManager);
+    mailBenachrichtigungsService =  new MailBenachrichtigungsServiceImpl(mailService, velocityEngine, toolManager, formatter);
     mailBenachrichtigungsService.setAntragService(antragService);
   }
 
@@ -73,7 +75,7 @@ public class MailBenachrichtigungsServiceTest {
     List<BewilligungsDaten> bewilligungen = new ArrayList<BewilligungsDaten>();
     bewilligungen.add(bewilligungsDaten);
     bewilligungen.add(bewilligungsDaten2);
-    String kommentar = String.format("Ich bin ein Kommentar zu Antrag: %d", antragId);
+    String kommentar = String.format("Ich bin ein Kommentar zu Antrag: %d\n\n* Eins\n* Zwei\n* Drei", antragId);
     AntragsDaten daten = new AntragsDaten(antragId, antragArt, antragStatus, sonderUrlaubArt, von, bis, anzahlTage, benutzer,
             bewilligungen, kommentar);
     return daten;

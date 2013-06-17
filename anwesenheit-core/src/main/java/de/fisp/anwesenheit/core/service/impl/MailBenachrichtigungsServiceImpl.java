@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.fisp.anwesenheit.core.service.MarkDownFormatter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
@@ -40,19 +41,22 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   private final MailService mailService;
   private final VelocityEngine velocityEngine;
   private final ToolManager toolManager;
+  private final MarkDownFormatter markDownFormatter;
 
   @Autowired
   public MailBenachrichtigungsServiceImpl(MailService mailService,
                                           VelocityEngine velocityEngine,
-                                          ToolManager toolManager) {
+                                          ToolManager toolManager,
+                                          MarkDownFormatter markDownFormatter) {
     this.mailService = mailService;
     this.velocityEngine = velocityEngine;
     this.toolManager = toolManager;
+    this.markDownFormatter = markDownFormatter;
   }
 
   @Override
   public void sendeErsteBewilligungsMail(String benutzerId, long antragId) {
-    AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
+    AntragsDaten antrag = findAntragById(benutzerId, antragId);
     for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
       if (istBewilligerFuerErsteUnterschrift(bewilligungsDaten)) {
         BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
@@ -64,9 +68,15 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
     }
   }
 
+  private AntragsDaten findAntragById(String benutzerId, long antragId) {
+    AntragsDaten daten = antragService.findAntragById(benutzerId, antragId);
+    daten.setKommentar(formatMarkDown(daten.getKommentar()));
+    return daten;
+  }
+
   @Override
   public void sendeZweiteBewilligungsMail(String benutzerId, long antragId) {
-    AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
+    AntragsDaten antrag = findAntragById(benutzerId, antragId);
     for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
       if (istBewilligerFuerZweiteUnterschrift(bewilligungsDaten)) {
         BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
@@ -80,7 +90,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
 
   @Override
   public void sendeAbgelehntMail(String benutzerId, long antragId, long bewilligungId) {
-    AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
+    AntragsDaten antrag = findAntragById(benutzerId, antragId);
     for(BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
       if(bewilligungsDaten.getId() == bewilligungId) {
         String text = getAntragsTextForBewilligung(antrag, bewilligungsDaten, "antragabgelehnt.vm");
@@ -93,7 +103,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
 
   @Override
   public void sendeBewilligtMail(String benutzerId, long antragId, long bewilligungId) {
-    AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
+    AntragsDaten antrag = findAntragById(benutzerId, antragId);
     String betreff = "BEWILLIGT: " + getBetreff(antrag);
     String text = getAntragsText(antrag, "antragbewilligt.vm");
     mailService.sendeMail(betreff, text, EMAIL_FROM, antrag.getBenutzer().getEmail());
@@ -101,7 +111,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
 
   @Override
   public void sendeStornoMail(String benutzerId, long antragId) {
-    AntragsDaten antrag = antragService.findAntragById(benutzerId, antragId);
+    AntragsDaten antrag = findAntragById(benutzerId, antragId);
     String betreff = "STORNIERT: " + getBetreff(antrag);
     String text = getAntragsText(antrag, "antragstorniert.vm");
     mailService.sendeMail(betreff, text, EMAIL_FROM, antrag.getBenutzer().getEmail());
@@ -178,5 +188,9 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
     if (namen.isEmpty())
       namen.add(benutzer.getBenutzerId());
     return StringUtils.join(namen, ' ');
+  }
+
+  private String formatMarkDown(String input) {
+    return markDownFormatter.formatMarkDown(input);
   }
 }
