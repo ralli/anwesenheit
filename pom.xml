@@ -7,8 +7,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Anwesenheitsverwaltung</name>
-    <description>Das hier ist ein experimentelles Projekt zur Anlage und Verwaltung von Urlaubsanträgen o.Ä.
-    </description>
+    <description>Verwaltung von Urlaubsanträgen</description>
     <url>https://github.com/ralli/anwesenheit</url>
     <modules>
         <module>anwesenheit-core</module>
