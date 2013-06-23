@@ -6,9 +6,11 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "parameter")
-public class Parameter {
+public class Parameter implements Serializable {
   @Id
   private String id;
   private String name;
@@ -49,6 +51,11 @@ public class Parameter {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this);
+    return "Parameter{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", wert='" + wert + '\'' +
+            ", beschreibung='" + beschreibung + '\'' +
+            '}';
   }
 }

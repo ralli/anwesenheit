@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.fisp.anwesenheit.core.service.MarkDownFormatter;
+import de.fisp.anwesenheit.core.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
@@ -22,15 +22,10 @@ import org.springframework.stereotype.Service;
 import de.fisp.anwesenheit.core.domain.AntragsDaten;
 import de.fisp.anwesenheit.core.domain.BenutzerDaten;
 import de.fisp.anwesenheit.core.domain.BewilligungsDaten;
-import de.fisp.anwesenheit.core.service.AntragService;
-import de.fisp.anwesenheit.core.service.MailBenachrichtigungsService;
-import de.fisp.anwesenheit.core.service.MailService;
 
 @Service
 public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsService {
   private static final Logger log = LoggerFactory.getLogger(MailBenachrichtigungsServiceImpl.class);
-  public static final String EMAIL_FROM = "noreply@f-i-solutions-plus.de";
-  public static final String BASIS_URL = "http://159.4.110.139:8090/anwesenheit-web";
 
   public void setAntragService(AntragService antragService) {
     this.antragService = antragService;
@@ -42,16 +37,19 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   private final VelocityEngine velocityEngine;
   private final ToolManager toolManager;
   private final MarkDownFormatter markDownFormatter;
+  private final ParameterService parameterService;
 
   @Autowired
   public MailBenachrichtigungsServiceImpl(MailService mailService,
                                           VelocityEngine velocityEngine,
                                           ToolManager toolManager,
-                                          MarkDownFormatter markDownFormatter) {
+                                          MarkDownFormatter markDownFormatter,
+                                          ParameterService parameterService) {
     this.mailService = mailService;
     this.velocityEngine = velocityEngine;
     this.toolManager = toolManager;
     this.markDownFormatter = markDownFormatter;
+    this.parameterService = parameterService;
   }
 
   @Override
@@ -63,7 +61,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
         String email = bewilliger.getEmail();
         String betreff = getBetreff(antrag);
         String text = getAntragsTextForBewilligung(antrag, bewilligungsDaten, "neuerantrag.vm");
-        mailService.sendeMail(betreff, text, "noreply@f-i-solutions-plus.de", email);
+        mailService.sendeMail(betreff, text, getReplyToAddress(), email);
       }
     }
   }
@@ -83,7 +81,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
         String email = bewilliger.getEmail();
         String betreff = getBetreff(antrag);
         String text = getAntragsTextForBewilligung(antrag, bewilligungsDaten, "neuerantrag.vm");
-        mailService.sendeMail(betreff, text, EMAIL_FROM, email);
+        mailService.sendeMail(betreff, text, getReplyToAddress(), email);
       }
     }
   }
@@ -91,12 +89,12 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   @Override
   public void sendeAbgelehntMail(String benutzerId, long antragId, long bewilligungId) {
     AntragsDaten antrag = findAntragById(benutzerId, antragId);
-    for(BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
-      if(bewilligungsDaten.getId() == bewilligungId) {
+    for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
+      if (bewilligungsDaten.getId() == bewilligungId) {
         String text = getAntragsTextForBewilligung(antrag, bewilligungsDaten, "antragabgelehnt.vm");
         String email = antrag.getBenutzer().getEmail();
         String betreff = "ABGELEHNT: " + getBetreff(antrag);
-        mailService.sendeMail(betreff, text, EMAIL_FROM, email);
+        mailService.sendeMail(betreff, text, getReplyToAddress(), email);
       }
     }
   }
@@ -106,7 +104,7 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
     AntragsDaten antrag = findAntragById(benutzerId, antragId);
     String betreff = "BEWILLIGT: " + getBetreff(antrag);
     String text = getAntragsText(antrag, "antragbewilligt.vm");
-    mailService.sendeMail(betreff, text, EMAIL_FROM, antrag.getBenutzer().getEmail());
+    mailService.sendeMail(betreff, text, getReplyToAddress(), antrag.getBenutzer().getEmail());
   }
 
   @Override
@@ -114,10 +112,10 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
     AntragsDaten antrag = findAntragById(benutzerId, antragId);
     String betreff = "STORNIERT: " + getBetreff(antrag);
     String text = getAntragsText(antrag, "antragstorniert.vm");
-    mailService.sendeMail(betreff, text, EMAIL_FROM, antrag.getBenutzer().getEmail());
+    mailService.sendeMail(betreff, text, getReplyToAddress(), antrag.getBenutzer().getEmail());
     for (BewilligungsDaten bewilligungsDaten : antrag.getBewilligungen()) {
       BenutzerDaten bewilliger = bewilligungsDaten.getBenutzer();
-      mailService.sendeMail(betreff, text, EMAIL_FROM, bewilliger.getEmail());
+      mailService.sendeMail(betreff, text, getReplyToAddress(), bewilliger.getEmail());
     }
   }
 
@@ -167,11 +165,11 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
   }
 
   private String getUrlForAntrag(long antragId) {
-    return BASIS_URL + "/?deepLink=uebersicht/" + antragId;
+    return getBasisUrl() + "/?deepLink=uebersicht/" + antragId;
   }
 
   private String getUrlForBewilligung(long bewilligungsId) {
-    return BASIS_URL + "/?deepLink=bewilligungen/" + bewilligungsId;
+    return getBasisUrl() + "/?deepLink=bewilligungen/" + bewilligungsId;
   }
 
   private String formatDate(Date date) {
@@ -192,5 +190,13 @@ public class MailBenachrichtigungsServiceImpl implements MailBenachrichtigungsSe
 
   private String formatMarkDown(String input) {
     return markDownFormatter.formatMarkDown(input);
+  }
+
+  private String getReplyToAddress() {
+    return parameterService.getValue("email.replyToAddress");
+  }
+
+  private String getBasisUrl() {
+    return parameterService.getValue("base.url");
   }
 }

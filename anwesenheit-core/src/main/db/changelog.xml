@@ -631,4 +631,31 @@
             <column name="kommentar" type="text"/>
         </addColumn>
     </changeSet>
+
+    <changeSet author="raljuhn" id="insertDefaultValuesIntoParameters">
+        <insert tableName="parameter">
+            <column name="id" value="base.url" />
+            <column name="name" value="Basis URL" />
+            <column name="beschreibung" value="Die URL die auf die Startseite der Anwendung verweist. (ohne abschließendes '/'-Zeichen)" />
+            <column name="wert" value="http://159.4.110.139:8090/anwesenheit-web" />
+        </insert>
+        <insert tableName="parameter">
+            <column name="id" value="email.replyToAddress" />
+            <column name="name" value="Antwortadresse" />
+            <column name="beschreibung" value="Die Antwortadresse in Emails" />
+            <column name="wert" value="noreply@f-i-solutions-plus.de" />
+        </insert>
+        <insert tableName="parameter">
+            <column name="id" value="ldap.url" />
+            <column name="name" value="LDAP-URL" />
+            <column name="beschreibung" value="Die URL des LDAP-Servers" />
+            <column name="wert" value="ldap://1822-s-inform.de:389" />
+        </insert>
+        <insert tableName="parameter">
+            <column name="id" value="ldap.domain" />
+            <column name="name" value="LDAP-Domäne" />
+            <column name="beschreibung" value="Die Domäne des LDAPs" />
+            <column name="wert" value="1822SINF-D001" />
+        </insert>
+    </changeSet>
 </databaseChangeLog>

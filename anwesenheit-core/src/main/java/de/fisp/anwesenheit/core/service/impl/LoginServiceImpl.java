@@ -6,6 +6,7 @@ import javax.naming.Context;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import de.fisp.anwesenheit.core.service.ParameterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,31 +28,35 @@ public class LoginServiceImpl implements LoginService {
   private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
   private final BenutzerDao benutzerDao;
   private final PasswordService passwordService;
-
-  // private static final Logger logger =
-  // LoggerFactory.getLogger(LoginServiceImpl.class);
+  private final ParameterService parameterService;
 
   @Autowired
-  public LoginServiceImpl(BenutzerDao benutzerDao, PasswordService passwordService) {
+  public LoginServiceImpl(BenutzerDao benutzerDao, PasswordService passwordService, ParameterService parameterService) {
     this.benutzerDao = benutzerDao;
     this.passwordService = passwordService;
+    this.parameterService = parameterService;
   }
-
-  private static final String PROVIDER_URL = "ldap://1822-s-inform.de:389";
-  private static final String DOMAIN = "1822SINF-D001";
 
   private String getPrincipal(String domain, String user) {
     return String.format("%s\\%s", domain, user);
+  }
+
+  private String getLdapUrl() {
+    return parameterService.getValue("ldap.url");
+  }
+
+  private String getLdapDomain() {
+    return parameterService.getValue("ldap.domain");
   }
 
   private boolean loginViaLDAP(LoginCommand loginData) {
     try {
       Hashtable<String, String> env = new Hashtable<String, String>();
       env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-      env.put(Context.PROVIDER_URL, PROVIDER_URL);
+      env.put(Context.PROVIDER_URL, getLdapUrl());
 
       env.put(Context.SECURITY_AUTHENTICATION, "simple");
-      env.put(Context.SECURITY_PRINCIPAL, getPrincipal(DOMAIN, loginData.getLogin()));
+      env.put(Context.SECURITY_PRINCIPAL, getPrincipal(getLdapDomain(), loginData.getLogin()));
       env.put(Context.SECURITY_CREDENTIALS, loginData.getPassword());
 
       DirContext ctx = new InitialDirContext(env);

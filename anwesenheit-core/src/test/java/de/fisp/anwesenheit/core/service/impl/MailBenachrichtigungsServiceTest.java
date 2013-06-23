@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import de.fisp.anwesenheit.core.service.ParameterService;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.tools.ToolManager;
@@ -31,15 +32,17 @@ public class MailBenachrichtigungsServiceTest {
   private MarkDownFormatterImpl formatter;
   private final ToolManager toolManager = createToolManager();
   private MailBenachrichtigungsServiceImpl mailBenachrichtigungsService;
+  private ParameterService parameterService;
   private final TestDataFactory testDataFactory = new TestDataFactory();
 
   @Before
   public void setUp() {
     antragService = mock(AntragService.class);
     mailService = mock(MailService.class);
+    parameterService = mock(ParameterService.class);
     formatter = new MarkDownFormatterImpl();
     velocityEngine = createVelocityEngine();
-    mailBenachrichtigungsService =  new MailBenachrichtigungsServiceImpl(mailService, velocityEngine, toolManager, formatter);
+    mailBenachrichtigungsService =  new MailBenachrichtigungsServiceImpl(mailService, velocityEngine, toolManager, formatter, parameterService);
     mailBenachrichtigungsService.setAntragService(antragService);
   }
 
@@ -87,6 +90,8 @@ public class MailBenachrichtigungsServiceTest {
     long antragId = 2L;
     AntragsDaten antragsDaten = createAntragsDaten(antragId);
     when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
+    when(parameterService.getValue("base.url")).thenReturn("http://base.url");
+    when(parameterService.getValue("email.replyToAddress")).thenReturn("replyto@nowhere.com");
     mailBenachrichtigungsService.sendeErsteBewilligungsMail(benutzerId, antragId);
   }
 
@@ -96,6 +101,8 @@ public class MailBenachrichtigungsServiceTest {
     long antragId = 2L;
     AntragsDaten antragsDaten = createAntragsDaten(antragId);
     when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
+    when(parameterService.getValue("base.url")).thenReturn("http://base.url");
+    when(parameterService.getValue("email.replyToAddress")).thenReturn("replyto@nowhere.com");
     mailBenachrichtigungsService.sendeZweiteBewilligungsMail(benutzerId, antragId);
   }
 
@@ -106,6 +113,8 @@ public class MailBenachrichtigungsServiceTest {
     long bewilligungsId = 1L;
     AntragsDaten antragsDaten = createAntragsDaten(antragId);
     when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
+    when(parameterService.getValue("base.url")).thenReturn("http://base.url");
+    when(parameterService.getValue("email.replyToAddress")).thenReturn("replyto@nowhere.com");
     mailBenachrichtigungsService.sendeAbgelehntMail(benutzerId, antragId, bewilligungsId);
   }
 
@@ -116,6 +125,8 @@ public class MailBenachrichtigungsServiceTest {
     long bewilligungsId = 1L;
     AntragsDaten antragsDaten = createAntragsDaten(antragId);
     when(antragService.findAntragById(benutzerId, antragId)).thenReturn(antragsDaten);
+    when(parameterService.getValue("base.url")).thenReturn("http://base.url");
+    when(parameterService.getValue("email.replyToAddress")).thenReturn("replyto@nowhere.com");
     mailBenachrichtigungsService.sendeBewilligtMail(benutzerId, antragId, bewilligungsId);
   }
 

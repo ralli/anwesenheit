@@ -6,17 +6,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import de.fisp.anwesenheit.core.entities.*;
 import org.springframework.stereotype.Service;
-
-import de.fisp.anwesenheit.core.entities.Antrag;
-import de.fisp.anwesenheit.core.entities.AntragArt;
-import de.fisp.anwesenheit.core.entities.AntragStatus;
-import de.fisp.anwesenheit.core.entities.Benutzer;
-import de.fisp.anwesenheit.core.entities.BenutzerRolle;
-import de.fisp.anwesenheit.core.entities.Bewilligung;
-import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
-import de.fisp.anwesenheit.core.entities.Feiertag;
-import de.fisp.anwesenheit.core.entities.FeiertagDefinition;
 
 @Service
 public class TestDataFactory {
@@ -143,5 +134,22 @@ public class TestDataFactory {
     feiertag.setDatum(date);
     feiertag.setName(name);
     return feiertag;
+  }
+
+  public Parameter createParameter() {
+    Parameter parameter = new Parameter();
+
+    parameter.setId("test");
+    parameter.setBeschreibung("Beschreibung des Parameters");
+    parameter.setName("test.name");
+    parameter.setWert("Test.Wert");
+
+    return parameter;
+  }
+
+  public List<Parameter> createParameters() {
+    List<Parameter> list = new ArrayList<Parameter>();
+    list.add(createParameter());
+    return list;
   }
 }
