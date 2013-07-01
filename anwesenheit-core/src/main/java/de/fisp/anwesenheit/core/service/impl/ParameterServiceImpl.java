@@ -5,6 +5,8 @@ import de.fisp.anwesenheit.core.entities.Parameter;
 import de.fisp.anwesenheit.core.service.ParameterService;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
 public class ParameterServiceImpl implements ParameterService {
   private final ParameterDao parameterDao;
   private final Ehcache cache;
-
+  private static final Logger logger = LoggerFactory.getLogger(ParameterServiceImpl.class);
 
   public ParameterServiceImpl(ParameterDao parameterDao, Ehcache cache) {
     this.parameterDao = parameterDao;
@@ -26,7 +28,9 @@ public class ParameterServiceImpl implements ParameterService {
   }
 
   @Override
+  @Transactional
   public void setValue(String key, String value) {
+    logger.debug("setValue({}, {})", key, value);
     Element element = getParameterElement(key);
     if(element == null) {
       Parameter parameter = new Parameter();
@@ -57,12 +61,16 @@ public class ParameterServiceImpl implements ParameterService {
   }
 
   @Override
+  @Transactional
   public String getValue(String key) {
     Parameter parameter = getParameter(key);
-    return parameter == null ? null : parameter.getWert();
+    String result = parameter == null ? null : parameter.getWert();
+    logger.debug("getValue({})={}", key, result);
+    return result;
   }
 
   @Override
+  @Transactional
   public Parameter getParameter(String key) {
     Element element = getParameterElement(key);
     if(element == null)
