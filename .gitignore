@@ -11,4 +11,4 @@ target/
 /anwesenheit-core.log
 /anwesenheit-core.properties
 mysql*.jar
-
+.metadata/
