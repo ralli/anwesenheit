@@ -16,30 +16,15 @@
     </modules>
     <properties>
         <!-- dependency versions -->
-        <maven.spring.dependency>3.2.2.RELEASE</maven.spring.dependency>
-        <maven.hibernate.dependency>4.2.1.Final</maven.hibernate.dependency>
-        <maven.mockito.dependency>1.9.5</maven.mockito.dependency>
-        <maven.junit.dependency>4.11</maven.junit.dependency>
+        <maven.spring.dependency>5.1.3.RELEASE</maven.spring.dependency>
+        <maven.hibernate.dependency>5.3.7.Final</maven.hibernate.dependency>
+        <maven.mockito.dependency>2.23.4</maven.mockito.dependency>
+        <maven.junit.dependency>4.12</maven.junit.dependency>
 
-        <!-- plugin versions -->
-        <maven.checkstyle.plugin>2.10</maven.checkstyle.plugin>
-        <maven.cobertura.plugin>2.5.2</maven.cobertura.plugin>
-        <maven.doxia.module.markdown.version>1.4</maven.doxia.module.markdown.version>
-        <maven.javadoc.plugin>2.9</maven.javadoc.plugin>
-        <maven.jxr.plugin>2.3</maven.jxr.plugin>
-        <maven.pmd.plugin>2.7.1</maven.pmd.plugin>
-        <maven.project.info.reports.plugin>2.6</maven.project.info.reports.plugin>
-        <maven.site.plugin>3.2</maven.site.plugin>
-        <maven.sonar.plugin>3.3.1</maven.sonar.plugin>
-        <maven.surefire.plugin>2.12.4</maven.surefire.plugin>
-        <maven.taglist.plugin>2.4</maven.taglist.plugin>
-        <maven.versions.plugin>1.3.1</maven.versions.plugin>
-        <maven.findbugs.plugin>2.5.2</maven.findbugs.plugin>
 
         <!-- code metrics -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.sourceVersion>1.7</project.build.sourceVersion>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     <developers>
         <developer>
@@ -81,7 +66,6 @@
                         <target>${project.build.sourceVersion}</target>
                         <testSource>${project.build.sourceVersion}</testSource>
                         <testTarget>${project.build.sourceVersion}</testTarget>
-                        <encoding>${project.reporting.outputEncoding}</encoding>
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>true</showWarnings>
                     </configuration>
@@ -89,156 +73,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-eclipse-plugin</artifactId>
-                    <version>2.9</version>
+                    <version>2.10</version>
                 </plugin>
             </plugins>
         </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>3.0.5</version>
-                                </requireMavenVersion>
-                                <requireJavaVersion>
-                                    <version>${project.build.sourceVersion}</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>${maven.site.plugin}</version>
-                <configuration>
-                    <reportPlugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-report-plugin</artifactId>
-                            <version>${maven.surefire.plugin}</version>
-                            <configuration>
-                                <outputDirectory>${project.reporting.outputDirectory}/testresults</outputDirectory>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <version>${maven.javadoc.plugin}</version>
-                            <configuration>
-                                <aggregate>true</aggregate>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-checkstyle-plugin</artifactId>
-                            <version>${maven.checkstyle.plugin}</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-project-info-reports-plugin</artifactId>
-                            <version>${maven.project.info.reports.plugin}</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-jxr-plugin</artifactId>
-                            <version>${maven.jxr.plugin}</version>
-                            <configuration>
-                                <aggregate>true</aggregate>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.jacoco</groupId>
-                            <artifactId>jacoco-maven-plugin</artifactId>
-                            <version>0.6.2.201302030002</version>
-                            <configuration>
-                                <destfile>${basedir}/target/jacoco/jacoco-unit.exec</destfile>
-                                <datafile>${basedir}/target/jacoco/jacoco-unit.exec</datafile>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-pmd-plugin</artifactId>
-                            <version>${maven.pmd.plugin}</version>
-                            <configuration>
-                                <aggregate>true</aggregate>
-                                <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                                <!-- The minimum tokens before a violation -->
-                                <minimumTokens>100</minimumTokens>
-                                <!-- Turn off if no xref report -->
-                                <linkXRef>true</linkXRef>
-                                <verbose>true</verbose>
-                                <targetJdk>${project.build.sourceVersion}</targetJdk>
-                                <rulesets>
-                                    <ruleset>/rulesets/maven.xml</ruleset>
-                                    <ruleset>/rulesets/migrating_to_junit4.xml</ruleset>
-                                    <ruleset>/rulesets/design.xml</ruleset>
-                                    <ruleset>/rulesets/unusedcode.xml</ruleset>
-                                    <ruleset>/rulesets/typeresolution.xml</ruleset>
-                                </rulesets>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>findbugs-maven-plugin</artifactId>
-                            <version>${maven.findbugs.plugin}</version>
-                            <configuration>
-                                <xmlOutput>true</xmlOutput>
-                                <!-- Optional directory to put findbugs xdoc xml report -->
-                                <xmlOutputDirectory>${project.reporting.outputDirectory}/findbugs</xmlOutputDirectory>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>versions-maven-plugin</artifactId>
-                            <version>${maven.versions.plugin}</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>taglist-maven-plugin</artifactId>
-                            <version>${maven.taglist.plugin}</version>
-                            <configuration>
-                                <aggregate>true</aggregate>
-                            </configuration>
-                        </plugin>
-                    </reportPlugins>
-                    <locales>en</locales>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>${maven.doxia.module.markdown.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javancss-maven-plugin</artifactId>
-                <version>2.0</version>
-            </plugin>
-        </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <!-- THIS _NEEDS_ TO BE THE LAST PLUGIN ENTRY -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>dashboard-maven-plugin</artifactId>
-                <version>1.0.0-beta-1</version>
-            </plugin>
-        </plugins>
-    </reporting>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -249,7 +88,7 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
+                <artifactId>mockito-core</artifactId>
                 <version>${maven.mockito.dependency}</version>
                 <scope>test</scope>
             </dependency>
@@ -336,17 +175,17 @@
             <dependency>
                 <groupId>antlr</groupId>
                 <artifactId>antlr</artifactId>
-                <version>2.7.6</version>
+                <version>2.7.7</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
-                <version>1.7.2</version>
+                <version>1.8.10</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
-                <version>1.7.2</version>
+                <version>1.8.10</version>
             </dependency>
             <dependency>
                 <groupId>javassist</groupId>
@@ -430,7 +269,7 @@
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-mapper-asl</artifactId>
-                <version>1.9.11</version>
+                <version>1.9.13</version>
             </dependency>
 
             <!-- Hibernate -->
@@ -442,7 +281,29 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>4.3.1.Final</version>
+                <version>5.2.5.Final</version>
+            </dependency>
+
+            <!-- java ee (jaxb, activation ...) -->
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>2.2.11</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-core</artifactId>
+                <version>2.2.11</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>2.2.11</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.activation</groupId>
+                <artifactId>activation</artifactId>
+                <version>1.1.1</version>
             </dependency>
 
             <!-- EHCache -->

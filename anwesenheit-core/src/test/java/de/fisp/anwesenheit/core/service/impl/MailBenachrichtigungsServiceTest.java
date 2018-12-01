@@ -1,6 +1,5 @@
 package de.fisp.anwesenheit.core.service.impl;
 
-import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +23,9 @@ import de.fisp.anwesenheit.core.entities.BewilligungsStatus;
 import de.fisp.anwesenheit.core.entities.SonderUrlaubArt;
 import de.fisp.anwesenheit.core.service.AntragService;
 import de.fisp.anwesenheit.core.service.MailService;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MailBenachrichtigungsServiceTest {
   private AntragService antragService;
